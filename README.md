@@ -22,7 +22,7 @@ A Web Worker is a JavaScript script that runs in the background, independently o
 
 ### What can Web Workers do?
 
-Web Workers are a simple means for web content to run scripts in background threads. Once created, a worker can send messages to the JavaScript code that created it by posting messages to an event handler specified by that code [(4)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
+Web Workers are a simple means for web content to run scripts in background threads. Once created, a worker can send messages to the JavaScript code that created it by posting messages to an event handler specified by that code [(4)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
 ### I don't understand...
 
