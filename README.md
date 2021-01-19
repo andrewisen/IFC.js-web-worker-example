@@ -39,7 +39,7 @@ Certain types, say Functions, are NOT supported by [The structured clone algorit
 ### Why can't I build the entire IFC Project inside a Web Worker?
 
 The `mainObject`, used in `src/ifc-project-builder/ifc-structure-builder.js`, contains some nasty stuff.
-The structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) cannot deal with that type of object.
+The [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) cannot deal with that type of object.
 
 Also, it's hard to use Three inside a web worker.
 See: [https://stackoverflow.com/a/52243600/14353202](https://stackoverflow.com/a/52243600/14353202)
@@ -52,7 +52,7 @@ Let's:
 
 1. Start a Web Worker
 2. Run `loadIfcFileItems()` as usual
-3. Run `constructProject()` without the `mainObject`.
+3. Run `constructProject()` without the `mainObject`
 4. Exit the Web Worker
 5. Append the `mainObject` (outside of the Web Worker)
 6. Build the geometry (outside of the Web Worker)
@@ -81,7 +81,7 @@ function readFile(input) {
 ```
 
 Notice how we use the Web Worker.
-We `post` he FileReader result into the worker.
+We `post` the FileReader result into the worker.
 And, we get back the `structured` object.
 
 Also, notice how we add back the mainObject in the snippet above.
@@ -107,9 +107,9 @@ We simply mimic the beginning of the original `loadIfc()` function.
 
 Take a look at these commits:
 
-- Add Config: [f5d9ff76c9b90fa282eb88f1fc94b1bb3e8aa9e4](f5d9ff76c9b90fa282eb88f1fc94b1bb3e8aa9e4)
-- Remove mainObject: [d84a4864a8573c6d5cd2e67fef14439e701f453d](d84a4864a8573c6d5cd2e67fef14439e701f453d)
-- Remove conflicting imports: [c336a38860d5dda1cc10759c840948177f48ad37](c336a38860d5dda1cc10759c840948177f48ad37)
+- Add Config: [f5d9ff76c9b90fa282eb88f1fc94b1bb3e8aa9e4](https://github.com/andrewisen/IFC.js-web-worker-example/commit/f5d9ff76c9b90fa282eb88f1fc94b1bb3e8aa9e4)
+- Remove mainObject: [d84a4864a8573c6d5cd2e67fef14439e701f453d](https://github.com/andrewisen/IFC.js-web-worker-example/commit/d84a4864a8573c6d5cd2e67fef14439e701f453d)
+- Remove conflicting imports: [c336a38860d5dda1cc10759c840948177f48ad37](https://github.com/andrewisen/IFC.js-web-worker-example/commit/c336a38860d5dda1cc10759c840948177f48ad37)
 
 ## Info
 
