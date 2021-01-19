@@ -1343,21 +1343,9 @@ function trimExplicitTypes(ifcLine, key) {
   if (value) ifcLine[key] = value;
 }
 
-function findRemainingTypes(items) {
-  var remainingTypes = [];
-  items.forEach(function (element) {
-    if (Object.values(ifcTypes).indexOf(element[itemsReaderValues.type]) < 0) {
-      if (!remainingTypes.includes(element[itemsReaderValues.type])) {
-        remainingTypes.push(element[itemsReaderValues.type]);
-      }
-    }
-  });
-  if (remainingTypes.length > 0) console.log('Error: the following classes are not implemented: ', remainingTypes);
-}
-
 function loadIfcFileItems(ifcData) {
-  var ifcItems = readIfcItems(ifcData);
-  findRemainingTypes(ifcItems);
+  var ifcItems = readIfcItems(ifcData); // findRemainingTypes(ifcItems);
+
   return loadItems(ifcItems);
 }
 

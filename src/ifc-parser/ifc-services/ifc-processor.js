@@ -1,35 +1,34 @@
-import "../ifc-models/building-elements.js";
-import "../ifc-models/classification.js";
-import "../ifc-models/context.js";
-import "../ifc-models/geometry.js";
-import "../ifc-models/identities.js";
-import "../ifc-models/materials.js";
-import "../ifc-models/presentation.js";
-import "../ifc-models/properties.js";
-import "../ifc-models/project.js";
-import "../ifc-models/relationships.js";
-import "../ifc-models/quantities.js";
-import "../ifc-models/systems.js";
-import "../ifc-models/spatial-structure.js";
-import "../ifc-models/units.js";
-import { ifcTypes as t } from "../../utils/ifc-types.js";
-import { parse } from "../parser/parse-process.js";
-import { readIfcItems } from "./ifc-items-reader.js";
-import { referenceEntities } from "./ifc-items-referencer.js";
-import { findRemainingTypes } from "../../dev/functions-for-development.js";
-import { itemsReaderValues as i, namedProps as n } from "../../utils/global-constants.js";
+import '../ifc-models/building-elements.js';
+import '../ifc-models/classification.js';
+import '../ifc-models/context.js';
+import '../ifc-models/geometry.js';
+import '../ifc-models/identities.js';
+import '../ifc-models/materials.js';
+import '../ifc-models/presentation.js';
+import '../ifc-models/properties.js';
+import '../ifc-models/project.js';
+import '../ifc-models/relationships.js';
+import '../ifc-models/quantities.js';
+import '../ifc-models/systems.js';
+import '../ifc-models/spatial-structure.js';
+import '../ifc-models/units.js';
+import { ifcTypes as t } from '../../utils/ifc-types.js';
+import { parse } from '../parser/parse-process.js';
+import { readIfcItems } from './ifc-items-reader.js';
+import { referenceEntities } from './ifc-items-referencer.js';
+import { findRemainingTypes } from '../../dev/functions-for-development.js';
+import { itemsReaderValues as i, namedProps as n } from '../../utils/global-constants.js';
 
 function loadIfcFileItems(ifcData) {
   const ifcItems = readIfcItems(ifcData);
-  findRemainingTypes(ifcItems);
+  // findRemainingTypes(ifcItems);
   return loadItems(ifcItems);
 }
 
 function loadItems(ifcData) {
   const loadedItems = {};
   ifcData.map((ifcItem) => {
-    if (isTypeSupported(ifcItem))
-      loadedItems[ifcItem[i.expressId]] = parseAndLoadItem(ifcItem);
+    if (isTypeSupported(ifcItem)) loadedItems[ifcItem[i.expressId]] = parseAndLoadItem(ifcItem);
   });
   referenceEntities(loadedItems);
   return loadedItems;

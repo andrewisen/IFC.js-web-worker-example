@@ -18,7 +18,7 @@ import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
 /**
  * Three.js scene
  */
-import { scene } from './three-scene.js';
+import { scene, animate } from './three-scene.js';
 
 /**
  * From Example 00
@@ -44,6 +44,8 @@ function readFile(input) {
       structured.MainObject = mainObject; // Add back the mainObject
       structured = buildGeometry(structured);
       scene.add(structured.MainObject);
+      animate();
+      document.getElementById('c').style.display = 'block';
       toggleLoader();
     };
   };
@@ -63,4 +65,5 @@ function toggleLoader() {
 }
 
 readIfcFile();
+document.getElementById('c').style.display = 'none';
 toggleLoader();

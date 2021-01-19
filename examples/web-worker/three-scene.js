@@ -88,6 +88,6 @@ function isMobile() {
   return 'ontouchstart' in document.documentElement;
 }
 
-animate();
+// animate();
 
-export { scene };
+export { scene, animate };
