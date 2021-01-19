@@ -1,15 +1,15 @@
 import { createExtrusion, createExtrusionsByPoints } from '../three-extrusion.js';
 import { ifcTypes as t } from '../../../utils/ifc-types.js';
 import { namedProps as n, ifcUnitsValue as i } from '../../../utils/global-constants.js';
-import { scene } from '../../../../examples/00/three-scene.js';
+// import { scene } from '../../../../examples/00/three-scene.js';
 
 function mapArbitraryProfileExtrusion(props) {
   return mapExtrusionByTypeOfProfile(props);
 }
 
 function mapArbitraryProfileWithVoidsExtrusion(props) {
-    props.holes = getInnerVoids(props);
-    return mapExtrusionByTypeOfProfile(props);
+  props.holes = getInnerVoids(props);
+  return mapExtrusionByTypeOfProfile(props);
 }
 
 function getInnerVoids(props) {
