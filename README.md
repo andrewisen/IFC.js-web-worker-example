@@ -6,38 +6,20 @@ This library converts any browser into an IFC viewer. It parses IFC entities to 
 
 ## Try it
 
-[Application](https://agviegas.github.io/IFC.js/examples/00/)
-
-[Example 01](https://agviegas.github.io/IFC.js/examples/01/)
-
-[Example 02](https://agviegas.github.io/IFC.js/examples/02/)
+[Web Worker Example](https://google.com/)
 
 ## Introduction
 
-IFC (Industry Foundation Classes) is an open format developed by the [Building Smart](https://www.buildingsmart.org/) for the exchange of information between applications of different developers in the AEC sector. IFC files generally contain much of the relevant information about a building, including all its geometry and the information associated with each element, possibly including measurement, structural, thermal, acoustic, economic or fire resistance data.
+A fork of [agviegas/IFC.js](https://github.com/agviegas/IFC.js).
+This repo uses [Web Workers](https://www.w3schools.com/html/html5_webworkers.asp) to build the IFC project.
 
-This project reads IFC files, structures their data in memory and converts them to Three.js custom geometric entities for display in any browser. Even though there are many libraries capable of parsing IFC formats, almost all of them depend on communication with a server, with all the disadvantages that this entails. The development of the parser entirely in JavaScript makes it possible to decentralise parsing, so that each client is able to read an IFC file and display its geometry and parameters to the user on its own.
+The purpose of this repo is to simply show one way to use Web Workers.
+I encourage you to experiment with this on your own.
 
-<a href="url"><img src="https://github.com/agviegas/IFC.js/blob/master/img/20201124_screenshot.jpg"  ></a>
-<a href="url"><img src="https://github.com/agviegas/IFC.js/blob/master/img/20201130_screenshot.jpg"  ></a>
+## How to use Web Workers
 
-## Contribution
+TODO
 
-Check the [CONTRIBUTING](https://github.com/agviegas/IFC.js/blob/master/CONTRIBUTING.md) documentation to find out how to take part in this project.
+### Info
 
-### Testing files
-You can find the IFC files for testing [here](https://drive.google.com/drive/folders/1wXLaf1wPaWzfEwWzu7kNTdJoOUqU6K0E?usp=sharing).
-
-Development:
-
-`npm run watch` for generating the build files with watch.
-`npm run dev` for running examples.
-
-Build:
-
-`npm run build` for generating the build files.
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Forked from [199f78f230f84ffe4d9105deb38b0e033cc6b715](https://github.com/agviegas/IFC.js/tree/199f78f230f84ffe4d9105deb38b0e033cc6b715) (2021-01-19).
