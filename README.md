@@ -6,7 +6,7 @@ This library converts any browser into an IFC viewer. It parses IFC entities to 
 
 ## Try it
 
-[Web Worker Example](https://google.com/)
+[Web Worker Example](https://github.andrewisen.se/ifc-web-worker/examples/web-worker/)
 
 ## Introduction
 
