@@ -1,11 +1,8 @@
-import { ifcTypes as t } from "../utils/ifc-types.js";
-import { createIfcItemsFinder } from "./items-finder.js";
-import { bindElements } from "./ifc-elements-binder.js";
-import {mainObject} from "../ifc-to-three.js/scene/mainObject.js"
-import {
-  namedProps as n,
-  structuredData as s,
-} from "../utils/global-constants.js";
+import { ifcTypes as t } from '../utils/ifc-types.js';
+import { createIfcItemsFinder } from './items-finder.js';
+import { bindElements } from './ifc-elements-binder.js';
+import { mainObject } from '../ifc-to-three.js/scene/mainObject.js';
+import { namedProps as n, structuredData as s } from '../utils/global-constants.js';
 
 function constructProject(ifcData) {
   const finder = createIfcItemsFinder(ifcData);
@@ -19,11 +16,11 @@ function constructProject(ifcData) {
     [s.products]: elements,
     [s.spaces]: spaces,
     [s.units]: units,
-    [s.mainObject]: mainObject,
+    [s.mainObject]: mainObject
   };
 }
 
-function get(finder, type){
+function get(finder, type) {
   return Object.values(finder.findByType(type));
 }
 
@@ -36,13 +33,7 @@ function bindAllElements(finder) {
 }
 
 function bindSpatialToSpatial(finder) {
-  bindElements(
-    finder,
-    t.IfcRelAggregates,
-    n.relatingObject,
-    n.relatedObjects,
-    n.hasSpatial
-  );
+  bindElements(finder, t.IfcRelAggregates, n.relatingObject, n.relatedObjects, n.hasSpatial);
 }
 
 function bindElementsToSpatial(finder) {
@@ -76,13 +67,7 @@ function bindFillingsToElements(finder) {
 }
 
 function bindTypesToElements(finder) {
-  bindElements(
-    finder,
-    t.IfcRelDefinesByType,
-    n.relatedObjects,
-    n.relatingType,
-    n.hasType
-  );
+  bindElements(finder, t.IfcRelDefinesByType, n.relatedObjects, n.relatingType, n.hasType);
 }
 
 export { constructProject };
