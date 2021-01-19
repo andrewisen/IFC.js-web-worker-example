@@ -14,13 +14,25 @@ onmessage = (e) => {
   const loaded = IFCjs.loadIfcFileItems(ifcData);
   const structured = IFCjs.constructProject(loaded);
 
-  structured.MainObject = undefined;
-
   /**
-   * DOMException:
-   * Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope':
-   * function onRotationChange() { quaternion.setFromEuler(rotation, false); } could not be cloned.
+   * The Web Worker cannot post the MainObject.
+   * It will give the following error:
+   * '''
+   *    DOMException:
+   *    Failed to execute 'postMessage' on 'DedicatedWorkerGlobalScope':
+   *    function onRotationChange() { quaternion.setFromEuler(rotation, false); } could not be cloned.
+   * '''
+   *
+   * This is because MainObject cannot be cloned using the structured clone algorithm.
+   *
+   * See:
+   * https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage
    */
 
+  structured.MainObject = undefined; // bye bye
+
+  /**
+   * See: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#sending_messages_to_and_from_a_dedicated_worker
+   */
   postMessage(structured);
 };

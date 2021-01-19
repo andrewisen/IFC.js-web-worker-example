@@ -1,9 +1,3 @@
-import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
-
-/**
- * Three.js scene
- */
-import { scene } from './three-scene.js';
 /**
  * See:
  * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
@@ -16,6 +10,19 @@ import { scene } from './three-scene.js';
  *
  */
 
+/**
+ * Make sure to include the Geometry bundle BEFORE (!) the scene.
+ * It will give an error otherwise.
+ */
+import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
+/**
+ * Three.js scene
+ */
+import { scene } from './three-scene.js';
+
+/**
+ * From Example 00
+ */
 export function readIfcFile() {
   const input = document.querySelector('input[type="file"]');
   input.addEventListener(
@@ -31,10 +38,10 @@ function readFile(input) {
   reader.onload = () => {
     toggleLoader();
     const ifcWorker = new Worker('worker.js'); // Assume Web Worker is supported
-    ifcWorker.postMessage(reader.result); // See "worker.js"
+    ifcWorker.postMessage(reader.result); // See the file "worker.js"
     ifcWorker.onmessage = function (e) {
-      let structured = e.data; // This is sent from the web worker, postMessage()
-      structured.MainObject = mainObject;
+      let structured = e.data; // This is the data from the web worker, i.e. postMessage()
+      structured.MainObject = mainObject; // Add back the mainObject
       structured = buildGeometry(structured);
       scene.add(structured.MainObject);
       toggleLoader();
@@ -43,6 +50,9 @@ function readFile(input) {
   reader.readAsText(input.files[0]);
 }
 
+/**
+ * Show or hide the Loader
+ */
 function toggleLoader() {
   var element = document.getElementById('loading');
   if (element.style.display === 'none') {
