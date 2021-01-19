@@ -1,7 +1,7 @@
 import { ifcTypes as t } from '../utils/ifc-types.js';
 import { createIfcItemsFinder } from './items-finder.js';
 import { bindElements } from './ifc-elements-binder.js';
-import { mainObject } from '../ifc-to-three.js/scene/mainObject.js';
+// import { mainObject } from '../ifc-to-three.js/scene/mainObject.js';
 import { namedProps as n, structuredData as s } from '../utils/global-constants.js';
 
 function constructProject(ifcData) {
@@ -16,7 +16,7 @@ function constructProject(ifcData) {
     [s.products]: elements,
     [s.spaces]: spaces,
     [s.units]: units,
-    [s.mainObject]: mainObject
+    [s.mainObject]: {} // mainObject
   };
 }
 
