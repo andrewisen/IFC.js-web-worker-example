@@ -1,18 +1,17 @@
 /**
- * See:
- * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+ * WEB WORKERS
  *
- * And:
- * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
  *
- * Modified code from:
- * https://github.com/mdn/simple-web-worker/blob/gh-pages/worker.js
+ * And: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API
+ *
+ * Also: https://github.com/mdn/simple-web-worker/blob/gh-pages/worker.js
  *
  */
 
 /**
  * Make sure to include the Geometry bundle BEFORE (!) the scene.
- * It will give an error otherwise.
+ * It might give an error otherwise - I have no idea why...
  */
 import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
 /**
