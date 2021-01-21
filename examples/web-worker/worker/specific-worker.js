@@ -6,24 +6,19 @@ importScripts('../../libs/chevrotain.min.js');
 importScripts('../../../build/IFC.specificWorker.js');
 onmessage = (e) => {
   //// DEBUG ////
-  // console.debug(`Starting ${e.data.ifcTypesGroupName}...`);
   console.time(e.data.ifcTypesGroupName);
   //// DEBUG ////
-
   /**
    * Get each ifcType from the GROUP
    */
   const ifcTypes = Object.values(e.data.ifcTypesGroup).map((ifcType) => {
     return ifcType;
   });
-
   /**
    * This is a rewrite constructRawIfcItems (src/ifc-parser/ifc-services/ifc-items-reader.js)
    */
   let ifcItems = [];
-
   const flatIfcItemList = IFCjs.separateIfcEntities(e.data.dataSection);
-
   flatIfcItemList.forEach((e) => {
     const ifcType = IFCjs.getIfcType(e);
     if (ifcTypes.includes(ifcType) === false) return;
@@ -40,9 +35,7 @@ onmessage = (e) => {
      */
     ifcItems.push(ifcObject);
   });
-
   const loaded = loadItems(ifcItems);
-
   //// DEBUG ////
   console.timeEnd(e.data.ifcTypesGroupName);
   //// DEBUG ////
