@@ -45,7 +45,7 @@ function readFile(input) {
    * Experiment with a fileSizeLimit that feels good :)
    */
   const fileSize = input.files[0].size;
-  const fileSizeLimit = 0; // 10485760; // 10 MB limit
+  const fileSizeLimit = 10485760; // 10 MB limit
   /**
    * The FileReader will be used as before
    */
