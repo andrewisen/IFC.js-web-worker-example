@@ -179,7 +179,7 @@ function readDataSection(ifcLine) {
 }
 
 function removeAllNewLines(ifcFile) {
-  return ifcFile.replace(regexp.allNewLines, " ");
+  return ifcFile.replace(regexp.allNewLines, ' ');
 }
 
 const ifcTypes = {
@@ -402,6 +402,7 @@ function createIfcItemsFinder(loadedIfc) {
 
 function bindElements(finder, type, relating, related, property) {
   const relations = finder.findByType(type);
+  if (Object.keys(relations).length === 0) return;
 
   const _isArray = isArray(Object.keys(relations)[0]);
 
