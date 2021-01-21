@@ -6,7 +6,7 @@ import { drawEdges } from './scene/edges.js';
 import { applyScale } from './geometry-transformer/units-applier.js';
 
 function buildGeometry(structured) {
-  // console.log(structured);
+  //console.log(structured);
   constructGeometries(structured);
   applyTransformations(structured);
   drawEdges(structured);
