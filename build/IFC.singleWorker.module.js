@@ -1381,8 +1381,9 @@ var IfcEntityFinder = /*#__PURE__*/function () {
       var _this = this;
 
       var matches = {};
+      var name = getName(ifcType);
       Object.keys(this.ifcData).forEach(function (e) {
-        if (_this.getType(e) === getName(ifcType)) {
+        if (_this.getType(e) === name) {
           matches[e] = _this.ifcData[e];
         }
       });
@@ -1418,8 +1419,11 @@ function createIfcItemsFinder(loadedIfc) {
 
 function bindElements(finder, type, relating, related, property) {
   var relations = finder.findByType(type);
+
+  var _isArray = isArray(Object.keys(relations)[0]);
+
   Object.values(relations).forEach(function (relation) {
-    return isArray(relation[relating]) ? bindMultiple(relation, relating, related, property) : bindSingle(relation, relating, related, property);
+    return _isArray ? bindMultiple(relation, relating, related, property) : bindSingle(relation, relating, related, property);
   });
 }
 

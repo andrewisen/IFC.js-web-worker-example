@@ -2319,7 +2319,7 @@ var IFCjs = (function (exports) {
   };
 
   function buildGeometry(structured) {
-    console.log(structured);
+    // console.log(structured);
     constructGeometries(structured);
     applyTransformations(structured);
     drawEdges(structured);
