@@ -14,11 +14,7 @@
  * It might give an error otherwise - I have no idea why...
  */
 import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
-/**
- * Three.js scene
- */
 import { scene, animate } from './three-scene.js';
-
 /**
  * From Example 00
  */
@@ -32,7 +28,6 @@ export function readIfcFile() {
     false
   );
 }
-
 /**
  * We will assume that Web Workers are supported.
  * Depending on the file size, we want to use multiple web workers.
@@ -61,7 +56,6 @@ function readFile(input) {
   };
   reader.readAsText(input.files[0]);
 }
-
 /**
  * Start by looking at how the single Web Worker works.
  */
@@ -79,7 +73,9 @@ function constructMultiWorker(result) {
   multiWorker.postMessage(result); // See the file "worker.js"
   multiWorker.onmessage = buildScene;
 }
-
+/**
+ * Build the Three.js scene from the Web Worker
+ */
 function buildScene(e) {
   let structured = e.data; // This is the data from the web worker, i.e. postMessage()
   structured.MainObject = mainObject; // Add back the mainObject
