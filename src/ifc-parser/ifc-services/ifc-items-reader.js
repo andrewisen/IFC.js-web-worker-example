@@ -1,4 +1,4 @@
-import { itemsReaderValues as i } from "../../utils/global-constants.js";
+import { itemsReaderValues as i } from '../../utils/global-constants.js';
 
 const regexp = {
   allNewLines: /\r?\n|\r/g,
@@ -7,7 +7,7 @@ const regexp = {
   singleIfcItems: /#\d+\s*=\s*IFC.+?\)(;\s*(?=#\d*)|;\s*$)/g,
   expressId: /^#\d+/,
   rawIfcType: /IFC\w+/,
-  rawIfcProperties: /\(.+?(?=;\s*$)/,
+  rawIfcProperties: /\(.+?(?=;\s*$)/
 };
 
 function readIfcItems(loadedIfc) {
@@ -19,7 +19,7 @@ function extractSections(loadedIfc) {
   const ifcPlaneText = removeAllNewLines(loadedIfc);
   return {
     headerSection: readHeaderSection(ifcPlaneText),
-    dataSection: readDataSection(ifcPlaneText),
+    dataSection: readDataSection(ifcPlaneText)
   };
 }
 
@@ -29,7 +29,7 @@ function constructRawIfcItems(dataSection) {
     return {
       [i.expressId]: getId(e),
       [i.type]: getIfcType(e),
-      [i.properties]: getIfcRawProperties(e),
+      [i.properties]: getIfcRawProperties(e)
     };
   });
 }
@@ -47,7 +47,7 @@ function readDataSection(ifcLine) {
 }
 
 function removeAllNewLines(ifcFile) {
-  return ifcFile.replace(regexp.allNewLines, " ");
+  return ifcFile.replace(regexp.allNewLines, ' ');
 }
 
 function getId(rawIfcLine) {
@@ -62,4 +62,11 @@ function getIfcRawProperties(ifcLine) {
   return ifcLine.match(regexp.rawIfcProperties).toString();
 }
 
-export { readIfcItems };
+export {
+  readIfcItems,
+  extractSections,
+  separateIfcEntities,
+  getIfcType,
+  getId,
+  getIfcRawProperties
+};

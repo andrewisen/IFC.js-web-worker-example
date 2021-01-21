@@ -44,4 +44,4 @@ function isTypeSupported(ifcItem) {
   return Object.values(t).indexOf(ifcItem[i.type]) > -1;
 }
 
-export { loadIfcFileItems };
+export { loadIfcFileItems, parseAndLoadItem, isTypeSupported };

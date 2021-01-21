@@ -32,25 +32,62 @@ export function readIfcFile() {
     false
   );
 }
+
+/**
+ * We will assume that Web Workers are supported.
+ * Depending on the file size, we want to use multiple web workers.
+ *
+ * In other words:
+ * There is no need to use multiple Web Works on small files.
+ */
 function readFile(input) {
+  /**
+   * Experiment with a fileSizeLimit that feels good :)
+   */
+  const fileSize = input.files[0].size;
+  const fileSizeLimit = 0; // 10485760; // 10 MB limit
+  /**
+   * The FileReader will be used as before
+   */
   const reader = new FileReader();
   reader.onload = () => {
-    toggleLoader();
-    const ifcWorker = new Worker('worker.js'); // Assume Web Worker is supported
-    ifcWorker.postMessage(reader.result); // See the file "worker.js"
-    ifcWorker.onmessage = function (e) {
-      let structured = e.data; // This is the data from the web worker, i.e. postMessage()
-      structured.MainObject = mainObject; // Add back the mainObject
-      structured = buildGeometry(structured);
-      scene.add(structured.MainObject);
-      animate();
-      document.getElementById('c').style.display = 'block';
-      toggleLoader();
-    };
+    toggleLoader(); // Start loading animation
+    if (fileSize < fileSizeLimit) {
+      constructSingleWorker(reader.result);
+    } else {
+      constructMultiWorker(reader.result);
+    }
   };
   reader.readAsText(input.files[0]);
 }
 
+/**
+ * Start by looking at how the single Web Worker works.
+ */
+function constructSingleWorker(result) {
+  const singleWorker = new Worker('worker/single-worker.js');
+  singleWorker.postMessage(result); // See the file "worker.js"
+  singleWorker.onmessage = buildScene;
+}
+/**
+ * The Multi Web Worker works in a similar way.
+ * But I recommend that you start with the Single Web Worker
+ */
+function constructMultiWorker(result) {
+  const multiWorker = new Worker('worker/multi-worker.js');
+  multiWorker.postMessage(result); // See the file "worker.js"
+  multiWorker.onmessage = buildScene;
+}
+
+function buildScene(e) {
+  let structured = e.data; // This is the data from the web worker, i.e. postMessage()
+  structured.MainObject = mainObject; // Add back the mainObject
+  structured = buildGeometry(structured);
+  scene.add(structured.MainObject);
+  animate();
+  document.getElementById('c').style.display = 'block';
+  toggleLoader(); // End loading animation
+}
 /**
  * Show or hide the Loader
  */
