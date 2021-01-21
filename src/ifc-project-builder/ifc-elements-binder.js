@@ -1,5 +1,6 @@
 function bindElements(finder, type, relating, related, property) {
   const relations = finder.findByType(type);
+  if (Object.keys(relations).length === 0) return;
   const _isArray = isArray(Object.keys(relations)[0]);
   Object.values(relations).forEach((relation) => {
     return _isArray
