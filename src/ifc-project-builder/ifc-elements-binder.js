@@ -1,15 +1,15 @@
 function bindElements(finder, type, relating, related, property) {
   const relations = finder.findByType(type);
+  const _isArray = isArray(Object.keys(relations)[0]);
   Object.values(relations).forEach((relation) => {
-    return isArray(relation[relating])
+    return _isArray
       ? bindMultiple(relation, relating, related, property)
       : bindSingle(relation, relating, related, property);
   });
 }
 
 function bindSingle(relation, relating, related, property) {
-  if (!relation[relating][property])
-    relation[relating][property] = [];
+  if (!relation[relating][property]) relation[relating][property] = [];
   bind(relation[relating][property], relation, related);
 }
 

@@ -1,5 +1,5 @@
-import { namedProps as n } from "../utils/global-constants.js";
-import { getName } from "../utils/ifc-types.js";
+import { namedProps as n } from '../utils/global-constants.js';
+import { getName } from '../utils/ifc-types.js';
 
 class IfcEntityFinder {
   constructor(ifcData) {
@@ -8,8 +8,9 @@ class IfcEntityFinder {
 
   findByType(ifcType) {
     const matches = {};
+    const name = getName(ifcType);
     Object.keys(this.ifcData).forEach((e) => {
-      if (this.getType(e) === getName(ifcType)) {
+      if (this.getType(e) === name) {
         matches[e] = this.ifcData[e];
       }
     });
