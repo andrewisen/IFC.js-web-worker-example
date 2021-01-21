@@ -21,7 +21,9 @@ onmessage = (e) => {
    * This is a rewrite constructRawIfcItems (src/ifc-parser/ifc-services/ifc-items-reader.js)
    */
   let ifcItems = [];
+
   const flatIfcItemList = IFCjs.separateIfcEntities(e.data.dataSection);
+
   flatIfcItemList.forEach((e) => {
     const ifcType = IFCjs.getIfcType(e);
     if (ifcTypes.includes(ifcType) === false) return;
@@ -40,6 +42,7 @@ onmessage = (e) => {
   });
 
   const loaded = loadItems(ifcItems);
+
   //// DEBUG ////
   console.timeEnd(e.data.ifcTypesGroupName);
   //// DEBUG ////
@@ -52,8 +55,9 @@ onmessage = (e) => {
 function loadItems(ifcData) {
   const loadedItems = {};
   ifcData.map((ifcItem) => {
-    if (IFCjs.isTypeSupported(ifcItem))
+    if (IFCjs.isTypeSupported(ifcItem)) {
       loadedItems[ifcItem[IFCjs.i.expressId]] = IFCjs.parseAndLoadItem(ifcItem);
+    }
   });
   return loadedItems;
 }

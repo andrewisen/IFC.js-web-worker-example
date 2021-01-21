@@ -48,9 +48,7 @@ onmessage = (e) => {
 const constructWebWorker = (dataSection, ifcTypesGroupName, ifcTypesGroup) => {
   const specificWorker = new Worker('specific-worker.js');
   ++running;
-  specificWorker.onmessage = function (e) {
-    workerDone(e);
-  };
+  specificWorker.onmessage = workerDone;
   specificWorker.postMessage({
     dataSection,
     ifcTypesGroupName,
