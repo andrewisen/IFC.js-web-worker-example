@@ -9,4 +9,5 @@ export {
   getId,
   getIfcRawProperties
 } from './ifc-parser/ifc-services/ifc-items-reader.js';
+
 export { structuredData as s, itemsReaderValues as i } from './utils/global-constants.js';
