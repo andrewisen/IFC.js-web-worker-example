@@ -7,7 +7,7 @@ importScripts('../../../build/IFC.specificWorker.js');
 onmessage = (e) => {
   //// DEBUG ////
   // console.debug(`Starting ${e.data.ifcTypesGroupName}...`);
-  // console.time(e.data.ifcTypesGroupName);
+  console.time(e.data.ifcTypesGroupName);
   //// DEBUG ////
 
   /**
@@ -41,7 +41,7 @@ onmessage = (e) => {
 
   const loaded = loadItems(ifcItems);
   //// DEBUG ////
-  // console.timeEnd(e.data.ifcTypesGroupName);
+  console.timeEnd(e.data.ifcTypesGroupName);
   //// DEBUG ////
   postMessage({ loaded, ifcTypesGroupName: e.data.ifcTypesGroupName });
 };

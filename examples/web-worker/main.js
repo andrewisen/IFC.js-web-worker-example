@@ -52,6 +52,7 @@ function readFile(input) {
   const reader = new FileReader();
   reader.onload = () => {
     toggleLoader(); // Start loading animation
+    console.time('TOTAL:');
     if (fileSize < fileSizeLimit) {
       constructSingleWorker(reader.result);
     } else {
@@ -87,6 +88,7 @@ function buildScene(e) {
   animate();
   document.getElementById('c').style.display = 'block';
   toggleLoader(); // End loading animation
+  console.timeEnd('TOTAL:');
 }
 /**
  * Show or hide the Loader
