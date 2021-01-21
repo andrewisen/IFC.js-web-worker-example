@@ -41,7 +41,6 @@ onmessage = (e) => {
   //// DEBUG ////
   postMessage({ loaded, ifcTypesGroupName: e.data.ifcTypesGroupName });
 };
-
 /**
  * We will not call referenceEntities() since the references will likely not exists
  */
