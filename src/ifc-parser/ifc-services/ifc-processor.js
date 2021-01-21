@@ -21,6 +21,7 @@ import { itemsReaderValues as i, namedProps as n } from '../../utils/global-cons
 
 function loadIfcFileItems(ifcData) {
   const ifcItems = readIfcItems(ifcData);
+
   // findRemainingTypes(ifcItems);
   return loadItems(ifcItems);
 }
@@ -44,4 +45,4 @@ function isTypeSupported(ifcItem) {
   return Object.values(t).indexOf(ifcItem[i.type]) > -1;
 }
 
-export { loadIfcFileItems, parseAndLoadItem, isTypeSupported };
+export { loadIfcFileItems, loadItems, parseAndLoadItem, isTypeSupported };

@@ -18,7 +18,7 @@ function readIfcItems(loadedIfc) {
 function extractSections(loadedIfc) {
   const ifcPlaneText = removeAllNewLines(loadedIfc);
   return {
-    headerSection: readHeaderSection(ifcPlaneText),
+    // headerSection: readHeaderSection(ifcPlaneText),
     dataSection: readDataSection(ifcPlaneText)
   };
 }

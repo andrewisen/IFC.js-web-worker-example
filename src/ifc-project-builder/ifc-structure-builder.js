@@ -6,6 +6,7 @@ import { namedProps as n, structuredData as s } from '../utils/global-constants.
 
 function constructProject(ifcData) {
   const finder = createIfcItemsFinder(ifcData);
+
   bindAllElements(finder);
   const ifcProjects = get(finder, t.IfcProject);
   const elements = finder.findAllProducts(ifcProjects);
@@ -70,4 +71,13 @@ function bindTypesToElements(finder) {
   bindElements(finder, t.IfcRelDefinesByType, n.relatedObjects, n.relatingType, n.hasType);
 }
 
-export { constructProject };
+export {
+  get,
+  bindElements,
+  constructProject,
+  bindSpatialToSpatial,
+  bindElementsToSpatial,
+  bindVoidsToElements,
+  bindFillingsToElements,
+  bindTypesToElements
+};
