@@ -111,6 +111,50 @@ Take a look at these commits:
 - Remove mainObject: [d84a4864a8573c6d5cd2e67fef14439e701f453d](https://github.com/andrewisen/IFC.js-web-worker-example/commit/d84a4864a8573c6d5cd2e67fef14439e701f453d)
 - Remove conflicting imports: [c336a38860d5dda1cc10759c840948177f48ad37](https://github.com/andrewisen/IFC.js-web-worker-example/commit/c336a38860d5dda1cc10759c840948177f48ad37)
 
+## Multi-threading using Web Workers
+
+For a large file, say > 20MB, a `single` Web Worker will not be enough.
+We can use `multiple` Web Workers speed up the build process.
+
+One might call this multi-threading or parallelizing.
+This might be a new concept if you only have worked with web development...
+
+Anyways, modern web browser makes this super easy.
+
+### Prerequisites
+
+- A modern Web Browser
+- An understanding what multi-threading is
+- Patience you must have, my young Padawan
+
+### Work with modern browsers
+
+We need to spawn additional, descendant dedicated Web Workers.
+Most modern browser should be able to do this...
+
+But not Safari (you can imagine my frustration since I work on a Mac).
+
+Anyways, see: [https://www.chromestatus.com/feature/6080438103703552](https://www.chromestatus.com/feature/6080438103703552)
+
+Since we use [Babel's](https://babeljs.io/docs/en/) [preset-env](https://babeljs.io/docs/en/babel-preset-env), we can use the [Browserslist](https://github.com/browserslist/browserslist) integration.
+
+Simply look at the `package.json` file.
+
+```javascript
+{
+  ...
+  "browserslist":"last 2 Chrome versions"
+  ...
+}
+```
+
+### What should we multi-thread?
+
+This can be a bit tricky to explain... so yhea.
+Please return to this page within some days :)
+
+### TODO
+
 ## Info
 
 Forked from [199f78f230f84ffe4d9105deb38b0e033cc6b715](https://github.com/agviegas/IFC.js/tree/199f78f230f84ffe4d9105deb38b0e033cc6b715) (2021-01-19).
