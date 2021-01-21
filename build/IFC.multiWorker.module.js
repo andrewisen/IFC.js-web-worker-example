@@ -1,74 +1,4 @@
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-var namedProps = {
+const namedProps = {
   agreementFlag: "AgreementFlag",
   axis: "Axis",
   axis1: "Axis1",
@@ -153,11 +83,11 @@ var namedProps = {
   yDim: "YDim",
   zDim: "ZDim"
 };
-var typeValue = {
+const typeValue = {
   type: "type",
   value: "value"
 };
-var structuredData = {
+const structuredData = {
   ifcProject: "IfcProject",
   products: "Products",
   spaces: "Spaces",
@@ -165,13 +95,13 @@ var structuredData = {
   mainObject: "MainObject"
 };
 
-var ifcDataTypes = {
+const ifcDataTypes = {
   asterisk: "Asterisk",
   anything: "Anything",
   bool: "Boolean",
   date: "Date",
-  "default": "DefaultValue",
-  "enum": "Enum",
+  default: "DefaultValue",
+  enum: "Enum",
   id: "ExpressId",
   idSet: "ExpressIdSet",
   value: "IfcValue",
@@ -183,13 +113,13 @@ var ifcDataTypes = {
 };
 
 function referenceEntities(items) {
-  var key;
+  let key;
 
   for (key in items) {
-    var ifcLine = items[key];
+    const ifcLine = items[key];
 
     for (key in ifcLine) {
-      var ifcProperty = ifcLine[key];
+      const ifcProperty = ifcLine[key];
       referenceSingleItem(ifcProperty, items);
       referenceMultipleItems(ifcProperty, items);
       trimExplicitTypes(ifcLine, key);
@@ -207,11 +137,9 @@ function isSingleItemValid(ifcProperty, items) {
 
 function referenceMultipleItems(ifcProperty, items) {
   if (ifcProperty[typeValue.type] === ifcDataTypes.idSet) {
-    var property = ifcProperty;
-
-    var values = _toConsumableArray(property[typeValue.value]);
-
-    property[typeValue.value] = values.map(function (e) {
+    const property = ifcProperty;
+    const values = [...property[typeValue.value]];
+    property[typeValue.value] = values.map(e => {
       return items.hasOwnProperty(e) ? items[e] : e;
     });
   }
@@ -224,11 +152,11 @@ function isItemWithReference(item) {
 }
 
 function trimExplicitTypes(ifcLine, key) {
-  var value = ifcLine[key][typeValue.value];
+  const value = ifcLine[key][typeValue.value];
   if (value) ifcLine[key] = value;
 }
 
-var regexp = {
+const regexp = {
   allNewLines: /\r?\n|\r/g,
   headerSection: /HEADER;.+?(?=ENDSEC;)/,
   dataSection: /DATA;\s+.+(?=ENDSEC;)/,
@@ -239,15 +167,11 @@ var regexp = {
 };
 
 function extractSections(loadedIfc) {
-  var ifcPlaneText = removeAllNewLines(loadedIfc);
+  const ifcPlaneText = removeAllNewLines(loadedIfc);
   return {
-    headerSection: readHeaderSection(ifcPlaneText),
+    // headerSection: readHeaderSection(ifcPlaneText),
     dataSection: readDataSection(ifcPlaneText)
   };
-}
-
-function readHeaderSection(ifcLine) {
-  return ifcLine.match(regexp.headerSection)[0];
 }
 
 function readDataSection(ifcLine) {
@@ -255,12 +179,10 @@ function readDataSection(ifcLine) {
 }
 
 function removeAllNewLines(ifcFile) {
-  return ifcFile.replace(regexp.allNewLines, ' ');
+  return ifcFile.replace(regexp.allNewLines, " ");
 }
 
-var _ifcTypes;
-
-var ifcTypes = (_ifcTypes = {
+const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
   IfcBeam: "IFCBEAM",
@@ -331,70 +253,159 @@ var ifcTypes = (_ifcTypes = {
   IfcProductDefinitionShape: "IFCPRODUCTDEFINITIONSHAPE",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
-  IfcTrimmedCurve: "IFCTRIMMEDCURVE"
-}, _defineProperty(_ifcTypes, "IfcGeometricSet", "IFCGEOMETRICSET"), _defineProperty(_ifcTypes, "IfcArbitraryOpenProfileDef", "IFCARBITRARYOPENPROFILEDEF"), _defineProperty(_ifcTypes, "IfcSurfaceOfLinearExtrusion", "IFCSURFACEOFLINEAREXTRUSION"), _defineProperty(_ifcTypes, "IfcApplication", "IFCAPPLICATION"), _defineProperty(_ifcTypes, "IfcOrganization", "IFCORGANIZATION"), _defineProperty(_ifcTypes, "IfcOwnerHistory", "IFCOWNERHISTORY"), _defineProperty(_ifcTypes, "IfcPerson", "IFCPERSON"), _defineProperty(_ifcTypes, "IfcPersonAndOrganization", "IFCPERSONANDORGANIZATION"), _defineProperty(_ifcTypes, "IfcPostalAddress", "IFCPOSTALADDRESS"), _defineProperty(_ifcTypes, "IfcMaterial", "IFCMATERIAL"), _defineProperty(_ifcTypes, "IfcMaterialLayer", "IFCMATERIALLAYER"), _defineProperty(_ifcTypes, "IfcMaterialLayerSet", "IFCMATERIALLAYERSET"), _defineProperty(_ifcTypes, "IfcMaterialLayerSetUsage", "IFCMATERIALLAYERSETUSAGE"), _defineProperty(_ifcTypes, "IfcMaterialList", "IFCMATERIALLIST"), _defineProperty(_ifcTypes, "IfcAnnotation", "IFCANNOTATION"), _defineProperty(_ifcTypes, "IfcAnnotationFillArea", "IFCANNOTATIONFILLAREA"), _defineProperty(_ifcTypes, "IfcColourRgb", "IFCCOLOURRGB"), _defineProperty(_ifcTypes, "IfcCurveStyle", "IFCCURVESTYLE"), _defineProperty(_ifcTypes, "IfcCurveStyleFont", "IFCCURVESTYLEFONT"), _defineProperty(_ifcTypes, "IfcCurveStyleFontPattern", "IFCCURVESTYLEFONTPATTERN"), _defineProperty(_ifcTypes, "IfcDraughtingPreDefinedCurveFont", "IFCDRAUGHTINGPREDEFINEDCURVEFONT"), _defineProperty(_ifcTypes, "IfcFillAreaStyle", "IFCFILLAREASTYLE"), _defineProperty(_ifcTypes, "IfcFillAreaStyleHatching", "IFCFILLAREASTYLEHATCHING"), _defineProperty(_ifcTypes, "IfcMaterialDefinitionRepresentation", "IFCMATERIALDEFINITIONREPRESENTATION"), _defineProperty(_ifcTypes, "IfcRepresentationMap", "IFCREPRESENTATIONMAP"), _defineProperty(_ifcTypes, "IfcPresentationLayerAssignment", "IFCPRESENTATIONLAYERASSIGNMENT"), _defineProperty(_ifcTypes, "IfcPresentationStyleAssignment", "IFCPRESENTATIONSTYLEASSIGNMENT"), _defineProperty(_ifcTypes, "IfcStyledItem", "IFCSTYLEDITEM"), _defineProperty(_ifcTypes, "IfcStyledRepresentation", "IFCSTYLEDREPRESENTATION"), _defineProperty(_ifcTypes, "IfcSurfaceStyle", "IFCSURFACESTYLE"), _defineProperty(_ifcTypes, "IfcSurfaceStyleRendering", "IFCSURFACESTYLERENDERING"), _defineProperty(_ifcTypes, "IfcSurfaceStyleShading", "IFCSURFACESTYLESHADING"), _defineProperty(_ifcTypes, "IfcTextLiteralWithExtent", "IFCTEXTLITERALWITHEXTENT"), _defineProperty(_ifcTypes, "IfcTextStyle", "IFCTEXTSTYLE"), _defineProperty(_ifcTypes, "IfcTextStyleFontModel", "IFCTEXTSTYLEFONTMODEL"), _defineProperty(_ifcTypes, "IfcTextStyleForDefinedFont", "IFCTEXTSTYLEFORDEFINEDFONT"), _defineProperty(_ifcTypes, "IfcActor", "IFCACTOR"), _defineProperty(_ifcTypes, "IfcAirTerminalType", "IFCAIRTERMINALTYPE"), _defineProperty(_ifcTypes, "IfcBuildingElementProxyType", "IFCBUILDINGELEMENTPROXYTYPE"), _defineProperty(_ifcTypes, "IfcColumnType", "IFCCOLUMNTYPE"), _defineProperty(_ifcTypes, "IfcCoveringType", "IFCCOVERINGTYPE"), _defineProperty(_ifcTypes, "IfcCurtainWallType", "IFCCURTAINWALLTYPE"), _defineProperty(_ifcTypes, "IfcFurnitureType", "IFCFURNITURETYPE"), _defineProperty(_ifcTypes, "IfcDistributionElementType", "IFCDISTRIBUTIONELEMENTTYPE"), _defineProperty(_ifcTypes, "IfcDoorType", "IFCDOORTYPE"), _defineProperty(_ifcTypes, "IfcDoorLiningProperties", "IFCDOORLININGPROPERTIES"), _defineProperty(_ifcTypes, "IfcDoorPanelProperties", "IFCDOORPANELPROPERTIES"), _defineProperty(_ifcTypes, "IfcDoorStyle", "IFCDOORSTYLE"), _defineProperty(_ifcTypes, "IfcLightFixtureType", "IFCLIGHTFIXTURETYPE"), _defineProperty(_ifcTypes, "IfcMemberType", "IFCMEMBERTYPE"), _defineProperty(_ifcTypes, "IfcPlateType", "IFCPLATETYPE"), _defineProperty(_ifcTypes, "IfcPropertySet", "IFCPROPERTYSET"), _defineProperty(_ifcTypes, "IfcPropertySingleValue", "IFCPROPERTYSINGLEVALUE"), _defineProperty(_ifcTypes, "IfcSanitaryTerminalType", "IFCSANITARYTERMINALTYPE"), _defineProperty(_ifcTypes, "IfcSpaceType", "IFCSPACETYPE"), _defineProperty(_ifcTypes, "IfcStairFlightType", "IFCSTAIRFLIGHTTYPE"), _defineProperty(_ifcTypes, "IfcSystemFurnitureElementType", "IFCSYSTEMFURNITUREELEMENTTYPE"), _defineProperty(_ifcTypes, "IfcWallType", "IFCWALLTYPE"), _defineProperty(_ifcTypes, "IfcWindowStyle", "IFCWINDOWSTYLE"), _defineProperty(_ifcTypes, "IfcSlabType", "IFCSLABTYPE"), _defineProperty(_ifcTypes, "IfcWindowLiningProperties", "IFCWINDOWLININGPROPERTIES"), _defineProperty(_ifcTypes, "IfcElementQuantity", "IFCELEMENTQUANTITY"), _defineProperty(_ifcTypes, "IfcQuantityArea", "IFCQUANTITYAREA"), _defineProperty(_ifcTypes, "IfcQuantityLength", "IFCQUANTITYLENGTH"), _defineProperty(_ifcTypes, "IfcQuantityVolume", "IFCQUANTITYVOLUME"), _defineProperty(_ifcTypes, "IfcRelAggregates", "IFCRELAGGREGATES"), _defineProperty(_ifcTypes, "IfcRelAssignsToActor", "IFCRELASSIGNSTOACTOR"), _defineProperty(_ifcTypes, "IfcRelAssignsToGroup", "IFCRELASSIGNSTOGROUP"), _defineProperty(_ifcTypes, "IfcRelAssociatesClassification", "IFCRELASSOCIATESCLASSIFICATION"), _defineProperty(_ifcTypes, "IfcRelAssociatesMaterial", "IFCRELASSOCIATESMATERIAL"), _defineProperty(_ifcTypes, "IfcRelConnectsPathElements", "IFCRELCONNECTSPATHELEMENTS"), _defineProperty(_ifcTypes, "IfcRelConnectsPortToElement", "IFCRELCONNECTSPORTTOELEMENT"), _defineProperty(_ifcTypes, "IfcRelContainedInSpatialStructure", "IFCRELCONTAINEDINSPATIALSTRUCTURE"), _defineProperty(_ifcTypes, "IfcRelDefinesByProperties", "IFCRELDEFINESBYPROPERTIES"), _defineProperty(_ifcTypes, "IfcRelDefinesByType", "IFCRELDEFINESBYTYPE"), _defineProperty(_ifcTypes, "IfcRelFillsElement", "IFCRELFILLSELEMENT"), _defineProperty(_ifcTypes, "IfcGroup", "IFCGROUP"), _defineProperty(_ifcTypes, "IfcRelSpaceBoundary", "IFCRELSPACEBOUNDARY"), _defineProperty(_ifcTypes, "IfcRelServicesBuildings", "IFCRELSERVICESBUILDINGS"), _defineProperty(_ifcTypes, "IfcRelVoidsElement", "IFCRELVOIDSELEMENT"), _defineProperty(_ifcTypes, "IfcBuilding", "IFCBUILDING"), _defineProperty(_ifcTypes, "IfcBuildingStorey", "IFCBUILDINGSTOREY"), _defineProperty(_ifcTypes, "IfcProject", "IFCPROJECT"), _defineProperty(_ifcTypes, "IfcSite", "IFCSITE"), _defineProperty(_ifcTypes, "IfcSpace", "IFCSPACE"), _defineProperty(_ifcTypes, "IfcDistributionPort", "IFCDISTRIBUTIONPORT"), _defineProperty(_ifcTypes, "IfcSystem", "IFCSYSTEM"), _defineProperty(_ifcTypes, "IfcConversionBasedUnit", "IFCCONVERSIONBASEDUNIT"), _defineProperty(_ifcTypes, "IfcDerivedUnit", "IFCDERIVEDUNIT"), _defineProperty(_ifcTypes, "IfcDerivedUnitElement", "IFCDERIVEDUNITELEMENT"), _defineProperty(_ifcTypes, "IfcDimensionalExponents", "IFCDIMENSIONALEXPONENTS"), _defineProperty(_ifcTypes, "IfcMeasureWithUnit", "IFCMEASUREWITHUNIT"), _defineProperty(_ifcTypes, "IfcSIUnit", "IFCSIUNIT"), _defineProperty(_ifcTypes, "IfcUnitAssignment", "IFCUNITASSIGNMENT"), _ifcTypes);
+  IfcTrimmedCurve: "IFCTRIMMEDCURVE",
+  IfcGeometricSet: "IFCGEOMETRICSET",
+  IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
+  IfcSurfaceOfLinearExtrusion: "IFCSURFACEOFLINEAREXTRUSION",
+  //Identities
+  IfcApplication: "IFCAPPLICATION",
+  IfcOrganization: "IFCORGANIZATION",
+  IfcOwnerHistory: "IFCOWNERHISTORY",
+  IfcPerson: "IFCPERSON",
+  IfcPersonAndOrganization: "IFCPERSONANDORGANIZATION",
+  IfcPostalAddress: "IFCPOSTALADDRESS",
+  //Materials
+  IfcMaterial: "IFCMATERIAL",
+  IfcMaterialLayer: "IFCMATERIALLAYER",
+  IfcMaterialLayerSet: "IFCMATERIALLAYERSET",
+  IfcMaterialLayerSetUsage: "IFCMATERIALLAYERSETUSAGE",
+  IfcMaterialList: "IFCMATERIALLIST",
+  //Presentation
+  IfcAnnotation: "IFCANNOTATION",
+  IfcAnnotationFillArea: "IFCANNOTATIONFILLAREA",
+  IfcColourRgb: "IFCCOLOURRGB",
+  IfcCurveStyle: "IFCCURVESTYLE",
+  IfcCurveStyleFont: "IFCCURVESTYLEFONT",
+  IfcCurveStyleFontPattern: "IFCCURVESTYLEFONTPATTERN",
+  IfcDraughtingPreDefinedCurveFont: "IFCDRAUGHTINGPREDEFINEDCURVEFONT",
+  IfcFillAreaStyle: "IFCFILLAREASTYLE",
+  IfcFillAreaStyleHatching: "IFCFILLAREASTYLEHATCHING",
+  IfcMaterialDefinitionRepresentation: "IFCMATERIALDEFINITIONREPRESENTATION",
+  IfcRepresentationMap: "IFCREPRESENTATIONMAP",
+  IfcPresentationLayerAssignment: "IFCPRESENTATIONLAYERASSIGNMENT",
+  IfcPresentationStyleAssignment: "IFCPRESENTATIONSTYLEASSIGNMENT",
+  IfcStyledItem: "IFCSTYLEDITEM",
+  IfcStyledRepresentation: "IFCSTYLEDREPRESENTATION",
+  IfcSurfaceStyle: "IFCSURFACESTYLE",
+  IfcSurfaceStyleRendering: "IFCSURFACESTYLERENDERING",
+  IfcSurfaceStyleShading: "IFCSURFACESTYLESHADING",
+  IfcTextLiteralWithExtent: "IFCTEXTLITERALWITHEXTENT",
+  IfcTextStyle: "IFCTEXTSTYLE",
+  IfcTextStyleFontModel: "IFCTEXTSTYLEFONTMODEL",
+  IfcTextStyleForDefinedFont: "IFCTEXTSTYLEFORDEFINEDFONT",
+  //Project
+  IfcActor: "IFCACTOR",
+  //Properties
+  IfcAirTerminalType: "IFCAIRTERMINALTYPE",
+  IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
+  IfcColumnType: "IFCCOLUMNTYPE",
+  IfcCoveringType: "IFCCOVERINGTYPE",
+  IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+  IfcFurnitureType: "IFCFURNITURETYPE",
+  IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
+  IfcDoorType: "IFCDOORTYPE",
+  IfcDoorLiningProperties: "IFCDOORLININGPROPERTIES",
+  IfcDoorPanelProperties: "IFCDOORPANELPROPERTIES",
+  IfcDoorStyle: "IFCDOORSTYLE",
+  IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
+  IfcMemberType: "IFCMEMBERTYPE",
+  IfcPlateType: "IFCPLATETYPE",
+  IfcPropertySet: "IFCPROPERTYSET",
+  IfcPropertySingleValue: "IFCPROPERTYSINGLEVALUE",
+  IfcSanitaryTerminalType: "IFCSANITARYTERMINALTYPE",
+  IfcSpaceType: "IFCSPACETYPE",
+  IfcStairFlightType: "IFCSTAIRFLIGHTTYPE",
+  IfcSystemFurnitureElementType: "IFCSYSTEMFURNITUREELEMENTTYPE",
+  IfcWallType: "IFCWALLTYPE",
+  IfcWindowStyle: "IFCWINDOWSTYLE",
+  IfcSlabType: "IFCSLABTYPE",
+  IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+  //Quantities
+  IfcElementQuantity: "IFCELEMENTQUANTITY",
+  IfcQuantityArea: "IFCQUANTITYAREA",
+  IfcQuantityLength: "IFCQUANTITYLENGTH",
+  IfcQuantityVolume: "IFCQUANTITYVOLUME",
+  // Relationships
+  IfcRelAggregates: "IFCRELAGGREGATES",
+  IfcRelAssignsToActor: "IFCRELASSIGNSTOACTOR",
+  IfcRelAssignsToGroup: "IFCRELASSIGNSTOGROUP",
+  IfcRelAssociatesClassification: "IFCRELASSOCIATESCLASSIFICATION",
+  IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
+  IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+  IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
+  IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
+  IfcRelDefinesByProperties: "IFCRELDEFINESBYPROPERTIES",
+  IfcRelDefinesByType: "IFCRELDEFINESBYTYPE",
+  IfcRelFillsElement: "IFCRELFILLSELEMENT",
+  IfcGroup: "IFCGROUP",
+  IfcRelSpaceBoundary: "IFCRELSPACEBOUNDARY",
+  IfcRelServicesBuildings: "IFCRELSERVICESBUILDINGS",
+  IfcRelVoidsElement: "IFCRELVOIDSELEMENT",
+  //Spatial structure elements
+  IfcBuilding: "IFCBUILDING",
+  IfcBuildingStorey: "IFCBUILDINGSTOREY",
+  IfcProject: "IFCPROJECT",
+  IfcSite: "IFCSITE",
+  IfcSpace: "IFCSPACE",
+  //Systems
+  IfcDistributionPort: "IFCDISTRIBUTIONPORT",
+  IfcSystem: "IFCSYSTEM",
+  //Units
+  IfcConversionBasedUnit: "IFCCONVERSIONBASEDUNIT",
+  IfcDerivedUnit: "IFCDERIVEDUNIT",
+  IfcDerivedUnitElement: "IFCDERIVEDUNITELEMENT",
+  IfcDimensionalExponents: "IFCDIMENSIONALEXPONENTS",
+  IfcMeasureWithUnit: "IFCMEASUREWITHUNIT",
+  IfcSIUnit: "IFCSIUNIT",
+  IfcUnitAssignment: "IFCUNITASSIGNMENT"
+};
 
 function getName(ifcType) {
-  return Object.keys(ifcTypes).find(function (key) {
-    return ifcTypes[key] === ifcType;
-  });
+  return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
 }
 
-var IfcEntityFinder = /*#__PURE__*/function () {
-  function IfcEntityFinder(ifcData) {
-    _classCallCheck(this, IfcEntityFinder);
-
+class IfcEntityFinder {
+  constructor(ifcData) {
     this.ifcData = ifcData;
   }
 
-  _createClass(IfcEntityFinder, [{
-    key: "findByType",
-    value: function findByType(ifcType) {
-      var _this = this;
+  findByType(ifcType) {
+    const matches = {};
+    const name = getName(ifcType);
+    Object.keys(this.ifcData).forEach(e => {
+      if (this.getType(e) === name) {
+        matches[e] = this.ifcData[e];
+      }
+    });
+    return matches;
+  }
 
-      var matches = {};
-      var name = getName(ifcType);
-      Object.keys(this.ifcData).forEach(function (e) {
-        if (_this.getType(e) === name) {
-          matches[e] = _this.ifcData[e];
-        }
-      });
-      return matches;
-    }
-  }, {
-    key: "getType",
-    value: function getType(id) {
-      return this.ifcData[id][namedProps.ifcClass];
-    }
-  }, {
-    key: "findAllProducts",
-    value: function findAllProducts(spatialStructureElements) {
-      var _this2 = this;
+  getType(id) {
+    return this.ifcData[id][namedProps.ifcClass];
+  }
 
-      var elements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      spatialStructureElements.forEach(function (spatial) {
-        var buildingElementsHere = spatial[namedProps.hasBuildingElements];
-        var spatialElementsHere = spatial[namedProps.hasSpatial];
-        if (buildingElementsHere) elements.push.apply(elements, _toConsumableArray(buildingElementsHere));
-        if (spatialElementsHere) _this2.findAllProducts(spatialElementsHere, elements);
-      });
-      return elements;
-    }
-  }]);
+  findAllProducts(spatialStructureElements, elements = []) {
+    spatialStructureElements.forEach(spatial => {
+      const buildingElementsHere = spatial[namedProps.hasBuildingElements];
+      const spatialElementsHere = spatial[namedProps.hasSpatial];
+      if (buildingElementsHere) elements.push(...buildingElementsHere);
+      if (spatialElementsHere) this.findAllProducts(spatialElementsHere, elements);
+    });
+    return elements;
+  }
 
-  return IfcEntityFinder;
-}();
+}
 
 function createIfcItemsFinder(loadedIfc) {
   return new IfcEntityFinder(loadedIfc);
 }
 
 function bindElements(finder, type, relating, related, property) {
-  var relations = finder.findByType(type);
+  const relations = finder.findByType(type);
 
-  var _isArray = isArray(Object.keys(relations)[0]);
+  const _isArray = isArray(Object.keys(relations)[0]);
 
-  Object.values(relations).forEach(function (relation) {
+  Object.values(relations).forEach(relation => {
     return _isArray ? bindMultiple(relation, relating, related, property) : bindSingle(relation, relating, related, property);
   });
 }
@@ -405,14 +416,14 @@ function bindSingle(relation, relating, related, property) {
 }
 
 function bindMultiple(relation, relating, related, property) {
-  relation[relating].forEach(function (e) {
+  relation[relating].forEach(e => {
     if (!e[property]) e[property] = [];
     bind(e[property], relation, related);
   });
 }
 
 function bind(property, relation, related) {
-  return isArray(relation[related]) ? property.push.apply(property, _toConsumableArray(relation[related])) : property.push(relation[related]);
+  return isArray(relation[related]) ? property.push(...relation[related]) : property.push(relation[related]);
 }
 
 function isArray(item) {
@@ -420,15 +431,20 @@ function isArray(item) {
 }
 
 function constructProject(ifcData) {
-  var _ref;
-
-  var finder = createIfcItemsFinder(ifcData);
+  const finder = createIfcItemsFinder(ifcData);
   bindAllElements(finder);
-  var ifcProjects = get(finder, ifcTypes.IfcProject);
-  var elements = finder.findAllProducts(ifcProjects);
-  var spaces = get(finder, ifcTypes.IfcSpace);
-  var units = get(finder, ifcTypes.IfcUnitAssignment)[0];
-  return _ref = {}, _defineProperty(_ref, structuredData.ifcProject, ifcProjects), _defineProperty(_ref, structuredData.products, elements), _defineProperty(_ref, structuredData.spaces, spaces), _defineProperty(_ref, structuredData.units, units), _defineProperty(_ref, structuredData.mainObject, {}), _ref;
+  const ifcProjects = get(finder, ifcTypes.IfcProject);
+  const elements = finder.findAllProducts(ifcProjects);
+  const spaces = get(finder, ifcTypes.IfcSpace);
+  const units = get(finder, ifcTypes.IfcUnitAssignment)[0];
+  return {
+    [structuredData.ifcProject]: ifcProjects,
+    [structuredData.products]: elements,
+    [structuredData.spaces]: spaces,
+    [structuredData.units]: units,
+    [structuredData.mainObject]: {} // mainObject
+
+  };
 }
 
 function get(finder, type) {

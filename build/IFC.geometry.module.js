@@ -1,86 +1,4 @@
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-var namedProps = {
+const namedProps = {
   agreementFlag: "AgreementFlag",
   axis: "Axis",
   axis1: "Axis1",
@@ -165,11 +83,11 @@ var namedProps = {
   yDim: "YDim",
   zDim: "ZDim"
 };
-var ifcUnitsValue = {
+const ifcUnitsValue = {
   value: "Value",
   unit: "IfcUnit"
 };
-var geometryTypes = {
+const geometryTypes = {
   annotation2D: "Annotation2D",
   curve2D: "Curve2D",
   sweptSolid: "SweptSolid",
@@ -181,31 +99,30 @@ var geometryTypes = {
   surfaceModel: "SurfaceModel",
   boundingBox: "BoundingBox"
 };
-var structuredData = {
+const structuredData = {
   ifcProject: "IfcProject",
   products: "Products",
   spaces: "Spaces",
   units: "Units",
   mainObject: "MainObject"
 };
-var pivots = {
+const pivots = {
   pivots: "Pivots",
   locat: "Locations",
   xAxis: "xRotation",
   yAxis: "yRotation",
   zAxis: "zRotation"
 };
-var defaultValue = "$";
+const defaultValue = "$";
 
 function trackLocalTransform(product, placement, property) {
-  var transform = initializeTransform(product, property);
-
-  var _getTransform = getTransform(placement),
-      locat = _getTransform.locat,
-      xAxis = _getTransform.xAxis,
-      yAxis = _getTransform.yAxis,
-      zAxis = _getTransform.zAxis;
-
+  const transform = initializeTransform(product, property);
+  const {
+    locat,
+    xAxis,
+    yAxis,
+    zAxis
+  } = getTransform(placement);
   transform[pivots.locat].push(locat);
   transform[pivots.xAxis].push(xAxis);
   transform[pivots.yAxis].push(yAxis);
@@ -213,54 +130,60 @@ function trackLocalTransform(product, placement, property) {
 }
 
 function initializeTransform(product, property) {
-  var _product$property;
-
-  if (!product[property]) product[property] = (_product$property = {}, _defineProperty(_product$property, pivots.locat, []), _defineProperty(_product$property, pivots.xAxis, []), _defineProperty(_product$property, pivots.yAxis, []), _defineProperty(_product$property, pivots.zAxis, []), _product$property);
+  if (!product[property]) product[property] = {
+    [pivots.locat]: [],
+    [pivots.xAxis]: [],
+    [pivots.yAxis]: [],
+    [pivots.zAxis]: []
+  };
   return product[property];
 }
 
 function getTransform(placement) {
-  var locat = getLocat(placement);
-  var xAxis = getAxisX(placement);
-  var zAxis = getAxisZ(placement);
-  var yAxis = getAxisY(zAxis, xAxis);
+  const locat = getLocat(placement);
+  const xAxis = getAxisX(placement);
+  const zAxis = getAxisZ(placement);
+  const yAxis = getAxisY(zAxis, xAxis);
   return {
-    locat: locat,
-    xAxis: xAxis,
-    yAxis: yAxis,
-    zAxis: zAxis
+    locat,
+    xAxis,
+    yAxis,
+    zAxis
   };
 }
 
 function getTransformOfGeometry(placement) {
-  var _ref;
-
-  var _getTransform2 = getTransform(placement),
-      locat = _getTransform2.locat,
-      xAxis = _getTransform2.xAxis,
-      yAxis = _getTransform2.yAxis,
-      zAxis = _getTransform2.zAxis;
-
-  return _ref = {}, _defineProperty(_ref, pivots.locat, [locat]), _defineProperty(_ref, pivots.xAxis, [xAxis]), _defineProperty(_ref, pivots.yAxis, [yAxis]), _defineProperty(_ref, pivots.zAxis, [zAxis]), _ref;
+  const {
+    locat,
+    xAxis,
+    yAxis,
+    zAxis
+  } = getTransform(placement);
+  return {
+    [pivots.locat]: [locat],
+    [pivots.xAxis]: [xAxis],
+    [pivots.yAxis]: [yAxis],
+    [pivots.zAxis]: [zAxis]
+  };
 }
 
 function getLocat(placement) {
   if (isInvalid(placement[namedProps.location])) return [0, 0, 0];
-  var location = placement[namedProps.location][namedProps.coordinates];
+  const location = placement[namedProps.location][namedProps.coordinates];
   if (location.length === 2) location.push(0);
   return location;
 }
 
 function getAxisX(placement) {
   if (isInvalid(placement[namedProps.refDirection])) return [1, 0, 0];
-  var x = placement[namedProps.refDirection][namedProps.dirRatios];
+  let x = placement[namedProps.refDirection][namedProps.dirRatios];
   if (x.length === 2) x.push(0);
   return x;
 }
 
 function getAxisZ(placement) {
   if (isInvalid(placement[namedProps.axis])) return [0, 0, 1];
-  var z = placement[namedProps.axis][namedProps.dirRatios];
+  const z = placement[namedProps.axis][namedProps.dirRatios];
   if (z.length === 2) z.push(0);
   return z;
 } //In IFC the axis Y is implicit (computed from X and Z)
@@ -275,18 +198,16 @@ function isInvalid(prop) {
   return false;
 }
 
-var mainObject = new THREE.Object3D();
+const mainObject = new THREE.Object3D();
 
 function applyTransforms(product, property) {
-  var pivots = getPivots(product[property]);
-  product[namedProps.geometry].forEach(function (geometry) {
-    return applyTransform(geometry, pivots);
-  });
+  const pivots = getPivots(product[property]);
+  product[namedProps.geometry].forEach(geometry => applyTransform(geometry, pivots));
 }
 
 function applyTransformsToGeometry(geometry, placement) {
-  var transform = getTransformOfGeometry(placement);
-  var pivots = getPivots(transform);
+  const transform = getTransformOfGeometry(placement);
+  const pivots = getPivots(transform);
   applyTransform(geometry, pivots);
 }
 
@@ -300,31 +221,23 @@ function applyTransform(geometry, pivots) {
 }
 
 function attachGeometryToScene(geometry) {
-  if (geometry.constructor === Array) return geometry.forEach(function (e) {
-    return attachGeometryToScene(e);
-  });
+  if (geometry.constructor === Array) return geometry.forEach(e => attachGeometryToScene(e));
   return mainObject.attach(geometry);
 }
 
 function bindGeometryToPivots(geometry, pivots) {
-  if (geometry.constructor === Array) return geometry.forEach(function (e) {
-    return bindGeometryToPivots(e, pivots);
-  });
+  if (geometry.constructor === Array) return geometry.forEach(e => bindGeometryToPivots(e, pivots));
   pivots[pivots.length - 1].add(geometry);
 }
 
 function getPivots(transform) {
-  var pivots$1 = [];
-  var locations = transform[pivots.locat] || [];
+  const pivots$1 = [];
+  const locations = transform[pivots.locat] || [];
 
-  for (var i = locations.length - 1; i >= 0; i--) {
-    var _pivot$position;
-
-    var pivot = new THREE.Object3D();
+  for (let i = locations.length - 1; i >= 0; i--) {
+    const pivot = new THREE.Object3D();
     pivot.rotation.setFromRotationMatrix(getRotMat(transform, i));
-
-    (_pivot$position = pivot.position).set.apply(_pivot$position, _toConsumableArray(locations[i]));
-
+    pivot.position.set(...locations[i]);
     pivots$1.push(pivot);
   }
 
@@ -333,37 +246,37 @@ function getPivots(transform) {
 }
 
 function bindPivots(pivots) {
-  for (var i = 0; i < pivots.length; i++) {
+  for (let i = 0; i < pivots.length; i++) {
     if (pivots[i + 1]) pivots[i].add(pivots[i + 1]);
   }
 }
 
 function getRotMat(transform, index) {
-  var _getTransforms = getTransforms(transform, index),
-      x = _getTransforms.x,
-      y = _getTransforms.y,
-      z = _getTransforms.z;
-
-  var directionMatrix = new THREE.Matrix4();
-  var rotationMatrix = new THREE.Matrix4();
+  const {
+    x,
+    y,
+    z
+  } = getTransforms(transform, index);
+  const directionMatrix = new THREE.Matrix4();
+  const rotationMatrix = new THREE.Matrix4();
   directionMatrix.set(x[0], x[1], x[2], 0, y[0], y[1], y[2], 0, z[0], z[1], z[2], 0, 0, 0, 0, 1);
   rotationMatrix.getInverse(directionMatrix);
   return rotationMatrix;
 }
 
 function getTransforms(transform, index) {
-  var x = transform[pivots.xAxis][index];
-  var y = transform[pivots.yAxis][index];
-  var z = transform[pivots.zAxis][index];
+  const x = transform[pivots.xAxis][index];
+  const y = transform[pivots.yAxis][index];
+  const z = transform[pivots.zAxis][index];
   return {
-    x: x,
-    y: y,
-    z: z
+    x,
+    y,
+    z
   };
 }
 
 function applyTransformations(structured) {
-  structured[structuredData.products].forEach(function (product) {
+  structured[structuredData.products].forEach(product => {
     applyTransform$1(product);
   });
 }
@@ -376,7 +289,7 @@ function applyTransform$1(product) {
 }
 
 function applyTransformToItems(items) {
-  if (items) items.forEach(function (item) {
+  if (items) items.forEach(item => {
     getTransforms$1(item, getPlacement(item));
     applyTransforms(item, namedProps.transform);
   });
@@ -385,7 +298,7 @@ function applyTransformToItems(items) {
 
 function getTransforms$1(product, objPlacement) {
   try {
-    var placement = objPlacement[namedProps.relativePlacement];
+    const placement = objPlacement[namedProps.relativePlacement];
     trackLocalTransform(product, placement, namedProps.transform);
     if (objPlacement[namedProps.placementRelTo] != defaultValue) getTransforms$1(product, objPlacement[namedProps.placementRelTo]);
   } catch (e) {
@@ -402,22 +315,20 @@ function getPlacement(product) {
 }
 
 function createLine(coordinates) {
-  var material = new THREE.LineBasicMaterial({
+  const material = new THREE.LineBasicMaterial({
     linecap: "round",
     color: 0xff0000
   });
-  var points = [];
-  coordinates.forEach(function (e) {
+  const points = [];
+  coordinates.forEach(e => {
     points.push(new THREE.Vector3(e[0], e[1]));
   });
-  var geometry = new THREE.BufferGeometry().setFromPoints(points);
-  var line = new THREE.Line(geometry, material);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
   return line;
 }
 
-var _ifcTypes;
-
-var ifcTypes = (_ifcTypes = {
+const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
   IfcBeam: "IFCBEAM",
@@ -488,31 +399,134 @@ var ifcTypes = (_ifcTypes = {
   IfcProductDefinitionShape: "IFCPRODUCTDEFINITIONSHAPE",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
-  IfcTrimmedCurve: "IFCTRIMMEDCURVE"
-}, _defineProperty(_ifcTypes, "IfcGeometricSet", "IFCGEOMETRICSET"), _defineProperty(_ifcTypes, "IfcArbitraryOpenProfileDef", "IFCARBITRARYOPENPROFILEDEF"), _defineProperty(_ifcTypes, "IfcSurfaceOfLinearExtrusion", "IFCSURFACEOFLINEAREXTRUSION"), _defineProperty(_ifcTypes, "IfcApplication", "IFCAPPLICATION"), _defineProperty(_ifcTypes, "IfcOrganization", "IFCORGANIZATION"), _defineProperty(_ifcTypes, "IfcOwnerHistory", "IFCOWNERHISTORY"), _defineProperty(_ifcTypes, "IfcPerson", "IFCPERSON"), _defineProperty(_ifcTypes, "IfcPersonAndOrganization", "IFCPERSONANDORGANIZATION"), _defineProperty(_ifcTypes, "IfcPostalAddress", "IFCPOSTALADDRESS"), _defineProperty(_ifcTypes, "IfcMaterial", "IFCMATERIAL"), _defineProperty(_ifcTypes, "IfcMaterialLayer", "IFCMATERIALLAYER"), _defineProperty(_ifcTypes, "IfcMaterialLayerSet", "IFCMATERIALLAYERSET"), _defineProperty(_ifcTypes, "IfcMaterialLayerSetUsage", "IFCMATERIALLAYERSETUSAGE"), _defineProperty(_ifcTypes, "IfcMaterialList", "IFCMATERIALLIST"), _defineProperty(_ifcTypes, "IfcAnnotation", "IFCANNOTATION"), _defineProperty(_ifcTypes, "IfcAnnotationFillArea", "IFCANNOTATIONFILLAREA"), _defineProperty(_ifcTypes, "IfcColourRgb", "IFCCOLOURRGB"), _defineProperty(_ifcTypes, "IfcCurveStyle", "IFCCURVESTYLE"), _defineProperty(_ifcTypes, "IfcCurveStyleFont", "IFCCURVESTYLEFONT"), _defineProperty(_ifcTypes, "IfcCurveStyleFontPattern", "IFCCURVESTYLEFONTPATTERN"), _defineProperty(_ifcTypes, "IfcDraughtingPreDefinedCurveFont", "IFCDRAUGHTINGPREDEFINEDCURVEFONT"), _defineProperty(_ifcTypes, "IfcFillAreaStyle", "IFCFILLAREASTYLE"), _defineProperty(_ifcTypes, "IfcFillAreaStyleHatching", "IFCFILLAREASTYLEHATCHING"), _defineProperty(_ifcTypes, "IfcMaterialDefinitionRepresentation", "IFCMATERIALDEFINITIONREPRESENTATION"), _defineProperty(_ifcTypes, "IfcRepresentationMap", "IFCREPRESENTATIONMAP"), _defineProperty(_ifcTypes, "IfcPresentationLayerAssignment", "IFCPRESENTATIONLAYERASSIGNMENT"), _defineProperty(_ifcTypes, "IfcPresentationStyleAssignment", "IFCPRESENTATIONSTYLEASSIGNMENT"), _defineProperty(_ifcTypes, "IfcStyledItem", "IFCSTYLEDITEM"), _defineProperty(_ifcTypes, "IfcStyledRepresentation", "IFCSTYLEDREPRESENTATION"), _defineProperty(_ifcTypes, "IfcSurfaceStyle", "IFCSURFACESTYLE"), _defineProperty(_ifcTypes, "IfcSurfaceStyleRendering", "IFCSURFACESTYLERENDERING"), _defineProperty(_ifcTypes, "IfcSurfaceStyleShading", "IFCSURFACESTYLESHADING"), _defineProperty(_ifcTypes, "IfcTextLiteralWithExtent", "IFCTEXTLITERALWITHEXTENT"), _defineProperty(_ifcTypes, "IfcTextStyle", "IFCTEXTSTYLE"), _defineProperty(_ifcTypes, "IfcTextStyleFontModel", "IFCTEXTSTYLEFONTMODEL"), _defineProperty(_ifcTypes, "IfcTextStyleForDefinedFont", "IFCTEXTSTYLEFORDEFINEDFONT"), _defineProperty(_ifcTypes, "IfcActor", "IFCACTOR"), _defineProperty(_ifcTypes, "IfcAirTerminalType", "IFCAIRTERMINALTYPE"), _defineProperty(_ifcTypes, "IfcBuildingElementProxyType", "IFCBUILDINGELEMENTPROXYTYPE"), _defineProperty(_ifcTypes, "IfcColumnType", "IFCCOLUMNTYPE"), _defineProperty(_ifcTypes, "IfcCoveringType", "IFCCOVERINGTYPE"), _defineProperty(_ifcTypes, "IfcCurtainWallType", "IFCCURTAINWALLTYPE"), _defineProperty(_ifcTypes, "IfcFurnitureType", "IFCFURNITURETYPE"), _defineProperty(_ifcTypes, "IfcDistributionElementType", "IFCDISTRIBUTIONELEMENTTYPE"), _defineProperty(_ifcTypes, "IfcDoorType", "IFCDOORTYPE"), _defineProperty(_ifcTypes, "IfcDoorLiningProperties", "IFCDOORLININGPROPERTIES"), _defineProperty(_ifcTypes, "IfcDoorPanelProperties", "IFCDOORPANELPROPERTIES"), _defineProperty(_ifcTypes, "IfcDoorStyle", "IFCDOORSTYLE"), _defineProperty(_ifcTypes, "IfcLightFixtureType", "IFCLIGHTFIXTURETYPE"), _defineProperty(_ifcTypes, "IfcMemberType", "IFCMEMBERTYPE"), _defineProperty(_ifcTypes, "IfcPlateType", "IFCPLATETYPE"), _defineProperty(_ifcTypes, "IfcPropertySet", "IFCPROPERTYSET"), _defineProperty(_ifcTypes, "IfcPropertySingleValue", "IFCPROPERTYSINGLEVALUE"), _defineProperty(_ifcTypes, "IfcSanitaryTerminalType", "IFCSANITARYTERMINALTYPE"), _defineProperty(_ifcTypes, "IfcSpaceType", "IFCSPACETYPE"), _defineProperty(_ifcTypes, "IfcStairFlightType", "IFCSTAIRFLIGHTTYPE"), _defineProperty(_ifcTypes, "IfcSystemFurnitureElementType", "IFCSYSTEMFURNITUREELEMENTTYPE"), _defineProperty(_ifcTypes, "IfcWallType", "IFCWALLTYPE"), _defineProperty(_ifcTypes, "IfcWindowStyle", "IFCWINDOWSTYLE"), _defineProperty(_ifcTypes, "IfcSlabType", "IFCSLABTYPE"), _defineProperty(_ifcTypes, "IfcWindowLiningProperties", "IFCWINDOWLININGPROPERTIES"), _defineProperty(_ifcTypes, "IfcElementQuantity", "IFCELEMENTQUANTITY"), _defineProperty(_ifcTypes, "IfcQuantityArea", "IFCQUANTITYAREA"), _defineProperty(_ifcTypes, "IfcQuantityLength", "IFCQUANTITYLENGTH"), _defineProperty(_ifcTypes, "IfcQuantityVolume", "IFCQUANTITYVOLUME"), _defineProperty(_ifcTypes, "IfcRelAggregates", "IFCRELAGGREGATES"), _defineProperty(_ifcTypes, "IfcRelAssignsToActor", "IFCRELASSIGNSTOACTOR"), _defineProperty(_ifcTypes, "IfcRelAssignsToGroup", "IFCRELASSIGNSTOGROUP"), _defineProperty(_ifcTypes, "IfcRelAssociatesClassification", "IFCRELASSOCIATESCLASSIFICATION"), _defineProperty(_ifcTypes, "IfcRelAssociatesMaterial", "IFCRELASSOCIATESMATERIAL"), _defineProperty(_ifcTypes, "IfcRelConnectsPathElements", "IFCRELCONNECTSPATHELEMENTS"), _defineProperty(_ifcTypes, "IfcRelConnectsPortToElement", "IFCRELCONNECTSPORTTOELEMENT"), _defineProperty(_ifcTypes, "IfcRelContainedInSpatialStructure", "IFCRELCONTAINEDINSPATIALSTRUCTURE"), _defineProperty(_ifcTypes, "IfcRelDefinesByProperties", "IFCRELDEFINESBYPROPERTIES"), _defineProperty(_ifcTypes, "IfcRelDefinesByType", "IFCRELDEFINESBYTYPE"), _defineProperty(_ifcTypes, "IfcRelFillsElement", "IFCRELFILLSELEMENT"), _defineProperty(_ifcTypes, "IfcGroup", "IFCGROUP"), _defineProperty(_ifcTypes, "IfcRelSpaceBoundary", "IFCRELSPACEBOUNDARY"), _defineProperty(_ifcTypes, "IfcRelServicesBuildings", "IFCRELSERVICESBUILDINGS"), _defineProperty(_ifcTypes, "IfcRelVoidsElement", "IFCRELVOIDSELEMENT"), _defineProperty(_ifcTypes, "IfcBuilding", "IFCBUILDING"), _defineProperty(_ifcTypes, "IfcBuildingStorey", "IFCBUILDINGSTOREY"), _defineProperty(_ifcTypes, "IfcProject", "IFCPROJECT"), _defineProperty(_ifcTypes, "IfcSite", "IFCSITE"), _defineProperty(_ifcTypes, "IfcSpace", "IFCSPACE"), _defineProperty(_ifcTypes, "IfcDistributionPort", "IFCDISTRIBUTIONPORT"), _defineProperty(_ifcTypes, "IfcSystem", "IFCSYSTEM"), _defineProperty(_ifcTypes, "IfcConversionBasedUnit", "IFCCONVERSIONBASEDUNIT"), _defineProperty(_ifcTypes, "IfcDerivedUnit", "IFCDERIVEDUNIT"), _defineProperty(_ifcTypes, "IfcDerivedUnitElement", "IFCDERIVEDUNITELEMENT"), _defineProperty(_ifcTypes, "IfcDimensionalExponents", "IFCDIMENSIONALEXPONENTS"), _defineProperty(_ifcTypes, "IfcMeasureWithUnit", "IFCMEASUREWITHUNIT"), _defineProperty(_ifcTypes, "IfcSIUnit", "IFCSIUNIT"), _defineProperty(_ifcTypes, "IfcUnitAssignment", "IFCUNITASSIGNMENT"), _ifcTypes);
+  IfcTrimmedCurve: "IFCTRIMMEDCURVE",
+  IfcGeometricSet: "IFCGEOMETRICSET",
+  IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
+  IfcSurfaceOfLinearExtrusion: "IFCSURFACEOFLINEAREXTRUSION",
+  //Identities
+  IfcApplication: "IFCAPPLICATION",
+  IfcOrganization: "IFCORGANIZATION",
+  IfcOwnerHistory: "IFCOWNERHISTORY",
+  IfcPerson: "IFCPERSON",
+  IfcPersonAndOrganization: "IFCPERSONANDORGANIZATION",
+  IfcPostalAddress: "IFCPOSTALADDRESS",
+  //Materials
+  IfcMaterial: "IFCMATERIAL",
+  IfcMaterialLayer: "IFCMATERIALLAYER",
+  IfcMaterialLayerSet: "IFCMATERIALLAYERSET",
+  IfcMaterialLayerSetUsage: "IFCMATERIALLAYERSETUSAGE",
+  IfcMaterialList: "IFCMATERIALLIST",
+  //Presentation
+  IfcAnnotation: "IFCANNOTATION",
+  IfcAnnotationFillArea: "IFCANNOTATIONFILLAREA",
+  IfcColourRgb: "IFCCOLOURRGB",
+  IfcCurveStyle: "IFCCURVESTYLE",
+  IfcCurveStyleFont: "IFCCURVESTYLEFONT",
+  IfcCurveStyleFontPattern: "IFCCURVESTYLEFONTPATTERN",
+  IfcDraughtingPreDefinedCurveFont: "IFCDRAUGHTINGPREDEFINEDCURVEFONT",
+  IfcFillAreaStyle: "IFCFILLAREASTYLE",
+  IfcFillAreaStyleHatching: "IFCFILLAREASTYLEHATCHING",
+  IfcMaterialDefinitionRepresentation: "IFCMATERIALDEFINITIONREPRESENTATION",
+  IfcRepresentationMap: "IFCREPRESENTATIONMAP",
+  IfcPresentationLayerAssignment: "IFCPRESENTATIONLAYERASSIGNMENT",
+  IfcPresentationStyleAssignment: "IFCPRESENTATIONSTYLEASSIGNMENT",
+  IfcStyledItem: "IFCSTYLEDITEM",
+  IfcStyledRepresentation: "IFCSTYLEDREPRESENTATION",
+  IfcSurfaceStyle: "IFCSURFACESTYLE",
+  IfcSurfaceStyleRendering: "IFCSURFACESTYLERENDERING",
+  IfcSurfaceStyleShading: "IFCSURFACESTYLESHADING",
+  IfcTextLiteralWithExtent: "IFCTEXTLITERALWITHEXTENT",
+  IfcTextStyle: "IFCTEXTSTYLE",
+  IfcTextStyleFontModel: "IFCTEXTSTYLEFONTMODEL",
+  IfcTextStyleForDefinedFont: "IFCTEXTSTYLEFORDEFINEDFONT",
+  //Project
+  IfcActor: "IFCACTOR",
+  //Properties
+  IfcAirTerminalType: "IFCAIRTERMINALTYPE",
+  IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
+  IfcColumnType: "IFCCOLUMNTYPE",
+  IfcCoveringType: "IFCCOVERINGTYPE",
+  IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+  IfcFurnitureType: "IFCFURNITURETYPE",
+  IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
+  IfcDoorType: "IFCDOORTYPE",
+  IfcDoorLiningProperties: "IFCDOORLININGPROPERTIES",
+  IfcDoorPanelProperties: "IFCDOORPANELPROPERTIES",
+  IfcDoorStyle: "IFCDOORSTYLE",
+  IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
+  IfcMemberType: "IFCMEMBERTYPE",
+  IfcPlateType: "IFCPLATETYPE",
+  IfcPropertySet: "IFCPROPERTYSET",
+  IfcPropertySingleValue: "IFCPROPERTYSINGLEVALUE",
+  IfcSanitaryTerminalType: "IFCSANITARYTERMINALTYPE",
+  IfcSpaceType: "IFCSPACETYPE",
+  IfcStairFlightType: "IFCSTAIRFLIGHTTYPE",
+  IfcSystemFurnitureElementType: "IFCSYSTEMFURNITUREELEMENTTYPE",
+  IfcWallType: "IFCWALLTYPE",
+  IfcWindowStyle: "IFCWINDOWSTYLE",
+  IfcSlabType: "IFCSLABTYPE",
+  IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+  //Quantities
+  IfcElementQuantity: "IFCELEMENTQUANTITY",
+  IfcQuantityArea: "IFCQUANTITYAREA",
+  IfcQuantityLength: "IFCQUANTITYLENGTH",
+  IfcQuantityVolume: "IFCQUANTITYVOLUME",
+  // Relationships
+  IfcRelAggregates: "IFCRELAGGREGATES",
+  IfcRelAssignsToActor: "IFCRELASSIGNSTOACTOR",
+  IfcRelAssignsToGroup: "IFCRELASSIGNSTOGROUP",
+  IfcRelAssociatesClassification: "IFCRELASSOCIATESCLASSIFICATION",
+  IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
+  IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+  IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
+  IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
+  IfcRelDefinesByProperties: "IFCRELDEFINESBYPROPERTIES",
+  IfcRelDefinesByType: "IFCRELDEFINESBYTYPE",
+  IfcRelFillsElement: "IFCRELFILLSELEMENT",
+  IfcGroup: "IFCGROUP",
+  IfcRelSpaceBoundary: "IFCRELSPACEBOUNDARY",
+  IfcRelServicesBuildings: "IFCRELSERVICESBUILDINGS",
+  IfcRelVoidsElement: "IFCRELVOIDSELEMENT",
+  //Spatial structure elements
+  IfcBuilding: "IFCBUILDING",
+  IfcBuildingStorey: "IFCBUILDINGSTOREY",
+  IfcProject: "IFCPROJECT",
+  IfcSite: "IFCSITE",
+  IfcSpace: "IFCSPACE",
+  //Systems
+  IfcDistributionPort: "IFCDISTRIBUTIONPORT",
+  IfcSystem: "IFCSYSTEM",
+  //Units
+  IfcConversionBasedUnit: "IFCCONVERSIONBASEDUNIT",
+  IfcDerivedUnit: "IFCDERIVEDUNIT",
+  IfcDerivedUnitElement: "IFCDERIVEDUNITELEMENT",
+  IfcDimensionalExponents: "IFCDIMENSIONALEXPONENTS",
+  IfcMeasureWithUnit: "IFCMEASUREWITHUNIT",
+  IfcSIUnit: "IFCSIUNIT",
+  IfcUnitAssignment: "IFCUNITASSIGNMENT"
+};
 
 function getName(ifcType) {
-  return Object.keys(ifcTypes).find(function (key) {
-    return ifcTypes[key] === ifcType;
-  });
+  return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
 }
-
-var _curve2DMap;
 
 function mapCurve2D(shape) {
   return mapCurve(shape[namedProps.items][0]);
 }
 
 function mapCurve(shape) {
-  var ifcClass = shape[namedProps.ifcClass].toUpperCase();
+  const ifcClass = shape[namedProps.ifcClass].toUpperCase();
   return curve2DMap[ifcClass](shape);
 }
 
-var curve2DMap = (_curve2DMap = {}, _defineProperty(_curve2DMap, ifcTypes.IfcPolyline, mapPolyline), _defineProperty(_curve2DMap, ifcTypes.IfcTrimmedCurve, mapTrimmedCurve), _curve2DMap);
+const curve2DMap = {
+  [ifcTypes.IfcPolyline]: mapPolyline,
+  [ifcTypes.IfcTrimmedCurve]: mapTrimmedCurve
+};
 
 function mapPolyline(shape) {
-  var points = [];
-  shape[namedProps.points].forEach(function (point) {
+  const points = [];
+  shape[namedProps.points].forEach(point => {
     points.push(point[namedProps.coordinates]);
   });
   return createLine(points);
@@ -524,75 +538,63 @@ function mapTrimmedCurve(shape) {
   return new THREE.Object3D();
 }
 
-function createExtrusionsByPoints(points, depth) {
-  var dir = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0, 1];
-  var holes = arguments.length > 3 ? arguments[3] : undefined;
-  var shapePoints = [];
-  points.forEach(function (e) {
-    return shapePoints.push(new THREE.Vector3(e[1], -e[0]));
-  });
-  var shape = new THREE.Shape(shapePoints);
-  if (holes) holes.forEach(function (hole) {
-    return shape.holes.push(hole);
-  });
+function createExtrusionsByPoints(points, depth, dir = [0, 0, 1], holes) {
+  const shapePoints = [];
+  points.forEach(e => shapePoints.push(new THREE.Vector3(e[1], -e[0])));
+  const shape = new THREE.Shape(shapePoints);
+  if (holes) holes.forEach(hole => shape.holes.push(hole));
   return createExtrusion(shape, depth, dir);
 }
 
-function createCircularExtrusion(radius, depth) {
-  var thickness = arguments.length > 3 ? arguments[3] : undefined;
-  var segments = 36;
-  var outerShape = createCircularShape(radius, segments);
+function createCircularExtrusion(radius, depth, dir = [0, 0, 1], thickness) {
+  const segments = 36;
+  const outerShape = createCircularShape(radius, segments);
 
   if (thickness) {
-    var innerShape = createCircularShape(radius - thickness, segments);
+    const innerShape = createCircularShape(radius - thickness, segments);
     outerShape.holes.push(innerShape);
   }
 
-  return createExtrusion(outerShape, depth, [0, 0, 1]);
+  return createExtrusion(outerShape, depth, dir = [0, 0, 1]);
 }
 
-function createTubularExtrusion(radius, depth) {
-  var dir = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0, 1];
-  var thickness = arguments.length > 3 ? arguments[3] : undefined;
+function createTubularExtrusion(radius, depth, dir = [0, 0, 1], thickness) {
   return createCircularExtrusion(radius, depth, dir, thickness);
 }
 
 function createCircularShape(radius, segments) {
-  var coordinates = getCircleCoordinates(radius, segments);
-  var shape = new THREE.Shape();
-  shape.moveTo.apply(shape, _toConsumableArray(coordinates[0]));
-  coordinates.forEach(function (point) {
-    return shape.lineTo.apply(shape, _toConsumableArray(point));
-  });
+  const coordinates = getCircleCoordinates(radius, segments);
+  const shape = new THREE.Shape();
+  shape.moveTo(...coordinates[0]);
+  coordinates.forEach(point => shape.lineTo(...point));
   return shape;
 }
 
 function getCircleCoordinates(radius, steps) {
-  var coords = [];
+  const coords = [];
 
-  for (var i = 0; i < steps; i++) {
+  for (let i = 0; i < steps; i++) {
     coords.push([radius * Math.cos(2 * Math.PI * (i / steps)), radius * Math.sin(2 * Math.PI * (i / steps))]);
   }
 
-  coords.push(_toConsumableArray(coords[0]));
+  coords.push([...coords[0]]);
   return coords;
 }
 
-function createExtrusion(shape, depth) {
-  var dir = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [0, 0, 1];
-  var material = new THREE.MeshPhongMaterial({
+function createExtrusion(shape, depth, dir = [0, 0, 1]) {
+  const material = new THREE.MeshPhongMaterial({
     color: 0xffffff
   });
-  var extrudeSettings = getExtrudeSettings(depth, dir);
-  var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  const extrudeSettings = getExtrudeSettings(depth, dir);
+  const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
   applyExtrusionDirection(dir, geometry);
-  var mesh = new THREE.Mesh(geometry, material);
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.updateMatrix();
   return mesh;
 }
 
 function getExtrudeSettings(depth, dir) {
-  var path = getVerticalDirection(depth, dir);
+  const path = getVerticalDirection(depth, dir);
   return {
     bevelEnabled: false,
     steps: 1,
@@ -604,40 +606,40 @@ function getExtrudeSettings(depth, dir) {
 
 
 function applyExtrusionDirection(dir, geometry) {
-  var matrix = getTransformMatrix(dir);
+  const matrix = getTransformMatrix(dir);
   geometry.applyMatrix4(matrix);
 }
 
 function getTransformMatrix(dir) {
-  var matrix = new THREE.Matrix4();
-  var direction = new THREE.Vector3(dir[0], dir[1], dir[2]);
-  var Syx = 0,
-      Sxy = 0,
-      Sxz = 0,
-      Syz = 0;
-  var Szx = direction.y,
-      Szy = direction.x;
+  const matrix = new THREE.Matrix4();
+  const direction = new THREE.Vector3(dir[0], dir[1], dir[2]);
+  const Syx = 0,
+        Sxy = 0,
+        Sxz = 0,
+        Syz = 0;
+  const Szx = direction.y,
+        Szy = direction.x;
   return matrix.set(1, Syx, Szx, 0, Sxy, 1, Szy, 0, Sxz, Syz, 1, 0, 0, 0, 0, 1);
 }
 
 function getVerticalDirection(depth, dir) {
-  var v1 = new THREE.Vector3(0, 0, 0);
-  var v2 = new THREE.Vector3(0, 0, depth * dir[2]);
+  const v1 = new THREE.Vector3(0, 0, 0);
+  const v2 = new THREE.Vector3(0, 0, depth * dir[2]);
   return new THREE.LineCurve3(v1, v2);
 }
 
 function mapRectangleProfileExtrusion(extruded, product) {
   getRectProfileDimensions(extruded);
-  var position = extruded.profile[namedProps.position];
-  var points = getRectProfilePoints(extruded);
-  var geometry = createExtrusionsByPoints(points, extruded.depth, extruded.direction);
+  const position = extruded.profile[namedProps.position];
+  const points = getRectProfilePoints(extruded);
+  const geometry = createExtrusionsByPoints(points, extruded.depth, extruded.direction);
   applyTransformsToGeometry(geometry, position);
   return geometry;
 }
 
 function getRectProfilePoints(extruded) {
-  var halfWidth = extruded[namedProps.xDim] / 2;
-  var halfHeight = extruded[namedProps.yDim] / 2;
+  const halfWidth = extruded[namedProps.xDim] / 2;
+  const halfHeight = extruded[namedProps.yDim] / 2;
   return [[-halfWidth, halfHeight], [halfWidth, halfHeight], [halfWidth, -halfHeight], [-halfWidth, -halfHeight]];
 }
 
@@ -645,8 +647,6 @@ function getRectProfileDimensions(extruded) {
   extruded[namedProps.xDim] = extruded.profile[namedProps.xDim];
   extruded[namedProps.yDim] = extruded.profile[namedProps.yDim];
 }
-
-var _extrusionCurvesMap, _compositeCurvesMap;
 
 function mapArbitraryProfileExtrusion(props) {
   return mapExtrusionByTypeOfProfile(props);
@@ -658,123 +658,120 @@ function mapArbitraryProfileWithVoidsExtrusion(props) {
 }
 
 function getInnerVoids(props) {
-  var shapes = [];
-  var innerCurvesRep = props.profile[namedProps.innerCurves];
-  innerCurvesRep.forEach(function (curveRep) {
-    var typeOfProfile = curveRep[namedProps.ifcClass].toUpperCase();
+  const shapes = [];
+  const innerCurvesRep = props.profile[namedProps.innerCurves];
+  innerCurvesRep.forEach(curveRep => {
+    const typeOfProfile = curveRep[namedProps.ifcClass].toUpperCase();
     shapes.push(extrusionCurvesMap[typeOfProfile].shape(curveRep));
   });
   return shapes;
 }
 
 function mapExtrusionByTypeOfProfile(props) {
-  var typeOfProfile = props.profile[namedProps.outerCurve][namedProps.ifcClass].toUpperCase();
+  const typeOfProfile = props.profile[namedProps.outerCurve][namedProps.ifcClass].toUpperCase();
   return extrusionCurvesMap[typeOfProfile].extrusion(props);
 }
 
-var extrusionCurvesMap = (_extrusionCurvesMap = {}, _defineProperty(_extrusionCurvesMap, ifcTypes.IfcPolyline, {
-  extrusion: mapPolylineExtrusion,
-  shape: mapPolylineShape
-}), _defineProperty(_extrusionCurvesMap, ifcTypes.IfcCompositeCurve, {
-  extrusion: mapCompositeCurveExtrusion,
-  shape: mapCompositeCurveShape
-}), _extrusionCurvesMap);
+const extrusionCurvesMap = {
+  [ifcTypes.IfcPolyline]: {
+    extrusion: mapPolylineExtrusion,
+    shape: mapPolylineShape
+  },
+  [ifcTypes.IfcCompositeCurve]: {
+    extrusion: mapCompositeCurveExtrusion,
+    shape: mapCompositeCurveShape
+  }
+};
 
 function mapPolylineShape(shapeRepresentation) {
-  var points = getShapePoints(shapeRepresentation[namedProps.points]);
-  var shape = new THREE.Shape();
-  shape.moveTo.apply(shape, _toConsumableArray(points[0]));
+  const points = getShapePoints(shapeRepresentation[namedProps.points]);
+  const shape = new THREE.Shape();
+  shape.moveTo(...points[0]);
   points.shift();
-  points.forEach(function (point) {
-    return shape.lineTo.apply(shape, _toConsumableArray(point));
-  });
+  points.forEach(point => shape.lineTo(...point));
   return shape;
 }
 
 function getShapePoints(pointsRepresentation) {
-  return pointsRepresentation.map(function (point) {
-    var coords = point[namedProps.coordinates];
+  return pointsRepresentation.map(point => {
+    const coords = point[namedProps.coordinates];
     return [-coords[1], coords[0]];
   });
 }
 
 function mapPolylineExtrusion(props) {
-  var profileRepresentation = props.profile;
-  var pointsRepresentation = profileRepresentation[namedProps.outerCurve][namedProps.points];
-  var points = getExtrusionPoints(pointsRepresentation);
+  const profileRepresentation = props.profile;
+  const pointsRepresentation = profileRepresentation[namedProps.outerCurve][namedProps.points];
+  const points = getExtrusionPoints(pointsRepresentation);
   return createExtrusionsByPoints(points, props.depth, props.direction, props.holes);
 }
 
 function mapCompositeCurveShape(shapeRepresentation) {
-  var shape = new THREE.Shape();
-  var segmentsRepresentation = shapeRepresentation[namedProps.segments];
-  segmentsRepresentation.forEach(function (curve) {
-    return mapCompositeCurveSegment(shape, curve);
-  });
+  const shape = new THREE.Shape();
+  const segmentsRepresentation = shapeRepresentation[namedProps.segments];
+  segmentsRepresentation.forEach(curve => mapCompositeCurveSegment(shape, curve));
   resetFirstCompositeCurve();
   return shape;
 }
 
 function mapCompositeCurveExtrusion(props) {
-  var shape = new THREE.Shape();
-  var segmentsRepresentation = props.profile[namedProps.outerCurve][namedProps.segments];
-  segmentsRepresentation.forEach(function (curve) {
-    return mapCompositeCurveSegment(shape, curve);
-  });
+  const shape = new THREE.Shape();
+  const segmentsRepresentation = props.profile[namedProps.outerCurve][namedProps.segments];
+  segmentsRepresentation.forEach(curve => mapCompositeCurveSegment(shape, curve));
   resetFirstCompositeCurve();
-  if (props.holes) props.holes.forEach(function (hole) {
-    return shape.holes.push(hole);
-  });
-  var extrusion = createExtrusion(shape, props.depth, props.direction);
+  if (props.holes) props.holes.forEach(hole => shape.holes.push(hole));
+  const extrusion = createExtrusion(shape, props.depth, props.direction);
   extrusion.rotation.z += Math.PI / 2;
   extrusion.updateMatrix();
   return extrusion;
 }
 
 function mapCompositeCurveSegment(shape, segmentRepresentation) {
-  var curve = segmentRepresentation[namedProps.parentCurve];
-  var typeOfCurve = curve[namedProps.ifcClass].toUpperCase();
+  const curve = segmentRepresentation[namedProps.parentCurve];
+  const typeOfCurve = curve[namedProps.ifcClass].toUpperCase();
   compositeCurvesMap[typeOfCurve](shape, curve);
 }
 
-var compositeCurvesMap = (_compositeCurvesMap = {}, _defineProperty(_compositeCurvesMap, ifcTypes.IfcPolyline, mapPolylineSegment), _defineProperty(_compositeCurvesMap, ifcTypes.IfcTrimmedCurve, mapTrimmedCurveSegment), _compositeCurvesMap);
+const compositeCurvesMap = {
+  [ifcTypes.IfcPolyline]: mapPolylineSegment,
+  [ifcTypes.IfcTrimmedCurve]: mapTrimmedCurveSegment
+};
 
 function mapPolylineSegment(shape, curve) {
-  var points = curve[namedProps.points];
+  const points = curve[namedProps.points];
 
   if (isFirstSegmentOfCompositeCurve) {
-    shape.moveTo.apply(shape, _toConsumableArray(points[0][namedProps.coordinates]));
+    shape.moveTo(...points[0][namedProps.coordinates]);
     points.shift();
     isFirstSegmentOfCompositeCurve = false;
   }
 
-  points.forEach(function (point) {
-    return shape.lineTo.apply(shape, _toConsumableArray(point[namedProps.coordinates]));
-  });
+  points.forEach(point => shape.lineTo(...point[namedProps.coordinates]));
 }
 
 function mapTrimmedCurveSegment(shape, curve) {
-  var typeOfTrimmedCurve = curve[namedProps.basisCurve][namedProps.ifcClass].toUpperCase();
+  const typeOfTrimmedCurve = curve[namedProps.basisCurve][namedProps.ifcClass].toUpperCase();
   trimmedCurvesMap[typeOfTrimmedCurve](shape, curve);
 }
 
-var trimmedCurvesMap = _defineProperty({}, ifcTypes.IfcCircle, mapTrimmedCircleCurve); //Three.js draw shapes continuously
+const trimmedCurvesMap = {
+  [ifcTypes.IfcCircle]: mapTrimmedCircleCurve
+}; //Three.js draw shapes continuously
 //(the last point of the current curve is the closest to the first point of the next curve)
 //But circles in IFC doesn't follow this pattern necessarily
 //This function computes the closest point of the next arc
 //To determine wether to draw the circle clockwise or counter-clockwise
 
-
 function mapTrimmedCircleCurve(shape, curve) {
-  var _getCircleInfo = getCircleInfo(curve),
-      x = _getCircleInfo.x,
-      y = _getCircleInfo.y,
-      radius = _getCircleInfo.radius,
-      trims = _getCircleInfo.trims,
-      ends = _getCircleInfo.ends;
-
-  var currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
-  var distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
+  const {
+    x,
+    y,
+    radius,
+    trims,
+    ends
+  } = getCircleInfo(curve);
+  const currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
+  const distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
   distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absarc(x, y, radius, trims[0], trims[1], false) : shape.absarc(x, y, radius, trims[1], trims[0], true);
 }
 
@@ -783,18 +780,18 @@ function getDistancesToNextPoints(currentPoint, ends) {
 }
 
 function getCircleInfo(curve) {
-  var location = curve[namedProps.basisCurve][namedProps.position][namedProps.location][namedProps.coordinates];
-  var radius = curve[namedProps.basisCurve][namedProps.radius];
-  var x = location[0];
-  var y = location[1];
-  var trims = getTrimmedCircleTrims(curve);
-  var ends = getTrimmedCircleEnds(x, y, radius, trims);
+  const location = curve[namedProps.basisCurve][namedProps.position][namedProps.location][namedProps.coordinates];
+  const radius = curve[namedProps.basisCurve][namedProps.radius];
+  const x = location[0];
+  const y = location[1];
+  const trims = getTrimmedCircleTrims(curve);
+  const ends = getTrimmedCircleEnds(x, y, radius, trims);
   return {
-    x: x,
-    y: y,
-    radius: radius,
-    trims: trims,
-    ends: ends
+    x,
+    y,
+    radius,
+    trims,
+    ends
   };
 }
 
@@ -803,8 +800,8 @@ function getTrimmedCircleTrims(curve) {
 }
 
 function getTrimmedCircleTrim(curve, trim) {
-  var rotation = curve[namedProps.basisCurve][namedProps.position][namedProps.refDirection][namedProps.dirRatios];
-  var offsetAngle = Math.acos(rotation[0]);
+  const rotation = curve[namedProps.basisCurve][namedProps.position][namedProps.refDirection][namedProps.dirRatios];
+  const offsetAngle = Math.acos(rotation[0]);
   return curve[trim][0][ifcUnitsValue.value] * Math.PI / 180 + offsetAngle;
 }
 
@@ -817,42 +814,42 @@ function getCirclePoint(x, y, radius, angle) {
 }
 
 function getDistanceBetweenPoints(point1, point2) {
-  var a = point1[0] - point2[0];
-  var b = point1[1] - point2[1];
+  const a = point1[0] - point2[0];
+  const b = point1[1] - point2[1];
   return Math.sqrt(a * a + b * b);
 }
 
 function getExtrusionPoints(pointsRepresentation) {
-  return pointsRepresentation.map(function (point) {
-    var coords = point[namedProps.coordinates];
+  return pointsRepresentation.map(point => {
+    const coords = point[namedProps.coordinates];
     return [-coords[0], -coords[1]];
   });
 } //Three.js needs to know the first point of the first curve to create a shape
 
 
-var isFirstSegmentOfCompositeCurve = true;
+let isFirstSegmentOfCompositeCurve = true;
 
 function resetFirstCompositeCurve() {
   isFirstSegmentOfCompositeCurve = true;
 }
 
 function mapCircleProfileExtrusion(extruded) {
-  var _getProperties = getProperties(extruded),
-      position = _getProperties.position,
-      radius = _getProperties.radius;
-
-  var cylinder = createCircularExtrusion(radius, extruded.depth);
+  const {
+    position,
+    radius
+  } = getProperties(extruded);
+  const cylinder = createCircularExtrusion(radius, extruded.depth);
   applyTransformsToGeometry(cylinder, position);
   return cylinder;
 }
 
 function mapCircleHollowProfileExtrusion(extruded) {
-  var _getProperties2 = getProperties(extruded),
-      position = _getProperties2.position,
-      radius = _getProperties2.radius,
-      thickness = _getProperties2.thickness;
-
-  var tube = createTubularExtrusion(radius, extruded.depth, extruded.direction, thickness);
+  const {
+    position,
+    radius,
+    thickness
+  } = getProperties(extruded);
+  const tube = createTubularExtrusion(radius, extruded.depth, extruded.direction, thickness);
   applyTransformsToGeometry(tube, position);
   return tube;
 }
@@ -865,32 +862,28 @@ function getProperties(extruded) {
   };
 }
 
-var _extrusionTypes;
-
 function mapSweptSolid(shape, product) {
-  var items = [];
-  shape[namedProps.items].forEach(function (extruded) {
-    return items.push(mapExtrudedAreaSolid(extruded, product));
-  });
+  const items = [];
+  shape[namedProps.items].forEach(extruded => items.push(mapExtrudedAreaSolid(extruded, product)));
   return joinAllExtrusions(items);
 }
 
 function joinAllExtrusions(items) {
   var singleGeometry = new THREE.Geometry();
-  items.forEach(function (item) {
+  items.forEach(item => {
     item.updateMatrix();
     singleGeometry.merge(item.geometry, item.matrix);
     mainObject.remove(item);
   });
-  var result = new THREE.Mesh(singleGeometry);
+  const result = new THREE.Mesh(singleGeometry);
   mainObject.add(result);
   return result;
 }
 
 function mapExtrudedAreaSolid(extruded, product) {
-  var extrudedProps = getExtrusionProps(extruded);
-  var solid = getExtrusionByType(extrudedProps, product);
-  var position = extruded[namedProps.position];
+  const extrudedProps = getExtrusionProps(extruded);
+  const solid = getExtrusionByType(extrudedProps, product);
+  const position = extruded[namedProps.position];
   applyTransformsToGeometry(solid, position);
   return solid;
 }
@@ -904,16 +897,22 @@ function getExtrusionProps(extruded) {
   };
 }
 
-var extrusionTypes = (_extrusionTypes = {}, _defineProperty(_extrusionTypes, ifcTypes.IfcRectangleProfileDef, mapRectangleProfileExtrusion), _defineProperty(_extrusionTypes, ifcTypes.IfcCircleProfileDef, mapCircleProfileExtrusion), _defineProperty(_extrusionTypes, ifcTypes.IfcCircleHollowProfileDef, mapCircleHollowProfileExtrusion), _defineProperty(_extrusionTypes, ifcTypes.IfcArbitraryClosedProfileDef, mapArbitraryProfileExtrusion), _defineProperty(_extrusionTypes, ifcTypes.IfcArbitraryProfileDefWithVoids, mapArbitraryProfileWithVoidsExtrusion), _extrusionTypes);
+const extrusionTypes = {
+  [ifcTypes.IfcRectangleProfileDef]: mapRectangleProfileExtrusion,
+  [ifcTypes.IfcCircleProfileDef]: mapCircleProfileExtrusion,
+  [ifcTypes.IfcCircleHollowProfileDef]: mapCircleHollowProfileExtrusion,
+  [ifcTypes.IfcArbitraryClosedProfileDef]: mapArbitraryProfileExtrusion,
+  [ifcTypes.IfcArbitraryProfileDefWithVoids]: mapArbitraryProfileWithVoidsExtrusion
+};
 
 function getExtrusionByType(extruded, product) {
   return extrusionTypes[extruded.ifcClass.toUpperCase()](extruded, product);
 }
 
 function mapMappedRepresentation(shape, product) {
-  var representation = shape[namedProps.items][0];
-  var target = getMappingTarget(representation);
-  var mapped = getMappingSource(product, representation);
+  const representation = shape[namedProps.items][0];
+  const target = getMappingTarget(representation);
+  const mapped = getMappingSource(product, representation);
   applyTransformsToGeometry(mapped, target);
   return mapped;
 } //The concept of mapped representation is that there are several instances
@@ -921,19 +920,19 @@ function mapMappedRepresentation(shape, product) {
 //only once and them simply create each instance copying the source geometry.
 
 
-var mappingSources = {};
+const mappingSources = {};
 
 function getMappingSource(product, representation) {
-  var source = representation[namedProps.mappingSource];
-  var origin = source[namedProps.mappingOrigin];
-  var geometry = isGeometryGenerated(source) ? getGeneratedGeometry(source) : generateGeometry(source, product);
+  const source = representation[namedProps.mappingSource];
+  const origin = source[namedProps.mappingOrigin];
+  const geometry = isGeometryGenerated(source) ? getGeneratedGeometry(source) : generateGeometry(source, product);
   applyTransformsToGeometry(geometry, origin);
   return geometry;
 }
 
 function generateGeometry(source, product) {
-  var mappedGeometry = source[namedProps.mappedRepresentation];
-  var geometry = getMappedGeometry(mappedGeometry, product);
+  const mappedGeometry = source[namedProps.mappedRepresentation];
+  const geometry = getMappedGeometry(mappedGeometry, product);
   mappingSources[source[namedProps.expressId]] = geometry;
   mainObject.remove(geometry);
   return geometry.clone();
@@ -952,10 +951,19 @@ function getGeneratedGeometry(source) {
 
 
 function getMappingTarget(representation) {
-  var _ref;
-
-  var target = representation[namedProps.mappingTarget];
-  return _ref = {}, _defineProperty(_ref, namedProps.location, _defineProperty({}, namedProps.coordinates, getTargetOrigin(target))), _defineProperty(_ref, namedProps.refDirection, _defineProperty({}, namedProps.dirRatios, getAxis(target, namedProps.axis1, [1, 0, 0]))), _defineProperty(_ref, namedProps.axis, _defineProperty({}, namedProps.dirRatios, getAxis(target, namedProps.axis3, [0, 0, 1]))), _defineProperty(_ref, namedProps.scale, target[namedProps.scale]), _ref;
+  const target = representation[namedProps.mappingTarget];
+  return {
+    [namedProps.location]: {
+      [namedProps.coordinates]: getTargetOrigin(target)
+    },
+    [namedProps.refDirection]: {
+      [namedProps.dirRatios]: getAxis(target, namedProps.axis1, [1, 0, 0])
+    },
+    [namedProps.axis]: {
+      [namedProps.dirRatios]: getAxis(target, namedProps.axis3, [0, 0, 1])
+    },
+    [namedProps.scale]: target[namedProps.scale]
+  };
 }
 
 function getTargetOrigin(target) {
@@ -963,31 +971,28 @@ function getTargetOrigin(target) {
 }
 
 function getAxis(target, axis, def) {
-  var value = target[axis];
+  const value = target[axis];
   return value === defaultValue ? def : value;
 }
 
 //Credit to the following algorithm:
 //https://stackoverflow.com/questions/50272399/three-js-2d-object-in-3d-space-by-vertices/50274103#50274103
 function createFace(faceDefinition) {
-  var coordinates = faceDefinition.outerBounds.bounds[0];
-  var outerPoints = getPoints(coordinates);
-
-  var _getProjectedPointsAn = getProjectedPointsAndQuaternion(outerPoints),
-      tempOuterPoints = _getProjectedPointsAn.tempOuterPoints,
-      quaternion = _getProjectedPointsAn.quaternion;
-
-  var outerShape = new THREE.Shape(tempOuterPoints);
-
-  var allPoints = _toConsumableArray(outerPoints);
-
+  const coordinates = faceDefinition.outerBounds.bounds[0];
+  let outerPoints = getPoints(coordinates);
+  let {
+    tempOuterPoints,
+    quaternion
+  } = getProjectedPointsAndQuaternion(outerPoints);
+  const outerShape = new THREE.Shape(tempOuterPoints);
+  const allPoints = [...outerPoints];
   if (hasHoles(faceDefinition)) punchHoles(faceDefinition, quaternion, allPoints, outerShape);
   return createGeometry(outerShape, allPoints);
 }
 
 function createGeometry(outerShape, allPoints) {
-  var shapeGeom = new THREE.ShapeGeometry(outerShape, 24);
-  var mesh = new THREE.Mesh(shapeGeom);
+  const shapeGeom = new THREE.ShapeGeometry(outerShape, 24);
+  const mesh = new THREE.Mesh(shapeGeom);
   mesh.geometry.vertices = allPoints;
   mesh.geometry.computeVertexNormals();
   mesh.geometry.computeFaceNormals();
@@ -995,15 +1000,11 @@ function createGeometry(outerShape, allPoints) {
 }
 
 function getPoints(coordinates) {
-  return coordinates.map(function (p) {
-    return new THREE.Vector3(p[0], p[1], p[2]);
-  });
+  return coordinates.map(p => new THREE.Vector3(p[0], p[1], p[2]));
 }
 
 function getTempPoints(points, quaternion) {
-  return points.map(function (p) {
-    return p.clone().applyQuaternion(quaternion);
-  });
+  return points.map(p => p.clone().applyQuaternion(quaternion));
 }
 
 function hasHoles(faceDefinition) {
@@ -1011,12 +1012,12 @@ function hasHoles(faceDefinition) {
 }
 
 function punchHoles(faceDefinition, quaternion, allPoints, outerShape) {
-  faceDefinition.innerBounds.bounds.forEach(function (bound) {
-    var innerPoints = getPoints(bound);
-    var tempInnerPoints = getTempPoints(innerPoints, quaternion);
-    var innerShape = new THREE.Path(tempInnerPoints);
+  faceDefinition.innerBounds.bounds.forEach(bound => {
+    const innerPoints = getPoints(bound);
+    const tempInnerPoints = getTempPoints(innerPoints, quaternion);
+    const innerShape = new THREE.Path(tempInnerPoints);
     outerShape.holes.push(innerShape);
-    allPoints.push.apply(allPoints, _toConsumableArray(innerPoints));
+    allPoints.push(...innerPoints);
   });
 } //To implement this algorithm successfully (see link above)
 // the selected triangle of vertices needs to fulfill the following points to work:
@@ -1026,7 +1027,7 @@ function punchHoles(faceDefinition, quaternion, allPoints, outerShape) {
 
 
 function getProjectedPointsAndQuaternion(points) {
-  var triangles = getAllTriangles(points); //1
+  const triangles = getAllTriangles(points); //1
 
   sortTrianglesByArea(triangles); //2
 
@@ -1034,17 +1035,17 @@ function getProjectedPointsAndQuaternion(points) {
 }
 
 function getAllTriangles(points) {
-  var triangles = [];
-  var i = 1;
+  const triangles = [];
+  let i = 1;
 
   while (i + 1 < points.length) {
-    var _getTriangleVector = getTriangleVector(points, i),
-        vector = _getTriangleVector.vector,
-        triangle = _getTriangleVector.triangle;
-
+    const {
+      vector,
+      triangle
+    } = getTriangleVector(points, i);
     if (isVectorValid(vector)) triangles.push({
       area: triangle.getArea(),
-      triangle: triangle
+      triangle
     });
     i++;
   }
@@ -1053,19 +1054,17 @@ function getAllTriangles(points) {
 }
 
 function getTriangleVector(points, i) {
-  var triangle = new THREE.Triangle(points[i + 1], points[i], points[0]);
-  var vector = new THREE.Vector3();
+  const triangle = new THREE.Triangle(points[i + 1], points[i], points[0]);
+  const vector = new THREE.Vector3();
   triangle.getNormal(vector);
   return {
-    vector: vector,
-    triangle: triangle
+    vector,
+    triangle
   };
 }
 
 function sortTrianglesByArea(triangles) {
-  triangles.sort(function (a, b) {
-    return a.area > b.area ? 1 : b.area > a.area ? -1 : 0;
-  }).reverse();
+  triangles.sort((a, b) => a.area > b.area ? 1 : b.area > a.area ? -1 : 0).reverse();
 }
 
 function isVectorValid(vector) {
@@ -1073,11 +1072,9 @@ function isVectorValid(vector) {
 }
 
 function getQuatAndPoints(triangles, points) {
-  var props = initializeProperties();
+  const props = initializeProperties();
 
-  while (props.isClockWise === false) {
-    selectAnotherTriangle(props, points, triangles);
-  }
+  while (props.isClockWise === false) selectAnotherTriangle(props, points, triangles);
 
   return {
     tempOuterPoints: props.tempOuterPoints,
@@ -1086,13 +1083,11 @@ function getQuatAndPoints(triangles, points) {
 }
 
 function selectAnotherTriangle(props, points, triangles) {
-  var tri = triangles[props.selectedTriangle];
+  const tri = triangles[props.selectedTriangle];
   tri.triangle.getNormal(props.normal);
   props.quaternion = new THREE.Quaternion().setFromUnitVectors(props.normal, props.baseNormal);
   props.tempOuterPoints = getTempPoints(points, props.quaternion);
-  var projected = props.tempOuterPoints.map(function (point) {
-    return new THREE.Vector2(point.x, point.y);
-  });
+  const projected = props.tempOuterPoints.map(point => new THREE.Vector2(point.x, point.y));
   props.isClockWise = THREE.ShapeUtils.isClockWise(projected);
   props.selectedTriangle++;
 }
@@ -1109,40 +1104,32 @@ function initializeProperties() {
 }
 
 function mapBrep(shape) {
-  var representations = shape[namedProps.items];
-  var definitions = [];
-  representations.forEach(function (r) {
-    return definitions.push.apply(definitions, _toConsumableArray(getGeometry(r[namedProps.outer][namedProps.cfsFaces])));
-  });
+  const representations = shape[namedProps.items];
+  const definitions = [];
+  representations.forEach(r => definitions.push(...getGeometry(r[namedProps.outer][namedProps.cfsFaces])));
   return createAndJoinFaces(definitions);
 }
 
 function mapSurfaceModel(shape) {
-  var faceSets = shape[namedProps.items][0][namedProps.fbsmFaces];
-  var definitions = [];
-  faceSets.forEach(function (faceSet) {
-    return definitions.push.apply(definitions, _toConsumableArray(getGeometry(faceSet[namedProps.cfsFaces])));
-  });
+  const faceSets = shape[namedProps.items][0][namedProps.fbsmFaces];
+  const definitions = [];
+  faceSets.forEach(faceSet => definitions.push(...getGeometry(faceSet[namedProps.cfsFaces])));
   return createAndJoinFaces(definitions);
 }
 
 function createAndJoinFaces(definitions) {
-  var faces = [];
-  definitions.forEach(function (definition) {
-    return faces.push(createFace(definition));
-  });
+  const faces = [];
+  definitions.forEach(definition => faces.push(createFace(definition)));
   return joinAllFaces(faces);
 }
 
 function joinAllFaces(faces) {
-  var joined = new THREE.Geometry();
-  faces.forEach(function (face) {
-    return joined.merge(face.geometry, face.matrix);
-  });
-  var material = new THREE.MeshPhongMaterial({
+  const joined = new THREE.Geometry();
+  faces.forEach(face => joined.merge(face.geometry, face.matrix));
+  const material = new THREE.MeshPhongMaterial({
     side: 2
   });
-  var mesh = new THREE.Mesh(joined, material);
+  const mesh = new THREE.Mesh(joined, material);
   mesh.geometry.computeVertexNormals();
   mesh.geometry.computeFaceNormals();
   mesh[namedProps.isBrep] = true;
@@ -1150,66 +1137,60 @@ function joinAllFaces(faces) {
 }
 
 function getGeometry(faceSet) {
-  var faces = [];
-  faceSet.forEach(function (face) {
-    return faces.push(getAllBounds(face));
-  });
+  const faces = [];
+  faceSet.forEach(face => faces.push(getAllBounds(face)));
   return faces;
 }
 
 function getAllBounds(face) {
-  var outerBoundsInfo = filterBounds(face, ifcTypes.IfcFaceOuterBound);
-  var innerBoundsInfo = filterBounds(face, ifcTypes.IfcFaceBound);
-  var outerBounds = getBounds(outerBoundsInfo);
-  var innerBounds = innerBoundsInfo ? getBounds(innerBoundsInfo) : {};
+  const outerBoundsInfo = filterBounds(face, ifcTypes.IfcFaceOuterBound);
+  const innerBoundsInfo = filterBounds(face, ifcTypes.IfcFaceBound);
+  const outerBounds = getBounds(outerBoundsInfo);
+  const innerBounds = innerBoundsInfo ? getBounds(innerBoundsInfo) : {};
   return {
-    outerBounds: outerBounds,
-    innerBounds: innerBounds
+    outerBounds,
+    innerBounds
   };
 }
 
 function getBounds(ifcBounds) {
-  var bounds = [];
-  var orientation = [];
-  ifcBounds.forEach(function (bound) {
+  const bounds = [];
+  const orientation = [];
+  ifcBounds.forEach(bound => {
     bounds.push(getPoints$1(bound));
     orientation.push(bound[namedProps.orientation]);
   });
   return {
-    orientation: orientation,
-    bounds: bounds
+    orientation,
+    bounds
   };
 }
 
 function getPoints$1(bound) {
-  var points = bound[namedProps.bound][namedProps.polygon];
-  var coordinates = [];
-  points.forEach(function (point) {
-    var coord = point[namedProps.coordinates];
+  const points = bound[namedProps.bound][namedProps.polygon];
+  const coordinates = [];
+  points.forEach(point => {
+    const coord = point[namedProps.coordinates];
     if (coord) coordinates.push(coord);
   });
   return coordinates;
 }
 
 function filterBounds(face, type) {
-  return face[namedProps.bounds].filter(function (e) {
-    return e[namedProps.ifcClass] === getName(type);
-  });
+  return face[namedProps.bounds].filter(e => e[namedProps.ifcClass] === getName(type));
 }
 
 function mapGeometricSet(shape) {
-  var curves = shape[namedProps.items][0][namedProps.elements];
-  var result = new THREE.Object3D();
-  result.children = _toConsumableArray(curves.map(function (e) {
-    return mapCurve(e);
-  }));
+  const curves = shape[namedProps.items][0][namedProps.elements];
+  const result = new THREE.Object3D();
+  result.children = [...curves.map(e => mapCurve(e))];
   return result;
 }
 
 function createClippingBox(orientation) {
-  var geometry = new THREE.BoxBufferGeometry(100000, 100000, 100000);
-  var mesh = new THREE.Mesh(geometry);
-  var direction = orientation ? -1 : 1;
+  const geometry = new THREE.BoxBufferGeometry(100000, 100000, 100000);
+  const mesh = new THREE.Mesh(geometry);
+  const direction = orientation ? -1 : 1;
   mesh.position.z += 50000 * direction;
   mesh.updateMatrix();
   return mesh;
@@ -1773,12 +1754,12 @@ CSG.eval=function(tokens,doRemove){//[['add',mesh,mesh,mesh,mesh],['sub',mesh,me
 
 function applyBoolDifferences(baseMesh, clipMeshes) {
   preventCoplanarSurfaces(baseMesh);
-  var operand1 = CSG.fromMesh(baseMesh);
+  let operand1 = CSG.fromMesh(baseMesh);
 
-  for (var i = 0; i < clipMeshes.length; i++) {
-    var clipMesh = clipMeshes[i];
+  for (let i = 0; i < clipMeshes.length; i++) {
+    const clipMesh = clipMeshes[i];
     clipMesh.updateMatrix();
-    var operand2 = CSG.fromMesh(clipMesh);
+    const operand2 = CSG.fromMesh(clipMesh);
     operand1 = subtractVolume(operand1, operand2, baseMesh, clipMesh);
   }
 
@@ -1787,7 +1768,7 @@ function applyBoolDifferences(baseMesh, clipMeshes) {
 
 
 function preventCoplanarSurfaces(baseMesh) {
-  var factor = 0.99999;
+  const factor = 0.99999;
   baseMesh.scale.x *= factor;
   baseMesh.scale.y *= factor;
   baseMesh.scale.z *= factor;
@@ -1797,10 +1778,10 @@ function preventCoplanarSurfaces(baseMesh) {
 
 
 function subtractVolume(operand1, operand2, baseMesh, clippingMesh) {
-  var result = operand1.subtract(operand2);
-  var resultMesh = CSG.toMesh(result, baseMesh.matrix);
-  var boundingBox1 = new THREE.Box3().setFromObject(resultMesh);
-  var boundingBox2 = new THREE.Box3().setFromObject(clippingMesh);
+  const result = operand1.subtract(operand2);
+  const resultMesh = CSG.toMesh(result, baseMesh.matrix);
+  const boundingBox1 = new THREE.Box3().setFromObject(resultMesh);
+  const boundingBox2 = new THREE.Box3().setFromObject(clippingMesh);
   if (areBoundingBoxesEqual(boundingBox1, boundingBox2)) return operand1.intersect(operand2);
   return result;
 }
@@ -1814,30 +1795,28 @@ function isPointEqual(point1, point2, precission) {
 }
 
 function mapClipping(shape, product) {
-  var _getClippingRepresent = getClippingRepresentations(shape),
-      clippingReps = _getClippingRepresent.clippingReps,
-      bodyRep = _getClippingRepresent.bodyRep;
-
-  var mainGeometry = getMappedGeometry(bodyRep, product);
-  var clippingGeometries = createClippingVolumes(clippingReps);
-  var booleanResult = applyBoolDifferences(mainGeometry, clippingGeometries);
+  const {
+    clippingReps,
+    bodyRep
+  } = getClippingRepresentations(shape);
+  const mainGeometry = getMappedGeometry(bodyRep, product);
+  const clippingGeometries = createClippingVolumes(clippingReps);
+  const booleanResult = applyBoolDifferences(mainGeometry, clippingGeometries);
   return generateResultMesh(booleanResult, mainGeometry, clippingGeometries);
 }
 
 function generateResultMesh(booleanResult, mainGeometry, clippingGeometries) {
-  var result = CSG.toMesh(booleanResult, mainGeometry.matrix);
+  const result = CSG.toMesh(booleanResult, mainGeometry.matrix);
   result.geometry = new THREE.BufferGeometry().fromGeometry(result.geometry);
   result.material = new THREE.MeshPhongMaterial();
   mainObject.remove(mainGeometry);
-  clippingGeometries.forEach(function (clippingGeo) {
-    return mainObject.remove(clippingGeo);
-  });
+  clippingGeometries.forEach(clippingGeo => mainObject.remove(clippingGeo));
   return result;
 }
 
 function getClippingRepresentations(shape) {
-  var clippingReps = [];
-  var bodyRep = shape[namedProps.items][0];
+  const clippingReps = [];
+  let bodyRep = shape[namedProps.items][0];
 
   while (bodyRep[namedProps.ifcClass] == 'IfcBooleanClippingResult') {
     clippingReps.push(bodyRep[namedProps.secondOperand]);
@@ -1845,16 +1824,14 @@ function getClippingRepresentations(shape) {
   }
 
   return {
-    clippingReps: clippingReps,
-    bodyRep: bodyRep
+    clippingReps,
+    bodyRep
   };
 }
 
 function createClippingVolumes(clippingRepresentations) {
-  var clippingGeometries = [];
-  clippingRepresentations.forEach(function (clippingRep) {
-    return clippingGeometries.push(createClippingVolume(clippingRep));
-  });
+  const clippingGeometries = [];
+  clippingRepresentations.forEach(clippingRep => clippingGeometries.push(createClippingVolume(clippingRep)));
   return clippingGeometries;
 }
 
@@ -1864,18 +1841,18 @@ function createClippingVolume(clippingRep) {
 }
 
 function mapIfcHalfSpaceSolid(clippingRep) {
-  var orientation = clippingRep[namedProps.agreementFlag];
+  let orientation = clippingRep[namedProps.agreementFlag];
   if (typeof orientation != 'boolean') orientation = orientation.value;
-  var clippingGeom = createClippingBox(orientation);
-  var position = clippingRep[namedProps.baseSurface][namedProps.position];
+  const clippingGeom = createClippingBox(orientation);
+  const position = clippingRep[namedProps.baseSurface][namedProps.position];
   applyTransformsToGeometry(clippingGeom, position);
   return clippingGeom;
 }
 
 function mapIfcPolygonalBoundedHalfSpace(clippingRep) {
-  var clippingGeom = mapIfcHalfSpaceSolid(clippingRep);
-  var boundingGeom = getBoundingGeometry(clippingRep);
-  var result = applyBoundingToGeometry(clippingGeom, boundingGeom);
+  const clippingGeom = mapIfcHalfSpaceSolid(clippingRep);
+  const boundingGeom = getBoundingGeometry(clippingRep);
+  const result = applyBoundingToGeometry(clippingGeom, boundingGeom);
   result.geometry = new THREE.BufferGeometry().fromGeometry(result.geometry);
   result.material = new THREE.MeshPhongMaterial();
   mainObject.remove(clippingGeom);
@@ -1885,16 +1862,16 @@ function mapIfcPolygonalBoundedHalfSpace(clippingRep) {
 }
 
 function applyBoundingToGeometry(clippingGeom, boundingGeom) {
-  var bspA = CSG.fromMesh(clippingGeom);
-  var bspB = CSG.fromMesh(boundingGeom);
-  var geomResult = bspA.intersect(bspB);
+  let bspA = CSG.fromMesh(clippingGeom);
+  let bspB = CSG.fromMesh(boundingGeom);
+  let geomResult = bspA.intersect(bspB);
   return CSG.toMesh(geomResult, clippingGeom.matrix);
 }
 
 function getBoundingGeometry(clippingRep) {
-  var points = getBoundingPoints(clippingRep);
-  var boundingGeom = createExtrusionsByPoints(points, 1000000);
-  var boundPosition = clippingRep[namedProps.position];
+  const points = getBoundingPoints(clippingRep);
+  const boundingGeom = createExtrusionsByPoints(points, 1000000);
+  const boundPosition = clippingRep[namedProps.position];
   applyTransformsToGeometry(boundingGeom, boundPosition);
   boundingGeom.position.z -= 500000;
   boundingGeom.updateMatrix();
@@ -1902,23 +1879,23 @@ function getBoundingGeometry(clippingRep) {
 }
 
 function getBoundingPoints(clippingRep) {
-  return clippingRep[namedProps.polygonalBoundary][namedProps.points].map(function (point) {
-    var coords = point[namedProps.coordinates];
+  return clippingRep[namedProps.polygonalBoundary][namedProps.points].map(point => {
+    const coords = point[namedProps.coordinates];
     return [-coords[0], -coords[1]];
   });
 }
 
 function mapBoundingBox(shape) {
-  var representation = shape[namedProps.items][0];
-  var dims = getBoundingBoxDimensions(representation);
-  var boundingBox = new THREE.BoxGeometry(dims.x, dims.y, dims.z);
-  var mesh = new THREE.Mesh(boundingBox);
+  const representation = shape[namedProps.items][0];
+  const dims = getBoundingBoxDimensions(representation);
+  const boundingBox = new THREE.BoxGeometry(dims.x, dims.y, dims.z);
+  const mesh = new THREE.Mesh(boundingBox);
   setBoundingBoxPosition(mesh, representation, dims);
   return new THREE.Object3D();
 }
 
 function setBoundingBoxPosition(mesh, representation, dims) {
-  var bottomLeftCorner = representation[namedProps.corner][namedProps.coordinates];
+  const bottomLeftCorner = representation[namedProps.corner][namedProps.coordinates];
   mesh.position.set(bottomLeftCorner[0], bottomLeftCorner[1], bottomLeftCorner[2]);
   mesh.position.x += dims.x / 2;
   mesh.position.y += dims.y / 2;
@@ -1939,31 +1916,37 @@ function mapAnnotation(shape) {
   return new THREE.Object3D();
 }
 
-var _geometryMap;
-var geometryMap = (_geometryMap = {}, _defineProperty(_geometryMap, geometryTypes.curve2D, mapCurve2D), _defineProperty(_geometryMap, geometryTypes.sweptSolid, mapSweptSolid), _defineProperty(_geometryMap, geometryTypes.mappedRepresentation, mapMappedRepresentation), _defineProperty(_geometryMap, geometryTypes.brep, mapBrep), _defineProperty(_geometryMap, geometryTypes.geometricSet, mapGeometricSet), _defineProperty(_geometryMap, geometryTypes.clipping, mapClipping), _defineProperty(_geometryMap, geometryTypes.extrudedAreaSolid, mapExtrudedAreaSolid), _defineProperty(_geometryMap, geometryTypes.surfaceModel, mapSurfaceModel), _defineProperty(_geometryMap, geometryTypes.boundingBox, mapBoundingBox), _defineProperty(_geometryMap, geometryTypes.annotation2D, mapAnnotation), _geometryMap);
+const geometryMap = {
+  [geometryTypes.curve2D]: mapCurve2D,
+  [geometryTypes.sweptSolid]: mapSweptSolid,
+  [geometryTypes.mappedRepresentation]: mapMappedRepresentation,
+  [geometryTypes.brep]: mapBrep,
+  [geometryTypes.geometricSet]: mapGeometricSet,
+  [geometryTypes.clipping]: mapClipping,
+  [geometryTypes.extrudedAreaSolid]: mapExtrudedAreaSolid,
+  [geometryTypes.surfaceModel]: mapSurfaceModel,
+  [geometryTypes.boundingBox]: mapBoundingBox,
+  [geometryTypes.annotation2D]: mapAnnotation
+};
 
 function getMappedGeometry(representation, product) {
-  var type = getType(representation);
+  const type = getType(representation);
 
   try {
     return geometryMap[type](representation, product);
   } catch (e) {
-    console.warn("Error with item ".concat(product[namedProps.ifcClass], " of type ").concat(type, ": ").concat(e));
+    console.warn(`Error with item ${product[namedProps.ifcClass]} of type ${type}: ${e}`);
   }
 }
 
 function getType(representation) {
-  var type = representation[namedProps.representationType];
+  const type = representation[namedProps.representationType];
   return type ? type : representation[namedProps.ifcClass];
 }
 
 function constructGeometries(structured) {
-  structured[structuredData.products].forEach(function (product) {
-    return constructGeometry(product);
-  });
-  structured[structuredData.spaces].forEach(function (space) {
-    return constructGeometry(space);
-  });
+  structured[structuredData.products].forEach(product => constructGeometry(product));
+  structured[structuredData.spaces].forEach(space => constructGeometry(space));
 }
 
 function constructGeometry(item) {
@@ -1982,14 +1965,12 @@ function getRepresentations(product) {
 }
 
 function getRepresentationOfItem(items) {
-  if (items) items.forEach(function (item) {
-    return getRepresentationValue(item);
-  });
+  if (items) items.forEach(item => getRepresentationValue(item));
 }
 
 function getRepresentationValue(product) {
   try {
-    var representations = product[namedProps.representation][namedProps.representations];
+    const representations = product[namedProps.representation][namedProps.representations];
     product[namedProps.geomRepresentations] = representations ? representations : [];
   } catch (e) {
     console.warn(e);
@@ -2003,22 +1984,20 @@ function mapRepresentations(product) {
 }
 
 function mapRepresentationsOfItems(items) {
-  if (items) items.forEach(function (item) {
-    return mapProductRepresentations(item);
-  });
+  if (items) items.forEach(item => mapProductRepresentations(item));
 }
 
 function mapProductRepresentations(product) {
   product[namedProps.geometry] = [];
-  product[namedProps.geomRepresentations].forEach(function (representation) {
-    var generatedGeometry = getMappedGeometry(representation, product);
+  product[namedProps.geomRepresentations].forEach(representation => {
+    const generatedGeometry = getMappedGeometry(representation, product);
     generatedGeometry._Data = product;
     product[namedProps.geometry].push(generatedGeometry);
   });
 }
 
 function subtractOpenings(structured) {
-  structured[structuredData.products].forEach(function (product) {
+  structured[structuredData.products].forEach(product => {
     try {
       if (product[namedProps.hasOpenings]) applyBooleanOperation(product);
     } catch (e) {
@@ -2028,16 +2007,16 @@ function subtractOpenings(structured) {
 }
 
 function applyBooleanOperation(product) {
-  for (var i = 0; i < product[namedProps.geometry].length; i++) {
-    var geometryItem = product[namedProps.geometry][i];
+  for (let i = 0; i < product[namedProps.geometry].length; i++) {
+    const geometryItem = product[namedProps.geometry][i];
     if (geometryItem.type === 'Mesh' && !geometryItem[namedProps.isBrep]) product[namedProps.geometry][i] = applyBooleanOperationOnMesh(product, geometryItem);
   }
 }
 
 function applyBooleanOperationOnMesh(product, geometry) {
-  var openings = getOpenings(product);
-  var resultGeom = applyBoolDifferences(geometry, openings);
-  var result = CSG.toMesh(resultGeom, geometry.matrix);
+  const openings = getOpenings(product);
+  const resultGeom = applyBoolDifferences(geometry, openings);
+  const result = CSG.toMesh(resultGeom, geometry.matrix);
   result.geometry = new THREE.BufferGeometry().fromGeometry(result.geometry);
   result.material = new THREE.MeshPhongMaterial();
   addResultToScene(geometry, openings, result);
@@ -2047,52 +2026,48 @@ function applyBooleanOperationOnMesh(product, geometry) {
 function addResultToScene(geometryItem, openings, result) {
   result._Data = geometryItem._Data; //Reference to parsed IFC information
 
-  result.attach.apply(result, _toConsumableArray(openings));
-  result.attach.apply(result, _toConsumableArray(geometryItem.children));
+  result.attach(...openings);
+  result.attach(...geometryItem.children);
   mainObject.add(result);
   mainObject.remove(geometryItem);
 }
 
 function getOpenings(product) {
-  var openingsReps = product[namedProps.hasOpenings];
-  var openings = [];
+  const openingsReps = product[namedProps.hasOpenings];
+  const openings = [];
 
-  for (var i = 0; i < openingsReps.length; i++) {
-    openings.push(openingsReps[i][namedProps.geometry][0]);
-  }
+  for (let i = 0; i < openingsReps.length; i++) openings.push(openingsReps[i][namedProps.geometry][0]);
 
   return openings;
 }
-
-var _materialsMap;
 
 function getMaterial(ifcType) {
   try {
     return materialsMap[ifcTypes[ifcType]].material;
   } catch (e) {
-    console.warn("The type ".concat(ifcType, " doesn't have a material implemented."));
+    console.warn(`The type ${ifcType} doesn't have a material implemented.`);
   }
 }
 
 function getLineColor(ifcType) {
   try {
     return materialsMap[ifcTypes[ifcType]].lineColor;
-  } catch (_unused) {
+  } catch {
     return materialsMap[ifcTypes.IfcWall];
   }
 }
 
 function getDiffuseMat(color) {
-  return new THREE.MeshLambertMaterial(_objectSpread2({}, getBaseSettings(color)));
+  return new THREE.MeshLambertMaterial({ ...getBaseSettings(color)
+  });
 }
 
-function getTransparentMat(color) {
-  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.2;
-  return new THREE.MeshBasicMaterial(_objectSpread2(_objectSpread2({}, getBaseSettings(color)), {}, {
+function getTransparentMat(color, opacity = 0.2) {
+  return new THREE.MeshBasicMaterial({ ...getBaseSettings(color),
     opacity: opacity,
     transparent: true,
     depthWrite: false
-  }));
+  });
 }
 
 function getBaseSettings(color) {
@@ -2105,7 +2080,7 @@ function getBaseSettings(color) {
   };
 }
 
-var colors = {
+const colors = {
   black: 0x000000,
   brown: 0xc2893a,
   red: 0xff0000,
@@ -2115,71 +2090,92 @@ var colors = {
   lightBlue: 0xadd8e6,
   white: 0xffffff
 };
-var materialsMap = (_materialsMap = {}, _defineProperty(_materialsMap, ifcTypes.IfcWall, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcWallStandardCase, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcSite, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcSlab, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcCovering, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcRoof, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcEquipmentElement, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcFurnishingElement, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcDoor, {
-  material: getDiffuseMat(colors.brown),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcRailing, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcColumn, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcStair, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcStairFlight, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcPlate, {
-  material: getTransparentMat(colors.lightBlue, 0.2),
-  lineColor: colors.darkBlue
-}), _defineProperty(_materialsMap, ifcTypes.IfcMember, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _defineProperty(_materialsMap, ifcTypes.IfcFlowTerminal, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.grey
-}), _defineProperty(_materialsMap, ifcTypes.IfcWindow, {
-  material: getTransparentMat(colors.lightBlue, 0.2),
-  lineColor: colors.darkBlue
-}), _defineProperty(_materialsMap, ifcTypes.IfcSpace, {
-  material: getTransparentMat(colors.lightBlue, 0),
-  lineColor: colors.black
-}), _defineProperty(_materialsMap, ifcTypes.IfcOpeningElement, {
-  material: getTransparentMat(colors.lightBlue, 0),
-  lineColor: colors.black
-}), _defineProperty(_materialsMap, ifcTypes.IfcBuildingElementProxy, {
-  material: getDiffuseMat(colors.white),
-  lineColor: colors.darkBrown
-}), _materialsMap);
+const materialsMap = {
+  [ifcTypes.IfcWall]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcWallStandardCase]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcSite]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcSlab]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcCovering]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcRoof]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcEquipmentElement]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcFurnishingElement]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcDoor]: {
+    material: getDiffuseMat(colors.brown),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcRailing]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcColumn]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcStair]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcStairFlight]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcPlate]: {
+    material: getTransparentMat(colors.lightBlue, 0.2),
+    lineColor: colors.darkBlue
+  },
+  [ifcTypes.IfcMember]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  },
+  [ifcTypes.IfcFlowTerminal]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.grey
+  },
+  [ifcTypes.IfcWindow]: {
+    material: getTransparentMat(colors.lightBlue, 0.2),
+    lineColor: colors.darkBlue
+  },
+  [ifcTypes.IfcSpace]: {
+    material: getTransparentMat(colors.lightBlue, 0),
+    lineColor: colors.black
+  },
+  [ifcTypes.IfcOpeningElement]: {
+    material: getTransparentMat(colors.lightBlue, 0),
+    lineColor: colors.black
+  },
+  [ifcTypes.IfcBuildingElementProxy]: {
+    material: getDiffuseMat(colors.white),
+    lineColor: colors.darkBrown
+  }
+};
 
 function applyMaterials(structured) {
   applyMaterialOnSpaces(structured);
-  structured[structuredData.products].forEach(function (product) {
+  structured[structuredData.products].forEach(product => {
     applyMaterialOnMesh(product);
     applyMaterialOnOpenings(product);
     applyMaterialOnSubElements(product);
@@ -2187,15 +2183,11 @@ function applyMaterials(structured) {
 }
 
 function applyMaterialOnSpaces(structured) {
-  structured[structuredData.spaces].forEach(function (space) {
-    return space[namedProps.geometry].forEach(function (item) {
-      return getMeshMaterial(item, space[namedProps.ifcClass]);
-    });
-  });
+  structured[structuredData.spaces].forEach(space => space[namedProps.geometry].forEach(item => getMeshMaterial(item, space[namedProps.ifcClass])));
 }
 
 function applyMaterialOnMesh(product) {
-  product[namedProps.geometry].forEach(function (item) {
+  product[namedProps.geometry].forEach(item => {
     getMeshMaterial(item, product[namedProps.ifcClass]);
   });
 }
@@ -2214,14 +2206,14 @@ function getMeshMaterial(item, ifcType) {
 }
 
 function applyMaterialOnItem(items) {
-  if (items) items.forEach(function (prop) {
-    var mesh = prop[namedProps.geometry][0];
+  if (items) items.forEach(prop => {
+    const mesh = prop[namedProps.geometry][0];
     mesh.material = getMaterial(prop[namedProps.ifcClass]);
   });
 }
 
 function drawEdges(structured) {
-  structured[structuredData.products].forEach(function (product) {
+  structured[structuredData.products].forEach(product => {
     generateEdgesOnProduct(product);
     generateEdgesOnItems(product[namedProps.hasSpatial]);
     generateEdgesOnItems(product[namedProps.hasOpenings]);
@@ -2229,42 +2221,38 @@ function drawEdges(structured) {
 }
 
 function generateEdgesOnProduct(product) {
-  product[namedProps.geometry].forEach(function (item) {
-    var ifcClass = product[namedProps.ifcClass];
+  product[namedProps.geometry].forEach(item => {
+    const ifcClass = product[namedProps.ifcClass];
     if (item.type === 'Mesh' && ifcClass) createEdgesOfItem(ifcClass, item);
   });
 }
 
 function generateEdgesOnItems(items) {
-  if (items) items.forEach(function (item) {
-    return item[namedProps.geometry].forEach(function (geometry) {
-      return createEdgesOfItem(item[namedProps.ifcClass], geometry);
-    });
-  });
+  if (items) items.forEach(item => item[namedProps.geometry].forEach(geometry => createEdgesOfItem(item[namedProps.ifcClass], geometry)));
 }
 
 function createEdgesOfItem(ifcClass, item) {
-  var lineColor = getLineColor(ifcClass);
-  var geometry = new THREE.EdgesGeometry(item.geometry);
-  var material = new THREE.LineBasicMaterial({
+  const lineColor = getLineColor(ifcClass);
+  const geometry = new THREE.EdgesGeometry(item.geometry);
+  const material = new THREE.LineBasicMaterial({
     color: lineColor
   });
-  var wireframe = new THREE.LineSegments(geometry, material);
+  const wireframe = new THREE.LineSegments(geometry, material);
   item.add(wireframe);
 }
 
 function applyScale(structured) {
-  var units = structured[structuredData.units][namedProps.units];
-  var scale = getUnitScale(units);
+  const units = structured[structuredData.units][namedProps.units];
+  const scale = getUnitScale(units);
   if (scale === 1) return;
   applyScaleOnItems(scale, structured);
 }
 
 function applyScaleOnItems(scale, structured) {
-  var axis = new THREE.Object3D();
+  const axis = new THREE.Object3D();
   mainObject.add(axis);
-  var geometries = getALlGeometries(structured);
-  geometries.forEach(function (geometry) {
+  const geometries = getALlGeometries(structured);
+  geometries.forEach(geometry => {
     axis.attach(geometry);
     axis.scale.set(scale, scale, scale);
     mainObject.attach(geometry);
@@ -2273,29 +2261,25 @@ function applyScaleOnItems(scale, structured) {
 }
 
 function getALlGeometries(structured) {
-  var allGeometry = [];
-  structured[structuredData.products].forEach(function (product) {
-    return getGeometry$1(product, allGeometry);
-  });
+  const allGeometry = [];
+  structured[structuredData.products].forEach(product => getGeometry$1(product, allGeometry));
   return allGeometry;
 }
 
 function getGeometry$1(product, allGeometry) {
-  allGeometry.push.apply(allGeometry, _toConsumableArray(product[namedProps.geometry]));
-  if (product[namedProps.hasSpatial]) product[namedProps.hasSpatial].forEach(function (spatial) {
-    return getGeometry$1(spatial, allGeometry);
-  });
+  allGeometry.push(...product[namedProps.geometry]);
+  if (product[namedProps.hasSpatial]) product[namedProps.hasSpatial].forEach(spatial => getGeometry$1(spatial, allGeometry));
 }
 
 function getUnitScale(units) {
-  var lengthUnit = units.filter(function (unitType) {
+  const lengthUnit = units.filter(unitType => {
     return unitType[namedProps.unitType] === 'LENGTHUNIT';
   })[0];
-  var prefix = lengthUnit[namedProps.prefix];
+  const prefix = lengthUnit[namedProps.prefix];
   return unitMap[prefix];
 }
 
-var unitMap = {
+const unitMap = {
   EXA: 100000000,
   PETA: 10000000,
   TERA: 1000000,
@@ -2316,7 +2300,7 @@ var unitMap = {
 };
 
 function buildGeometry(structured) {
-  // console.log(structured);
+  //console.log(structured);
   constructGeometries(structured);
   applyTransformations(structured);
   drawEdges(structured);
