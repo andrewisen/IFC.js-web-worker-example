@@ -7,10 +7,8 @@
  *
  * See: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#importing_scripts_and_libraries
  */
-
 importScripts('../libs/chevrotain.min.js');
 importScripts('../../build/IFC.worker.js');
-
 /**
  * See: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#sending_messages_to_and_from_a_dedicated_worker
  */
