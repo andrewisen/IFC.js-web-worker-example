@@ -299,7 +299,3 @@ Take a look at these commits for a general understanding of what I did.
 ## Info
 
 Forked from [199f78f230f84ffe4d9105deb38b0e033cc6b715](https://github.com/agviegas/IFC.js/tree/199f78f230f84ffe4d9105deb38b0e033cc6b715) (2021-01-19).
-
-```
-
-```
