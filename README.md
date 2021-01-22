@@ -210,7 +210,7 @@ Instead, trust the [Chrome DevTools Performance panel](https://developers.google
 
 We can see that `loadIfcFileItems` and `constructProject` takes roughly the same amount of time to compute.
 
-### Wan can we multithread?
+### What can we multithread?
 
 We must consider one thing.
 
