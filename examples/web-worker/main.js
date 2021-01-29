@@ -10,11 +10,18 @@
  */
 
 /**
- * Make sure to include the Geometry bundle BEFORE (!) the scene.
- * It might give an error otherwise - I have no idea why...
+ * TODO
  */
-import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
-import { scene, animate } from './assets/js/three-scene.js';
+import { IfcFile } from './assets/js/ifc-file.js';
+/**
+ * TODO
+ */
+import { constructSingleWorker, constructMultiWorker } from './assets/js/construct-worker.js';
+/**
+ * TODO
+ */
+import { toggleLoader } from './assets/js/utils.js';
+
 /**
  * From Example 00
  */
@@ -36,66 +43,30 @@ export function readIfcFile() {
  * There is no need to use multiple Web Works on small files.
  */
 function readFile(input) {
+  const { name, lastModified, size } = input.files[0];
+  let myIfcFile = new IfcFile(name, lastModified, size);
   /**
    * Experiment with a fileSizeLimit that feels good :)
+   * 10485760 (10 MB) is a good limit
+   *
+   * I have set the limit to zero for this demo.
+   * This means that we will always use multiple Web Worker.
    */
-  const fileSize = input.files[0].size;
-  const fileSizeLimit = 0; // 10485760; // 10 MB limit
+  const fileSizeLimit = 0;
   /**
-   * The FileReader will be used as before
+   * The FileReader will be used as before (see Example 00)
    */
   const reader = new FileReader();
   reader.onload = () => {
     toggleLoader(); // Start loading animation
     console.time('TOTAL:');
-    if (fileSize < fileSizeLimit) {
-      constructSingleWorker(reader.result);
+    if (myIfcFile.size < fileSizeLimit) {
+      constructSingleWorker(reader.result, myIfcFile);
     } else {
-      constructMultiWorker(reader.result);
+      constructMultiWorker(reader.result, myIfcFile);
     }
   };
   reader.readAsText(input.files[0]);
-}
-/**
- * Start by looking at how the single Web Worker works.
- */
-function constructSingleWorker(result) {
-  const singleWorker = new Worker('worker/single-worker.js');
-  singleWorker.postMessage(result); // See the file "worker.js"
-  singleWorker.onmessage = buildScene;
-}
-/**
- * The Multi Web Worker works in a similar way.
- * But I recommend that you start with the Single Web Worker
- */
-function constructMultiWorker(result) {
-  const multiWorker = new Worker('worker/multi-worker.js');
-  multiWorker.postMessage(result); // See the file "worker.js"
-  multiWorker.onmessage = buildScene;
-}
-/**
- * Build the Three.js scene from the Web Worker
- */
-function buildScene(e) {
-  let structured = e.data; // This is the data from the web worker, i.e. postMessage()
-  structured.MainObject = mainObject; // Add back the mainObject
-  structured = buildGeometry(structured);
-  scene.add(structured.MainObject);
-  animate();
-  document.getElementById('c').style.display = 'block';
-  toggleLoader(); // End loading animation
-  console.timeEnd('TOTAL:');
-}
-/**
- * Show or hide the Loader
- */
-function toggleLoader() {
-  var element = document.getElementById('loading');
-  if (element.style.display === 'none') {
-    element.style.display = 'block';
-  } else {
-    element.style.display = 'none';
-  }
 }
 
 readIfcFile();
