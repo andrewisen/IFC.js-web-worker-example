@@ -1,5 +1,16 @@
 import { buildScene } from './build-scene.js';
 import { saveScene } from './save-scene.js';
+
+/**
+ * TODO
+ */
+function constructWorker(result, myIfcFile, fileSizeLimit) {
+  if (myIfcFile.size < fileSizeLimit) {
+    constructSingleWorker(result, myIfcFile);
+  } else {
+    constructMultiWorker(result, myIfcFile);
+  }
+}
 /**
  * Start by looking at how the single Web Worker works.
  */

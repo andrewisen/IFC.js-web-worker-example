@@ -16,7 +16,7 @@ import { IfcFile } from './assets/js/ifc-file.js';
 /**
  * TODO
  */
-import { constructSingleWorker, constructMultiWorker } from './assets/js/construct-worker.js';
+import { constructWorker } from './assets/js/construct-worker.js';
 /**
  * TODO
  */
@@ -60,11 +60,7 @@ function readFile(input) {
   reader.onload = () => {
     toggleLoader(); // Start loading animation
     console.time('TOTAL:');
-    if (myIfcFile.size < fileSizeLimit) {
-      constructSingleWorker(reader.result, myIfcFile);
-    } else {
-      constructMultiWorker(reader.result, myIfcFile);
-    }
+    constructWorker(reader.result, myIfcFile, fileSizeLimit);
   };
   reader.readAsText(input.files[0]);
 }
