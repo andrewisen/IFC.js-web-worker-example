@@ -14,7 +14,7 @@
  * It might give an error otherwise - I have no idea why...
  */
 import { buildGeometry, mainObject } from '../../build/IFC.geometry.module.js';
-import { scene, animate } from './three-scene.js';
+import { scene, animate } from './assets/js/three-scene.js';
 /**
  * From Example 00
  */
