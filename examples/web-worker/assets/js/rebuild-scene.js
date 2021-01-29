@@ -5,20 +5,19 @@ import { buildGeometry, mainObject } from '../../../../build/IFC.geometry.module
  */
 import { scene, animate } from './three-scene.js';
 import { toggleLoader } from './utils.js';
-// import { saveScene } from './save-scene.js';
 
 /**
- * Build the Three.js scene from the Web Worker
+ * Rebuild the Three.js
+ * Note: The UI will freeze :(
  */
-function buildScene(e) {
-  let structured = e.data; // This is the data from the web worker, i.e. postMessage()
+function rebuildScene(structured) {
+  console.time('TOTAL:');
   structured.MainObject = mainObject; // Add back the mainObject
   structured = buildGeometry(structured);
   scene.add(structured.MainObject);
   animate();
   document.getElementById('c').style.display = 'block';
-  toggleLoader(); // End loading animation
   console.timeEnd('TOTAL:');
 }
 
-export { buildScene };
+export { rebuildScene };

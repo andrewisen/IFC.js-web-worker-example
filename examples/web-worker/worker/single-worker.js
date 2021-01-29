@@ -9,13 +9,16 @@
  */
 importScripts('../../libs/chevrotain.min.js');
 importScripts('../../../build/IFC.singleWorker.js');
+importScripts('./save/indexed-db.js');
+importScripts('./save/save-structured.js');
 /**
  * See: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#sending_messages_to_and_from_a_dedicated_worker
  */
 onmessage = (e) => {
-  const ifcData = e.data;
+  const { result: ifcData, myIfcFile } = e.data;
   const loaded = IFCjs.loadIfcFileItems(ifcData);
   const structured = IFCjs.constructProject(loaded);
+  saveStructured(structured, myIfcFile);
   /**
    * The Web Worker cannot post the MainObject.
    * It will give the following error:

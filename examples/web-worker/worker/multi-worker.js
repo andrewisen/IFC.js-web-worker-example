@@ -10,15 +10,18 @@
 importScripts('../../libs/chevrotain.min.js');
 importScripts('../../../build/IFC.multiWorker.js');
 importScripts('./utils/custom-ifc-types.js');
+importScripts('./save/indexed-db.js');
+importScripts('./save/save-structured.js');
 
 var loaded = {};
 var running = 0;
-
+var myIfcFile;
 onmessage = (e) => {
   /**
    * This is a rewrite of loadIfcFileItems (src/ifc-parser/ifc-services/ifc-processor.js)
    */
-  const ifcData = e.data;
+  const { result: ifcData, myIfcFile: _myIfcFile } = e.data;
+  myIfcFile = _myIfcFile; // Global variable
   const { dataSection } = IFCjs.extractSections(ifcData);
   /**
    * We will construct a Web Worker for each GROUP of ifcTypes.
@@ -86,6 +89,7 @@ function workerDone(e) {
      * And: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#sending_messages_to_and_from_a_dedicated_worker
      */
     const structured = IFCjs.constructProject(loaded);
+    saveStructured(structured, myIfcFile);
     postMessage(structured);
   }
 }
