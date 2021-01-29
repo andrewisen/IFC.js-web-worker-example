@@ -1,5 +1,5 @@
 import { applyTransformations } from './geometry-transformer/transformation.js';
-import { constructGeometries } from './geometry-generator/geometry-mapper.js';
+import { constructGeometries } from './geometry-generator/geometry-map.js';
 import { subtractOpenings } from './geometry-operator/openings-subtractor.js';
 import { applyMaterials } from './scene/materials.js';
 import { drawEdges } from './scene/edges.js';

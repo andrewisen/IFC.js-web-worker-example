@@ -21,6 +21,14 @@ newObject({
 });
 
 newObject({
+  [n.ifcClass]: getName(t.IfcPropertyEnumeratedValue),
+  Name: d.text,
+  Description: d.text,
+  EnumerationValues: d.valueSet,
+  EnumerationReference: d.enum,
+});
+
+newObject({
   [n.ifcClass]: getName(t.IfcSpaceType),
   GlobalId: d.text,
   OwnerHistory: d.id,
@@ -105,6 +113,34 @@ newObject({
 });
 
 newObject({
+  [n.ifcClass]: getName(t.IfcDuctSegmentType),
+  GlobalId: d.text,
+  OwnerHistory: d.id,
+  Name: d.text,
+  Description: d.text,
+  ApplicableOccurrence: d.text,
+  HasPropertySets: d.idSet,
+  RepresentationMaps: d.idSet,
+  Tag: d.text,
+  ElementType: d.text,
+  PredefinedType: d.enum,
+});
+
+newObject({
+  [n.ifcClass]: getName(t.IfcRailingType),
+  GlobalId: d.text,
+  OwnerHistory: d.id,
+  Name: d.text,
+  Description: d.text,
+  ApplicableOccurrence: d.text,
+  HasPropertySets: d.idSet,
+  RepresentationMaps: d.idSet,
+  Tag: d.text,
+  ElementType: d.text,
+  PredefinedType: d.enum,
+});
+
+newObject({
   [n.ifcClass]: getName(t.IfcCoveringType),
   GlobalId: d.text,
   OwnerHistory: d.id,
@@ -161,6 +197,34 @@ newObject({
   OperationType: d.enum,
   ParameterTakesPrecedence: d.bool,
   UserDefinedOperationType: d.text,
+});
+
+newObject({
+  [n.ifcClass]: getName(t.IfcPipeSegmentType),
+  GlobalId: d.text,
+  OwnerHistory: d.id,
+  Name: d.text,
+  Description: d.text,
+  ApplicableOccurrence: d.text,
+  HasPropertySets: d.idSet,
+  RepresentationMaps: d.idSet,
+  Tag: d.text,
+  ElementType: d.text,
+  PredefinedType: d.enum,
+});
+
+newObject({
+  [n.ifcClass]: getName(t.IfcBeamType),
+  GlobalId: d.text,
+  OwnerHistory: d.id,
+  Name: d.text,
+  Description: d.text,
+  ApplicableOccurrence: d.text,
+  HasPropertySets: d.idSet,
+  RepresentationMaps: d.idSet,
+  Tag: d.text,
+  ElementType: d.text,
+  PredefinedType: d.enum,
 });
 
 newObject({
