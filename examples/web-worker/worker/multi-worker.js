@@ -73,7 +73,7 @@ function workerDone(e) {
      * We have used specific Web Workers to build the loaded data.
      * Thus, we are missing references to other entities.
      */
-    IFCjs.referenceEntities(loaded);
+    IFCjs.bindEntities(loaded);
     /**
      * The Web Worker cannot post the MainObject.
      * It will give the following error:
