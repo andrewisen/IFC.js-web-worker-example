@@ -17,7 +17,9 @@ const namedProps = {
   extDirection: "ExtrudedDirection",
   expressId: "_ExpressId",
   fbsmFaces: "FbsmFaces",
+  filletRadius: "FilletRadius",
   firstOperand: "FirstOperand",
+  flangeThickness: "FlangeThickness",
   geometry: "_Geometry",
   geomRepresentations: "_GeometryRepresentations",
   hasBuildingElements: "_HasBuildingElements",
@@ -27,6 +29,7 @@ const namedProps = {
   hasType: "_HasType",
   ifcClass: "_IfcClass",
   innerCurves: "InnerCurves",
+  innerFilletRadius: "InnerFilletRadius",
   isBrep: "_IsBrep",
   items: "Items",
   location: "Location",
@@ -40,6 +43,9 @@ const namedProps = {
   orientation: "Orientation",
   outer: "Outer",
   outerCurve: "OuterCurve",
+  outerFilletRadius: "OuterFilletRadius",
+  overallDepth: "OverallDepth",
+  overallWidth: "OverallWidth",
   parentCurve: "ParentCurve",
   pivots: "Pivots",
   placementRelTo: "PlacementRelTo",
@@ -79,6 +85,7 @@ const namedProps = {
   units: "Units",
   unitType: "UnitType",
   wallThickness: "WallThickness",
+  webThickness: "WebThickness",
   xDim: "XDim",
   yDim: "YDim",
   zDim: "ZDim"
@@ -90,6 +97,7 @@ const ifcUnitsValue = {
 const geometryTypes = {
   annotation2D: "Annotation2D",
   curve2D: "Curve2D",
+  curve3D: "Curve3D",
   sweptSolid: "SweptSolid",
   mappedRepresentation: "MappedRepresentation",
   brep: "Brep",
@@ -314,20 +322,6 @@ function getPlacement(product) {
   }
 }
 
-function createLine(coordinates) {
-  const material = new THREE.LineBasicMaterial({
-    linecap: "round",
-    color: 0xff0000
-  });
-  const points = [];
-  coordinates.forEach(e => {
-    points.push(new THREE.Vector3(e[0], e[1]));
-  });
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const line = new THREE.Line(geometry, material);
-  return line;
-}
-
 const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
@@ -336,14 +330,21 @@ const ifcTypes = {
   IfcCovering: "IFCCOVERING",
   IfcCurtainWall: "IFCCURTAINWALL",
   IfcDoor: "IFCDOOR",
+  IfcElementAssembly: "IFCELEMENTASSEMBLY",
   IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
+  IfcFastener: "IFCFASTENER",
   IfcFlowTerminal: "IFCFLOWTERMINAL",
+  IfcFlowSegment: "IFCFLOWSEGMENT",
   IfcFooting: "IFCFOOTING",
   IfcFurnishingElement: "IFCFURNISHINGELEMENT",
   IfcMappedItem: "IFCMAPPEDITEM",
+  IfcMechanicalFastener: "IFCMECHANICALFASTENER",
   IfcMember: "IFCMEMBER",
   IfcPlate: "IFCPLATE",
   IfcRailing: "IFCRAILING",
+  IfcRamp: "IFCRAMP",
+  IfcReinforcingBar: "IFCREINFORCINGBAR",
+  IfcReinforcingMesh: "IFCREINFORCINGMESH",
   IfcSlab: "IFCSLAB",
   IfcOpeningElement: "IFCOPENINGELEMENT",
   IfcRoof: "IFCROOF",
@@ -361,6 +362,8 @@ const ifcTypes = {
   IfcGridPlacement: "IFCGRIDPLACEMENT",
   IfcLinearPlacement: "IFCLINEARPLACEMENT",
   IfcLocalPlacement: "IFCLOCALPLACEMENT",
+  //Document
+  IfcDocumentReference: "IFCDOCUMENTREFERENCE",
   //Geometry
   IfcArbitraryClosedProfileDef: "IFCARBITRARYCLOSEDPROFILEDEF",
   IfcArbitraryProfileDefWithVoids: "IFCARBITRARYPROFILEDEFWITHVOIDS",
@@ -391,18 +394,22 @@ const ifcTypes = {
   IfcGeometricSet: "IFCGEOMETRICSET",
   IfcHalfSpaceSolid: "IFCHALFSPACESOLID",
   IfcIShapeProfileDef: "IFCISHAPEPROFILEDEF",
+  IfcLine: "IFCLINE",
+  IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
   IfcPlanarExtent: "IFCPLANAREXTENT",
   IfcPlane: "IFCPLANE",
   IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
   IfcPolyline: "IFCPOLYLINE",
   IfcPolyLoop: "IFCPOLYLOOP",
   IfcProductDefinitionShape: "IFCPRODUCTDEFINITIONSHAPE",
+  IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+  IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
   IfcTrimmedCurve: "IFCTRIMMEDCURVE",
-  IfcGeometricSet: "IFCGEOMETRICSET",
   IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
   IfcSurfaceOfLinearExtrusion: "IFCSURFACEOFLINEAREXTRUSION",
+  IfcVector: "IFCVECTOR",
   //Identities
   IfcApplication: "IFCAPPLICATION",
   IfcOrganization: "IFCORGANIZATION",
@@ -444,6 +451,7 @@ const ifcTypes = {
   //Properties
   IfcAirTerminalType: "IFCAIRTERMINALTYPE",
   IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
+  IfcBeamType: "IFCBEAMTYPE",
   IfcColumnType: "IFCCOLUMNTYPE",
   IfcCoveringType: "IFCCOVERINGTYPE",
   IfcCurtainWallType: "IFCCURTAINWALLTYPE",
@@ -453,11 +461,15 @@ const ifcTypes = {
   IfcDoorLiningProperties: "IFCDOORLININGPROPERTIES",
   IfcDoorPanelProperties: "IFCDOORPANELPROPERTIES",
   IfcDoorStyle: "IFCDOORSTYLE",
+  IfcDuctSegmentType: "IFCDUCTSEGMENTTYPE",
   IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
   IfcMemberType: "IFCMEMBERTYPE",
+  IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
   IfcPlateType: "IFCPLATETYPE",
   IfcPropertySet: "IFCPROPERTYSET",
+  IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
   IfcPropertySingleValue: "IFCPROPERTYSINGLEVALUE",
+  IfcRailingType: "IFCRAILINGTYPE",
   IfcSanitaryTerminalType: "IFCSANITARYTERMINALTYPE",
   IfcSpaceType: "IFCSPACETYPE",
   IfcStairFlightType: "IFCSTAIRFLIGHTTYPE",
@@ -476,9 +488,11 @@ const ifcTypes = {
   IfcRelAssignsToActor: "IFCRELASSIGNSTOACTOR",
   IfcRelAssignsToGroup: "IFCRELASSIGNSTOGROUP",
   IfcRelAssociatesClassification: "IFCRELASSOCIATESCLASSIFICATION",
+  IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
   IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
   IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
   IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
+  IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
   IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
   IfcRelDefinesByProperties: "IFCRELDEFINESBYPROPERTIES",
   IfcRelDefinesByType: "IFCRELDEFINESBYTYPE",
@@ -510,7 +524,214 @@ function getName(ifcType) {
   return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
 }
 
+function createLine(coordinates) {
+  const material = new THREE.LineBasicMaterial({
+    linecap: "round",
+    color: 0xff0000
+  });
+  const points = [];
+  coordinates.forEach(e => {
+    points.push(new THREE.Vector3(e[0], e[1]));
+  });
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, material);
+  return line;
+}
+
+function mapPolyline(shape) {
+  const points = [];
+  shape[namedProps.points].forEach(point => {
+    points.push(point[namedProps.coordinates]);
+  });
+  return createLine(points);
+}
+
+function mapPolylineShape(shapeRepresentation) {
+  const points = getShapePoints(shapeRepresentation[namedProps.points]);
+  const shape = new THREE.Shape();
+  shape.moveTo(...points[0]);
+  points.shift();
+  points.forEach(point => shape.lineTo(...point));
+  return shape;
+}
+
+function getShapePoints(pointsRepresentation) {
+  return pointsRepresentation.map(point => {
+    const coords = point[namedProps.coordinates];
+    return [-coords[1], coords[0]];
+  });
+}
+
+function mapTrimmedCurve(curve) {
+  const typeOfTrimmedCurve = curve[namedProps.basisCurve][namedProps.ifcClass].toUpperCase();
+  return trimmedCurvesMap[typeOfTrimmedCurve].line(curve);
+}
+
+function mapTrimmedCurveAsShape(shape, curve) {
+  const typeOfTrimmedCurve = curve[namedProps.basisCurve][namedProps.ifcClass].toUpperCase();
+  return trimmedCurvesMap[typeOfTrimmedCurve].shape(shape, curve);
+}
+
+const trimmedCurvesMap = {
+  [ifcTypes.IfcLine]: {
+    line: mapTrimmedLine
+  },
+  [ifcTypes.IfcCircle]: {
+    shape: mapTrimmedCircleShape,
+    line: mapTrimmedCircleLine
+  },
+  [ifcTypes.IfcEllipse]: {
+    shape: mapTrimmedEllipseShape,
+    line: mapTrimmedCircleLine
+  }
+};
+
+function mapTrimmedLine(curve) {
+  const point1 = getTrimmedCurvePoint(curve[namedProps.trim1]);
+  const point2 = getTrimmedCurvePoint(curve[namedProps.trim2]);
+  return createLine([point1, point2]);
+}
+
+function getTrimmedCurvePoint(trim) {
+  return trim[0][ifcUnitsValue.value][namedProps.coordinates];
+}
+
+function mapTrimmedCircleLine(curve) {
+  const {
+    x,
+    y,
+    radius,
+    trims
+  } = getCircleInfo(curve);
+  const circleCurve = new THREE.EllipseCurve(x, y, radius, radius, trims[0], trims[1], false, 0);
+  const points = circleCurve.getPoints(50).map(point => [point.x, point.y]);
+  return createLine(points);
+}
+//(the last point of the current curve is the closest to the first point of the next curve)
+//But circles in IFC doesn't follow this rule necessarily
+//This logic ensures that the curve is drawn from the closest point to the farthest one
+
+
+function mapTrimmedCircleShape(shape, curve) {
+  const {
+    x,
+    y,
+    radius,
+    trims,
+    ends
+  } = getCircleInfo(curve);
+  const currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
+  const distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
+  distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absarc(x, y, radius, trims[0], trims[1], false) : shape.absarc(x, y, radius, trims[1], trims[0], true);
+}
+
+function mapTrimmedEllipseShape(shape, curve) {
+  const {
+    x,
+    y,
+    a,
+    b,
+    trims,
+    ends
+  } = getEllipseInfo(curve);
+  const currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
+  const distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
+  distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absellipse(x, y, a, b, trims[1], trims[0], true) : shape.absellipse(x, y, a, b, trims[0], trims[1], false);
+}
+
+function getCircleInfo(curve) {
+  const radius = curve[namedProps.basisCurve][namedProps.radius];
+  const {
+    x,
+    y
+  } = getCurveLocation(curve);
+  const trims = getCurveTrims(curve);
+  const ends = getCircleEnds(x, y, radius, trims);
+  return {
+    x,
+    y,
+    radius,
+    trims,
+    ends
+  };
+}
+
+function getEllipseInfo(curve) {
+  const {
+    x,
+    y
+  } = getCurveLocation(curve);
+  const a = curve[namedProps.basisCurve][namedProps.semiAxis1];
+  const b = curve[namedProps.basisCurve][namedProps.semiAxis2];
+  const trims = getCurveTrims(curve);
+  const ends = getEllipseEnds(x, a, b, trims);
+  return {
+    x,
+    y,
+    a,
+    b,
+    trims,
+    ends
+  };
+}
+
+function getCurveLocation(curve) {
+  const loc = curve[namedProps.basisCurve][namedProps.position][namedProps.location][namedProps.coordinates];
+  return {
+    x: loc[0],
+    y: loc[1]
+  };
+}
+
+function getCurveTrims(curve) {
+  return [getCurveTrim(curve, [namedProps.trim1]), getCurveTrim(curve, [namedProps.trim2])];
+}
+
+function getCurveTrim(curve, trim) {
+  const offsetAngle = getTrimmedCurveAngle(curve);
+  return curve[trim][0][ifcUnitsValue.value] * Math.PI / 180 - offsetAngle;
+}
+
+function getCircleEnds(x, y, radius, trims) {
+  return [getCircleEnd(x, y, radius, trims[0]), getCircleEnd(x, y, radius, trims[1])];
+}
+
+function getCircleEnd(x, y, radius, angle) {
+  return [Math.cos(angle) * radius + x, Math.sin(angle) * radius + y];
+}
+
+function getEllipseEnds(x, a, b, trims) {
+  return [getEllipseEnd(x, a, b, trims[0]), getEllipseEnd(x, a, b, trims[1])];
+}
+
+function getEllipseEnd(x, a, b, trim) {
+  const angle = trim % (Math.PI * 2);
+  const factor = angle > 3 * Math.PI / 2 || angle < Math.PI / 2 ? -1 : 1;
+  const endX = a * b / Math.sqrt(b * b + a * a * Math.pow(Math.tan(angle), 2)) * factor;
+  const endY = x * Math.tan(angle);
+  return [endX, endY];
+}
+
+function getDistancesToNextPoints(currentPoint, ends) {
+  return [getDistanceBetweenPoints(currentPoint, ends[0]), getDistanceBetweenPoints(currentPoint, ends[1])];
+}
+
+function getDistanceBetweenPoints(point1, point2) {
+  const a = point1[0] - point2[0];
+  const b = point1[1] - point2[1];
+  return Math.sqrt(a * a + b * b);
+}
+
+function getTrimmedCurveAngle(curve) {
+  const angle = curve[namedProps.basisCurve][namedProps.position][namedProps.refDirection][namedProps.dirRatios];
+  return Math.acos(angle[0]);
+}
+
 function mapCurve2D(shape) {
+  return mapCurve(shape[namedProps.items][0]);
+}
+
+function mapCurve3D(shape) {
   return mapCurve(shape[namedProps.items][0]);
 }
 
@@ -524,25 +745,12 @@ const curve2DMap = {
   [ifcTypes.IfcTrimmedCurve]: mapTrimmedCurve
 };
 
-function mapPolyline(shape) {
-  const points = [];
-  shape[namedProps.points].forEach(point => {
-    points.push(point[namedProps.coordinates]);
-  });
-  return createLine(points);
-}
-
-function mapTrimmedCurve(shape) {
-  //TODO
-  console.log("TODO:", shape);
-  return new THREE.Object3D();
-}
-
-function createExtrusionsByPoints(points, depth, dir = [0, 0, 1], holes) {
+function createExtrusionsByPoints(points, depth, dir = [0, 0, 1], holes, position) {
   const shapePoints = [];
   points.forEach(e => shapePoints.push(new THREE.Vector3(e[1], -e[0])));
   const shape = new THREE.Shape(shapePoints);
   if (holes) holes.forEach(hole => shape.holes.push(hole));
+  dir = correctExtrusionOrientation(dir, position);
   return createExtrusion(shape, depth, dir);
 }
 
@@ -581,6 +789,40 @@ function getCircleCoordinates(radius, steps) {
   return coords;
 }
 
+function createIShapeExtrusion(profile, depth, dir = [0, 0, 1]) {
+  const overallWidth = profile[namedProps.overallWidth];
+  const overallDepth = profile[namedProps.overallDepth];
+  const webThickness = profile[namedProps.webThickness];
+  const flangeThickness = profile[namedProps.flangeThickness];
+  const filletRadius = profile[namedProps.filletRadius];
+  const shape = new THREE.Shape();
+  const halfWidth = overallWidth / 2;
+  const halfDepth = overallDepth / 2;
+  const halfWebThickness = webThickness / 2;
+  shape.moveTo(halfWidth, halfDepth);
+  shape.lineTo(-halfWidth, halfDepth);
+  shape.lineTo(-halfWidth, halfDepth - flangeThickness);
+  shape.lineTo(-halfWebThickness - filletRadius, halfDepth - flangeThickness);
+  shape.lineTo(-halfWebThickness - filletRadius, halfDepth - flangeThickness);
+  shape.arc(0, -filletRadius, filletRadius, Math.PI / 2, 0, true);
+  shape.lineTo(-halfWebThickness, -halfDepth + flangeThickness + filletRadius);
+  shape.arc(-filletRadius, 0, filletRadius, 0, 3 * Math.PI / 2, true);
+  shape.lineTo(-halfWidth, -halfDepth + flangeThickness);
+  shape.lineTo(-halfWidth, -halfDepth);
+  shape.lineTo(halfWidth, -halfDepth);
+  shape.lineTo(halfWidth, -halfDepth + flangeThickness);
+  shape.lineTo(halfWebThickness + filletRadius, -halfDepth + flangeThickness);
+  shape.lineTo(halfWebThickness + filletRadius, -halfDepth + flangeThickness);
+  shape.arc(0, filletRadius, filletRadius, 3 * Math.PI / 2, Math.PI, true);
+  shape.lineTo(halfWebThickness, halfDepth - flangeThickness - filletRadius);
+  shape.arc(filletRadius, 0, filletRadius, Math.PI, Math.PI / 2, true);
+  shape.lineTo(halfWidth, halfDepth - flangeThickness);
+  const extrusion = createExtrusion(shape, depth, dir);
+  extrusion.rotation.z += Math.PI / 2;
+  extrusion.updateMatrix();
+  return extrusion;
+}
+
 function createExtrusion(shape, depth, dir = [0, 0, 1]) {
   const material = new THREE.MeshPhongMaterial({
     color: 0xffffff
@@ -613,12 +855,12 @@ function applyExtrusionDirection(dir, geometry) {
 function getTransformMatrix(dir) {
   const matrix = new THREE.Matrix4();
   const direction = new THREE.Vector3(dir[0], dir[1], dir[2]);
-  const Syx = 0,
-        Sxy = 0,
-        Sxz = 0,
-        Syz = 0;
-  const Szx = direction.y,
-        Szy = direction.x;
+  const Syx = 0;
+  const Sxy = 0;
+  const Sxz = 0;
+  const Syz = 0;
+  const Szx = -direction.x / direction.z;
+  const Szy = direction.y / direction.z;
   return matrix.set(1, Syx, Szx, 0, Sxy, 1, Szy, 0, Sxz, Syz, 1, 0, 0, 0, 0, 1);
 }
 
@@ -626,13 +868,26 @@ function getVerticalDirection(depth, dir) {
   const v1 = new THREE.Vector3(0, 0, 0);
   const v2 = new THREE.Vector3(0, 0, depth * dir[2]);
   return new THREE.LineCurve3(v1, v2);
+} //The extrusion direction needs to be applied when creating the extrusion (at the profile level)
+//But in IFC, the coordinate system of the extrusion direction is at the level of IfcExtrudedAreaSolid
+//Thus, the extrusion direction needs to be correted in order to comply with this coordinate system
+
+
+function correctExtrusionOrientation(direction, position) {
+  if (position) {
+    const directionVector = position[namedProps.refDirection][namedProps.dirRatios];
+    const angle = Math.atan2(directionVector[1], directionVector[0]);
+    return [direction[0] * Math.cos(angle) - direction[1] * Math.sin(angle), direction[0] * Math.sin(angle) + direction[1] * Math.cos(angle), direction[2]];
+  }
+
+  return direction;
 }
 
-function mapRectangleProfileExtrusion(extruded, product) {
+function mapRectangleProfileExtrusion(extruded) {
   getRectProfileDimensions(extruded);
   const position = extruded.profile[namedProps.position];
   const points = getRectProfilePoints(extruded);
-  const geometry = createExtrusionsByPoints(points, extruded.depth, extruded.direction);
+  const geometry = createExtrusionsByPoints(points, extruded.depth, extruded.direction, undefined, position);
   applyTransformsToGeometry(geometry, position);
   return geometry;
 }
@@ -646,6 +901,43 @@ function getRectProfilePoints(extruded) {
 function getRectProfileDimensions(extruded) {
   extruded[namedProps.xDim] = extruded.profile[namedProps.xDim];
   extruded[namedProps.yDim] = extruded.profile[namedProps.yDim];
+}
+
+function mapCompositeCurveShape(props, segments) {
+  const shape = new THREE.Shape();
+  const segmentsRepresentation = segments || props[namedProps.segments];
+  segmentsRepresentation.forEach(curve => mapCompositeCurveSegment(shape, curve));
+  resetFirstCompositeCurve();
+  return shape;
+}
+
+function mapCompositeCurveSegment(shape, segmentRepresentation) {
+  const curve = segmentRepresentation[namedProps.parentCurve];
+  const typeOfCurve = curve[namedProps.ifcClass].toUpperCase();
+  compositeCurvesMap[typeOfCurve](shape, curve);
+}
+
+const compositeCurvesMap = {
+  [ifcTypes.IfcPolyline]: mapPolylineSegment,
+  [ifcTypes.IfcTrimmedCurve]: mapTrimmedCurveAsShape
+};
+
+function mapPolylineSegment(shape, curve) {
+  const points = curve[namedProps.points];
+
+  if (isFirstSegmentOfCompositeCurve) {
+    shape.moveTo(...points[0][namedProps.coordinates]);
+    points.shift();
+    isFirstSegmentOfCompositeCurve = false;
+  }
+
+  points.forEach(point => shape.lineTo(...point[namedProps.coordinates]));
+}
+
+let isFirstSegmentOfCompositeCurve = true;
+
+function resetFirstCompositeCurve() {
+  isFirstSegmentOfCompositeCurve = true;
 }
 
 function mapArbitraryProfileExtrusion(props) {
@@ -683,22 +975,6 @@ const extrusionCurvesMap = {
   }
 };
 
-function mapPolylineShape(shapeRepresentation) {
-  const points = getShapePoints(shapeRepresentation[namedProps.points]);
-  const shape = new THREE.Shape();
-  shape.moveTo(...points[0]);
-  points.shift();
-  points.forEach(point => shape.lineTo(...point));
-  return shape;
-}
-
-function getShapePoints(pointsRepresentation) {
-  return pointsRepresentation.map(point => {
-    const coords = point[namedProps.coordinates];
-    return [-coords[1], coords[0]];
-  });
-}
-
 function mapPolylineExtrusion(props) {
   const profileRepresentation = props.profile;
   const pointsRepresentation = profileRepresentation[namedProps.outerCurve][namedProps.points];
@@ -706,19 +982,9 @@ function mapPolylineExtrusion(props) {
   return createExtrusionsByPoints(points, props.depth, props.direction, props.holes);
 }
 
-function mapCompositeCurveShape(shapeRepresentation) {
-  const shape = new THREE.Shape();
-  const segmentsRepresentation = shapeRepresentation[namedProps.segments];
-  segmentsRepresentation.forEach(curve => mapCompositeCurveSegment(shape, curve));
-  resetFirstCompositeCurve();
-  return shape;
-}
-
 function mapCompositeCurveExtrusion(props) {
-  const shape = new THREE.Shape();
-  const segmentsRepresentation = props.profile[namedProps.outerCurve][namedProps.segments];
-  segmentsRepresentation.forEach(curve => mapCompositeCurveSegment(shape, curve));
-  resetFirstCompositeCurve();
+  const segments = props.profile[namedProps.outerCurve][namedProps.segments];
+  const shape = mapCompositeCurveShape(props, segments);
   if (props.holes) props.holes.forEach(hole => shape.holes.push(hole));
   const extrusion = createExtrusion(shape, props.depth, props.direction);
   extrusion.rotation.z += Math.PI / 2;
@@ -726,111 +992,11 @@ function mapCompositeCurveExtrusion(props) {
   return extrusion;
 }
 
-function mapCompositeCurveSegment(shape, segmentRepresentation) {
-  const curve = segmentRepresentation[namedProps.parentCurve];
-  const typeOfCurve = curve[namedProps.ifcClass].toUpperCase();
-  compositeCurvesMap[typeOfCurve](shape, curve);
-}
-
-const compositeCurvesMap = {
-  [ifcTypes.IfcPolyline]: mapPolylineSegment,
-  [ifcTypes.IfcTrimmedCurve]: mapTrimmedCurveSegment
-};
-
-function mapPolylineSegment(shape, curve) {
-  const points = curve[namedProps.points];
-
-  if (isFirstSegmentOfCompositeCurve) {
-    shape.moveTo(...points[0][namedProps.coordinates]);
-    points.shift();
-    isFirstSegmentOfCompositeCurve = false;
-  }
-
-  points.forEach(point => shape.lineTo(...point[namedProps.coordinates]));
-}
-
-function mapTrimmedCurveSegment(shape, curve) {
-  const typeOfTrimmedCurve = curve[namedProps.basisCurve][namedProps.ifcClass].toUpperCase();
-  trimmedCurvesMap[typeOfTrimmedCurve](shape, curve);
-}
-
-const trimmedCurvesMap = {
-  [ifcTypes.IfcCircle]: mapTrimmedCircleCurve
-}; //Three.js draw shapes continuously
-//(the last point of the current curve is the closest to the first point of the next curve)
-//But circles in IFC doesn't follow this pattern necessarily
-//This function computes the closest point of the next arc
-//To determine wether to draw the circle clockwise or counter-clockwise
-
-function mapTrimmedCircleCurve(shape, curve) {
-  const {
-    x,
-    y,
-    radius,
-    trims,
-    ends
-  } = getCircleInfo(curve);
-  const currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
-  const distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
-  distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absarc(x, y, radius, trims[0], trims[1], false) : shape.absarc(x, y, radius, trims[1], trims[0], true);
-}
-
-function getDistancesToNextPoints(currentPoint, ends) {
-  return [getDistanceBetweenPoints(currentPoint, ends[0]), getDistanceBetweenPoints(currentPoint, ends[1])];
-}
-
-function getCircleInfo(curve) {
-  const location = curve[namedProps.basisCurve][namedProps.position][namedProps.location][namedProps.coordinates];
-  const radius = curve[namedProps.basisCurve][namedProps.radius];
-  const x = location[0];
-  const y = location[1];
-  const trims = getTrimmedCircleTrims(curve);
-  const ends = getTrimmedCircleEnds(x, y, radius, trims);
-  return {
-    x,
-    y,
-    radius,
-    trims,
-    ends
-  };
-}
-
-function getTrimmedCircleTrims(curve) {
-  return [getTrimmedCircleTrim(curve, [namedProps.trim1]), getTrimmedCircleTrim(curve, [namedProps.trim2])];
-}
-
-function getTrimmedCircleTrim(curve, trim) {
-  const rotation = curve[namedProps.basisCurve][namedProps.position][namedProps.refDirection][namedProps.dirRatios];
-  const offsetAngle = Math.acos(rotation[0]);
-  return curve[trim][0][ifcUnitsValue.value] * Math.PI / 180 + offsetAngle;
-}
-
-function getTrimmedCircleEnds(x, y, radius, trims) {
-  return [getCirclePoint(x, y, radius, trims[0]), getCirclePoint(x, y, radius, trims[1])];
-}
-
-function getCirclePoint(x, y, radius, angle) {
-  return [Math.cos(angle) * radius + x, Math.sin(angle) * radius + y];
-}
-
-function getDistanceBetweenPoints(point1, point2) {
-  const a = point1[0] - point2[0];
-  const b = point1[1] - point2[1];
-  return Math.sqrt(a * a + b * b);
-}
-
 function getExtrusionPoints(pointsRepresentation) {
   return pointsRepresentation.map(point => {
     const coords = point[namedProps.coordinates];
     return [-coords[0], -coords[1]];
   });
-} //Three.js needs to know the first point of the first curve to create a shape
-
-
-let isFirstSegmentOfCompositeCurve = true;
-
-function resetFirstCompositeCurve() {
-  isFirstSegmentOfCompositeCurve = true;
 }
 
 function mapCircleProfileExtrusion(extruded) {
@@ -860,6 +1026,13 @@ function getProperties(extruded) {
     radius: extruded.profile[namedProps.radius],
     thickness: extruded.profile[namedProps.wallThickness]
   };
+}
+
+function mapIShapeProfileExtrusion(props) {
+  const position = props.profile[namedProps.position];
+  const geometry = createIShapeExtrusion(props.profile, props.depth, props.direction);
+  applyTransformsToGeometry(geometry, position);
+  return geometry;
 }
 
 function mapSweptSolid(shape, product) {
@@ -902,7 +1075,8 @@ const extrusionTypes = {
   [ifcTypes.IfcCircleProfileDef]: mapCircleProfileExtrusion,
   [ifcTypes.IfcCircleHollowProfileDef]: mapCircleHollowProfileExtrusion,
   [ifcTypes.IfcArbitraryClosedProfileDef]: mapArbitraryProfileExtrusion,
-  [ifcTypes.IfcArbitraryProfileDefWithVoids]: mapArbitraryProfileWithVoidsExtrusion
+  [ifcTypes.IfcArbitraryProfileDefWithVoids]: mapArbitraryProfileWithVoidsExtrusion,
+  [ifcTypes.IfcIShapeProfileDef]: mapIShapeProfileExtrusion
 };
 
 function getExtrusionByType(extruded, product) {
@@ -1183,7 +1357,8 @@ function filterBounds(face, type) {
 function mapGeometricSet(shape) {
   const curves = shape[namedProps.items][0][namedProps.elements];
   const result = new THREE.Object3D();
-  result.children = [...curves.map(e => mapCurve(e))];
+  const mappedCurves = curves.map(e => mapCurve(e));
+  mappedCurves.forEach(curve => result.add(curve));
   return result;
 }
 
@@ -1750,8 +1925,6 @@ CSG.eval=function(tokens,doRemove){//[['add',mesh,mesh,mesh,mesh],['sub',mesh,me
 //          +-------+
 //
 
-// import { scene } from '../../../examples/00/three-scene.js';
-
 function applyBoolDifferences(baseMesh, clipMeshes) {
   preventCoplanarSurfaces(baseMesh);
   let operand1 = CSG.fromMesh(baseMesh);
@@ -1760,7 +1933,7 @@ function applyBoolDifferences(baseMesh, clipMeshes) {
     const clipMesh = clipMeshes[i];
     clipMesh.updateMatrix();
     const operand2 = CSG.fromMesh(clipMesh);
-    operand1 = subtractVolume(operand1, operand2, baseMesh, clipMesh);
+    operand1 = operand2.polygons.length > 0 ? subtractVolume(operand1, operand2, baseMesh, clipMesh) : operand1;
   }
 
   return operand1;
@@ -1912,36 +2085,7 @@ function getBoundingBoxDimensions(representation) {
 
 function mapAnnotation(shape) {
   //TODO
-  console.log("TODO:", shape);
   return new THREE.Object3D();
-}
-
-const geometryMap = {
-  [geometryTypes.curve2D]: mapCurve2D,
-  [geometryTypes.sweptSolid]: mapSweptSolid,
-  [geometryTypes.mappedRepresentation]: mapMappedRepresentation,
-  [geometryTypes.brep]: mapBrep,
-  [geometryTypes.geometricSet]: mapGeometricSet,
-  [geometryTypes.clipping]: mapClipping,
-  [geometryTypes.extrudedAreaSolid]: mapExtrudedAreaSolid,
-  [geometryTypes.surfaceModel]: mapSurfaceModel,
-  [geometryTypes.boundingBox]: mapBoundingBox,
-  [geometryTypes.annotation2D]: mapAnnotation
-};
-
-function getMappedGeometry(representation, product) {
-  const type = getType(representation);
-
-  try {
-    return geometryMap[type](representation, product);
-  } catch (e) {
-    console.warn(`Error with item ${product[namedProps.ifcClass]} of type ${type}: ${e}`);
-  }
-}
-
-function getType(representation) {
-  const type = representation[namedProps.representationType];
-  return type ? type : representation[namedProps.ifcClass];
 }
 
 function constructGeometries(structured) {
@@ -1996,6 +2140,36 @@ function mapProductRepresentations(product) {
   });
 }
 
+const geometryMap = {
+  [geometryTypes.curve2D]: mapCurve2D,
+  [geometryTypes.curve3D]: mapCurve3D,
+  [geometryTypes.sweptSolid]: mapSweptSolid,
+  [geometryTypes.mappedRepresentation]: mapMappedRepresentation,
+  [geometryTypes.brep]: mapBrep,
+  [geometryTypes.geometricSet]: mapGeometricSet,
+  [geometryTypes.clipping]: mapClipping,
+  [geometryTypes.extrudedAreaSolid]: mapExtrudedAreaSolid,
+  [geometryTypes.surfaceModel]: mapSurfaceModel,
+  [geometryTypes.boundingBox]: mapBoundingBox,
+  [geometryTypes.annotation2D]: mapAnnotation
+};
+
+function getMappedGeometry(representation, product) {
+  const type = getType(representation);
+
+  try {
+    return geometryMap[type](representation, product);
+  } catch (e) {
+    console.warn(`Error with item ${product[namedProps.ifcClass]} of type ${type}: ${e}`);
+    return geometryMap[type](representation, product);
+  }
+}
+
+function getType(representation) {
+  const type = representation[namedProps.representationType];
+  return type ? type : representation[namedProps.ifcClass];
+}
+
 function subtractOpenings(structured) {
   structured[structuredData.products].forEach(product => {
     try {
@@ -2026,8 +2200,8 @@ function applyBooleanOperationOnMesh(product, geometry) {
 function addResultToScene(geometryItem, openings, result) {
   result._Data = geometryItem._Data; //Reference to parsed IFC information
 
-  result.attach(...openings);
-  result.attach(...geometryItem.children);
+  openings.forEach(opening => result.attach(opening));
+  geometryItem.children.forEach(child => result.attach(child));
   mainObject.add(result);
   mainObject.remove(geometryItem);
 }
@@ -2041,6 +2215,29 @@ function getOpenings(product) {
   return openings;
 }
 
+const colors = {
+  black: 0x000000,
+  brown: 0xc2893a,
+  red: 0xff0000,
+  grey: 0x606060,
+  darkBrown: 0x5c3d1e,
+  darkBlue: 0x23395d,
+  lightBlue: 0xadd8e6,
+  white: 0xffffff
+};
+const materials = {
+  whiteDiffuse: getDiffuseMat(colors.white),
+  brownDiffuse: getDiffuseMat(colors.brown),
+  transparent: getTransparentMat(colors.white, 0),
+  translucentBlue: getTransparentMat(colors.lightBlue, 0.2)
+};
+const lineMaterials = {
+  grey: newLineMaterial(colors.grey),
+  brown: newLineMaterial(colors.darkBrown),
+  blue: newLineMaterial(colors.darkBlue),
+  black: newLineMaterial(colors.black)
+};
+
 function getMaterial(ifcType) {
   try {
     return materialsMap[ifcTypes[ifcType]].material;
@@ -2049,11 +2246,11 @@ function getMaterial(ifcType) {
   }
 }
 
-function getLineColor(ifcType) {
+function getLineMaterial(ifcType) {
   try {
-    return materialsMap[ifcTypes[ifcType]].lineColor;
+    return materialsMap[ifcTypes[ifcType]].lineMaterial;
   } catch {
-    return materialsMap[ifcTypes.IfcWall];
+    return newLineMaterial(colors.grey);
   }
 }
 
@@ -2080,96 +2277,100 @@ function getBaseSettings(color) {
   };
 }
 
-const colors = {
-  black: 0x000000,
-  brown: 0xc2893a,
-  red: 0xff0000,
-  grey: 0x606060,
-  darkBrown: 0x5c3d1e,
-  darkBlue: 0x23395d,
-  lightBlue: 0xadd8e6,
-  white: 0xffffff
-};
+function newLineMaterial(lineColor) {
+  return new THREE.LineBasicMaterial({
+    color: lineColor
+  });
+}
+
 const materialsMap = {
   [ifcTypes.IfcWall]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcWallStandardCase]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcSite]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcSlab]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcCovering]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcRoof]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcEquipmentElement]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcFurnishingElement]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
-  },
-  [ifcTypes.IfcDoor]: {
-    material: getDiffuseMat(colors.brown),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcRailing]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcColumn]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
+  },
+  [ifcTypes.IfcFooting]: {
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
+  },
+  [ifcTypes.IfcBeam]: {
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcStair]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcStairFlight]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
-  },
-  [ifcTypes.IfcPlate]: {
-    material: getTransparentMat(colors.lightBlue, 0.2),
-    lineColor: colors.darkBlue
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcMember]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
   },
   [ifcTypes.IfcFlowTerminal]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.grey
-  },
-  [ifcTypes.IfcWindow]: {
-    material: getTransparentMat(colors.lightBlue, 0.2),
-    lineColor: colors.darkBlue
-  },
-  [ifcTypes.IfcSpace]: {
-    material: getTransparentMat(colors.lightBlue, 0),
-    lineColor: colors.black
-  },
-  [ifcTypes.IfcOpeningElement]: {
-    material: getTransparentMat(colors.lightBlue, 0),
-    lineColor: colors.black
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.grey
   },
   [ifcTypes.IfcBuildingElementProxy]: {
-    material: getDiffuseMat(colors.white),
-    lineColor: colors.darkBrown
+    material: materials.whiteDiffuse,
+    lineMaterial: lineMaterials.brown
+  },
+  [ifcTypes.IfcDoor]: {
+    material: materials.brownDiffuse,
+    lineMaterial: lineMaterials.brown
+  },
+  [ifcTypes.IfcPlate]: {
+    material: materials.translucentBlue,
+    lineMaterial: lineMaterials.blue
+  },
+  [ifcTypes.IfcWindow]: {
+    material: materials.translucentBlue,
+    lineMaterial: lineMaterials.blue
+  },
+  [ifcTypes.IfcSpace]: {
+    material: materials.transparent,
+    lineMaterial: lineMaterials.grey
+  },
+  [ifcTypes.IfcOpeningElement]: {
+    material: materials.transparent,
+    lineMaterial: lineMaterials.grey
   }
 };
 
@@ -2207,8 +2408,9 @@ function getMeshMaterial(item, ifcType) {
 
 function applyMaterialOnItem(items) {
   if (items) items.forEach(prop => {
-    const mesh = prop[namedProps.geometry][0];
-    mesh.material = getMaterial(prop[namedProps.ifcClass]);
+    prop[namedProps.geometry].forEach(geometry => {
+      if (geometry.type === 'Mesh') geometry.material = getMaterial(prop[namedProps.ifcClass]);
+    });
   });
 }
 
@@ -2232,13 +2434,16 @@ function generateEdgesOnItems(items) {
 }
 
 function createEdgesOfItem(ifcClass, item) {
-  const lineColor = getLineColor(ifcClass);
-  const geometry = new THREE.EdgesGeometry(item.geometry);
-  const material = new THREE.LineBasicMaterial({
-    color: lineColor
-  });
-  const wireframe = new THREE.LineSegments(geometry, material);
-  item.add(wireframe);
+  try {
+    if (item.type === 'Mesh') {
+      const geometry = new THREE.EdgesGeometry(item.geometry);
+      const material = getLineMaterial(ifcClass);
+      const wireframe = new THREE.LineSegments(geometry, material);
+      item.add(wireframe);
+    }
+  } catch (e) {
+    console.warn(`Error generating edges of the following item, of class ${ifcClass}:`, item);
+  }
 }
 
 function applyScale(structured) {

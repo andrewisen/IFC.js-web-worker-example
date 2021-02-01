@@ -17,7 +17,9 @@ const namedProps = {
   extDirection: "ExtrudedDirection",
   expressId: "_ExpressId",
   fbsmFaces: "FbsmFaces",
+  filletRadius: "FilletRadius",
   firstOperand: "FirstOperand",
+  flangeThickness: "FlangeThickness",
   geometry: "_Geometry",
   geomRepresentations: "_GeometryRepresentations",
   hasBuildingElements: "_HasBuildingElements",
@@ -27,6 +29,7 @@ const namedProps = {
   hasType: "_HasType",
   ifcClass: "_IfcClass",
   innerCurves: "InnerCurves",
+  innerFilletRadius: "InnerFilletRadius",
   isBrep: "_IsBrep",
   items: "Items",
   location: "Location",
@@ -40,6 +43,9 @@ const namedProps = {
   orientation: "Orientation",
   outer: "Outer",
   outerCurve: "OuterCurve",
+  outerFilletRadius: "OuterFilletRadius",
+  overallDepth: "OverallDepth",
+  overallWidth: "OverallWidth",
   parentCurve: "ParentCurve",
   pivots: "Pivots",
   placementRelTo: "PlacementRelTo",
@@ -79,6 +85,7 @@ const namedProps = {
   units: "Units",
   unitType: "UnitType",
   wallThickness: "WallThickness",
+  webThickness: "WebThickness",
   xDim: "XDim",
   yDim: "YDim",
   zDim: "ZDim"
@@ -86,6 +93,10 @@ const namedProps = {
 const typeValue = {
   type: "type",
   value: "value"
+};
+const ifcUnitsValue = {
+  value: "Value",
+  unit: "IfcUnit"
 };
 const structuredData = {
   ifcProject: "IfcProject",
@@ -112,43 +123,41 @@ const ifcDataTypes = {
   textSet: "TextSet"
 };
 
-function referenceEntities(items) {
-  let key;
+function bindEntities(items) {
+  for (let item in items) {
+    const ifcItem = items[item];
 
-  for (key in items) {
-    const ifcLine = items[key];
-
-    for (key in ifcLine) {
-      const ifcProperty = ifcLine[key];
-      referenceSingleItem(ifcProperty, items);
-      referenceMultipleItems(ifcProperty, items);
-      trimExplicitTypes(ifcLine, key);
+    for (let property in ifcItem) {
+      bindProperty(ifcItem[property], items);
+      trimExplicitTypes(ifcItem, property);
     }
   }
 }
 
-function referenceSingleItem(ifcProperty, items) {
-  if (isSingleItemValid(ifcProperty, items)) ifcProperty[typeValue.value] = items[ifcProperty[typeValue.value]];
+function bindProperty(ifcProperty, items) {
+  bindIdProperty(ifcProperty, items);
+  bindIdSetProperty(ifcProperty, items);
+  bindValueSetProperty(ifcProperty, items);
 }
 
-function isSingleItemValid(ifcProperty, items) {
-  return isItemWithReference(ifcProperty) && items.hasOwnProperty(ifcProperty[typeValue.value]);
+function bindIdProperty(ifcProperty, items) {
+  const id = ifcProperty[typeValue.value];
+  if (ifcProperty[typeValue.type] === ifcDataTypes.id && items.hasOwnProperty(id)) ifcProperty[typeValue.value] = items[id];
 }
 
-function referenceMultipleItems(ifcProperty, items) {
+function bindIdSetProperty(ifcProperty, items) {
   if (ifcProperty[typeValue.type] === ifcDataTypes.idSet) {
-    const property = ifcProperty;
-    const values = [...property[typeValue.value]];
-    property[typeValue.value] = values.map(e => {
-      return items.hasOwnProperty(e) ? items[e] : e;
-    });
+    const values = [...ifcProperty[typeValue.value]];
+    ifcProperty[typeValue.value] = values.map(e => items.hasOwnProperty(e) ? items[e] : e);
   }
-}
+} //IfcValues can also contains IDs (not always)
 
-function isItemWithReference(item) {
-  if (item[typeValue.value] === ifcDataTypes[typeValue.value] && !isNaN(item[typeValue.value])) return true;
-  if (item[typeValue.type] === ifcDataTypes.id) return true;
-  return false;
+
+function bindValueSetProperty(ifcProperty, items) {
+  if (ifcProperty[typeValue.type] === ifcDataTypes.valueSet && ifcProperty[typeValue.value][0][ifcUnitsValue.unit] === ifcDataTypes.id) ifcProperty[typeValue.value] = ifcProperty[typeValue.value].map(e => {
+    if (items.hasOwnProperty(e[ifcUnitsValue.value])) e[ifcUnitsValue.value] = items[e[ifcUnitsValue.value]];
+    return e;
+  });
 }
 
 function trimExplicitTypes(ifcLine, key) {
@@ -159,7 +168,7 @@ function trimExplicitTypes(ifcLine, key) {
 const regexp = {
   allNewLines: /\r?\n|\r/g,
   headerSection: /HEADER;.+?(?=ENDSEC;)/,
-  dataSection: /DATA;\s+.+(?=ENDSEC;)/,
+  dataSection: /DATA;.+(?=ENDSEC;)/,
   singleIfcItems: /#\d+\s*=\s*IFC.+?\)(;\s*(?=#\d*)|;\s*$)/g,
   expressId: /^#\d+/,
   rawIfcType: /IFC\w+/,
@@ -179,7 +188,7 @@ function readDataSection(ifcLine) {
 }
 
 function removeAllNewLines(ifcFile) {
-  return ifcFile.replace(regexp.allNewLines, ' ');
+  return ifcFile.replace(regexp.allNewLines, '');
 }
 
 const ifcTypes = {
@@ -190,14 +199,21 @@ const ifcTypes = {
   IfcCovering: "IFCCOVERING",
   IfcCurtainWall: "IFCCURTAINWALL",
   IfcDoor: "IFCDOOR",
+  IfcElementAssembly: "IFCELEMENTASSEMBLY",
   IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
+  IfcFastener: "IFCFASTENER",
   IfcFlowTerminal: "IFCFLOWTERMINAL",
+  IfcFlowSegment: "IFCFLOWSEGMENT",
   IfcFooting: "IFCFOOTING",
   IfcFurnishingElement: "IFCFURNISHINGELEMENT",
   IfcMappedItem: "IFCMAPPEDITEM",
+  IfcMechanicalFastener: "IFCMECHANICALFASTENER",
   IfcMember: "IFCMEMBER",
   IfcPlate: "IFCPLATE",
   IfcRailing: "IFCRAILING",
+  IfcRamp: "IFCRAMP",
+  IfcReinforcingBar: "IFCREINFORCINGBAR",
+  IfcReinforcingMesh: "IFCREINFORCINGMESH",
   IfcSlab: "IFCSLAB",
   IfcOpeningElement: "IFCOPENINGELEMENT",
   IfcRoof: "IFCROOF",
@@ -215,6 +231,8 @@ const ifcTypes = {
   IfcGridPlacement: "IFCGRIDPLACEMENT",
   IfcLinearPlacement: "IFCLINEARPLACEMENT",
   IfcLocalPlacement: "IFCLOCALPLACEMENT",
+  //Document
+  IfcDocumentReference: "IFCDOCUMENTREFERENCE",
   //Geometry
   IfcArbitraryClosedProfileDef: "IFCARBITRARYCLOSEDPROFILEDEF",
   IfcArbitraryProfileDefWithVoids: "IFCARBITRARYPROFILEDEFWITHVOIDS",
@@ -245,18 +263,22 @@ const ifcTypes = {
   IfcGeometricSet: "IFCGEOMETRICSET",
   IfcHalfSpaceSolid: "IFCHALFSPACESOLID",
   IfcIShapeProfileDef: "IFCISHAPEPROFILEDEF",
+  IfcLine: "IFCLINE",
+  IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
   IfcPlanarExtent: "IFCPLANAREXTENT",
   IfcPlane: "IFCPLANE",
   IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
   IfcPolyline: "IFCPOLYLINE",
   IfcPolyLoop: "IFCPOLYLOOP",
   IfcProductDefinitionShape: "IFCPRODUCTDEFINITIONSHAPE",
+  IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+  IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
   IfcTrimmedCurve: "IFCTRIMMEDCURVE",
-  IfcGeometricSet: "IFCGEOMETRICSET",
   IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
   IfcSurfaceOfLinearExtrusion: "IFCSURFACEOFLINEAREXTRUSION",
+  IfcVector: "IFCVECTOR",
   //Identities
   IfcApplication: "IFCAPPLICATION",
   IfcOrganization: "IFCORGANIZATION",
@@ -298,6 +320,7 @@ const ifcTypes = {
   //Properties
   IfcAirTerminalType: "IFCAIRTERMINALTYPE",
   IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
+  IfcBeamType: "IFCBEAMTYPE",
   IfcColumnType: "IFCCOLUMNTYPE",
   IfcCoveringType: "IFCCOVERINGTYPE",
   IfcCurtainWallType: "IFCCURTAINWALLTYPE",
@@ -307,11 +330,15 @@ const ifcTypes = {
   IfcDoorLiningProperties: "IFCDOORLININGPROPERTIES",
   IfcDoorPanelProperties: "IFCDOORPANELPROPERTIES",
   IfcDoorStyle: "IFCDOORSTYLE",
+  IfcDuctSegmentType: "IFCDUCTSEGMENTTYPE",
   IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
   IfcMemberType: "IFCMEMBERTYPE",
+  IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
   IfcPlateType: "IFCPLATETYPE",
   IfcPropertySet: "IFCPROPERTYSET",
+  IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
   IfcPropertySingleValue: "IFCPROPERTYSINGLEVALUE",
+  IfcRailingType: "IFCRAILINGTYPE",
   IfcSanitaryTerminalType: "IFCSANITARYTERMINALTYPE",
   IfcSpaceType: "IFCSPACETYPE",
   IfcStairFlightType: "IFCSTAIRFLIGHTTYPE",
@@ -330,9 +357,11 @@ const ifcTypes = {
   IfcRelAssignsToActor: "IFCRELASSIGNSTOACTOR",
   IfcRelAssignsToGroup: "IFCRELASSIGNSTOGROUP",
   IfcRelAssociatesClassification: "IFCRELASSOCIATESCLASSIFICATION",
+  IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
   IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
   IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
   IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
+  IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
   IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
   IfcRelDefinesByProperties: "IFCRELDEFINESBYPROPERTIES",
   IfcRelDefinesByType: "IFCRELDEFINESBYTYPE",
@@ -480,4 +509,4 @@ function bindTypesToElements(finder) {
   bindElements(finder, ifcTypes.IfcRelDefinesByType, namedProps.relatedObjects, namedProps.relatingType, namedProps.hasType);
 }
 
-export { constructProject, extractSections, referenceEntities };
+export { bindEntities, constructProject, extractSections };
