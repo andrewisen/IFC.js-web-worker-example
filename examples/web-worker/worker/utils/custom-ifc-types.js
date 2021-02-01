@@ -24,14 +24,21 @@ const _buildingElements = {
   IfcCovering: 'IFCCOVERING',
   IfcCurtainWall: 'IFCCURTAINWALL',
   IfcDoor: 'IFCDOOR',
+  IfcElementAssembly: 'IFCELEMENTASSEMBLY',
   IfcEquipmentElement: 'IFCEQUIPMENTELEMENT',
+  IfcFastener: 'IFCFASTENER',
   IfcFlowTerminal: 'IFCFLOWTERMINAL',
+  IfcFlowSegment: 'IFCFLOWSEGMENT',
   IfcFooting: 'IFCFOOTING',
   IfcFurnishingElement: 'IFCFURNISHINGELEMENT',
   IfcMappedItem: 'IFCMAPPEDITEM',
+  IfcMechanicalFastener: 'IFCMECHANICALFASTENER',
   IfcMember: 'IFCMEMBER',
   IfcPlate: 'IFCPLATE',
   IfcRailing: 'IFCRAILING',
+  IfcRamp: 'IFCRAMP',
+  IfcReinforcingBar: 'IFCREINFORCINGBAR',
+  IfcReinforcingMesh: 'IFCREINFORCINGMESH',
   IfcSlab: 'IFCSLAB',
   IfcOpeningElement: 'IFCOPENINGELEMENT',
   IfcRoof: 'IFCROOF',
@@ -61,7 +68,8 @@ const _geometryFacesMisc = {
  */
 const _geometryPoints = {
   IfcCartesianPoint: 'IFCCARTESIANPOINT',
-  IfcCartesianTransformationOperator3D: 'IFCCARTESIANTRANSFORMATIONOPERATOR3D'
+  IfcCartesianTransformationOperator3D: 'IFCCARTESIANTRANSFORMATIONOPERATOR3D',
+  IfcVector: 'IFCVECTOR'
 };
 /**
  * Geometry - Planes
@@ -105,8 +113,9 @@ const _geometryMisc = {
   IfcGeometricSet: 'IFCGEOMETRICSET',
   IfcHalfSpaceSolid: 'IFCHALFSPACESOLID',
   IfcIShapeProfileDef: 'IFCISHAPEPROFILEDEF',
+  IfcLine: 'IFCLINE',
+  IfcLShapeProfileDef: 'IFCLSHAPEPROFILEDEF',
   IfcTrimmedCurve: 'IFCTRIMMEDCURVE',
-  IfcGeometricSet: 'IFCGEOMETRICSET',
   IfcArbitraryOpenProfileDef: 'IFCARBITRARYOPENPROFILEDEF',
   IfcSurfaceOfLinearExtrusion: 'IFCSURFACEOFLINEAREXTRUSION',
   IfcArbitraryClosedProfileDef: 'IFCARBITRARYCLOSEDPROFILEDEF',
@@ -114,8 +123,11 @@ const _geometryMisc = {
   IfcBooleanClippingResult: 'IFCBOOLEANCLIPPINGRESULT',
   IfcBoundingBox: 'IFCBOUNDINGBOX',
   IfcProductDefinitionShape: 'IFCPRODUCTDEFINITIONSHAPE',
+  IfcRectangleHollowProfileDef: 'IFCRECTANGLEHOLLOWPROFILEDEF',
+  IfcLShapeProfileDef: 'IFCLSHAPEPROFILEDEF',
   IfcRectangleProfileDef: 'IFCRECTANGLEPROFILEDEF',
-  IfcShapeRepresentation: 'IFCSHAPEREPRESENTATION'
+  IfcShapeRepresentation: 'IFCSHAPEREPRESENTATION',
+  IfcSweptDiskSolid: 'IFCSWEPTDISKSOLID'
 };
 /**
  * Properties
@@ -123,6 +135,7 @@ const _geometryMisc = {
 const _properties = {
   IfcAirTerminalType: 'IFCAIRTERMINALTYPE',
   IfcBuildingElementProxyType: 'IFCBUILDINGELEMENTPROXYTYPE',
+  IfcBeamType: 'IFCBEAMTYPE',
   IfcColumnType: 'IFCCOLUMNTYPE',
   IfcCoveringType: 'IFCCOVERINGTYPE',
   IfcCurtainWallType: 'IFCCURTAINWALLTYPE',
@@ -132,11 +145,15 @@ const _properties = {
   IfcDoorLiningProperties: 'IFCDOORLININGPROPERTIES',
   IfcDoorPanelProperties: 'IFCDOORPANELPROPERTIES',
   IfcDoorStyle: 'IFCDOORSTYLE',
+  IfcDuctSegmentType: 'IFCDUCTSEGMENTTYPE',
   IfcLightFixtureType: 'IFCLIGHTFIXTURETYPE',
   IfcMemberType: 'IFCMEMBERTYPE',
+  IfcPipeSegmentType: 'IFCPIPESEGMENTTYPE',
   IfcPlateType: 'IFCPLATETYPE',
   IfcPropertySet: 'IFCPROPERTYSET',
+  IfcPropertyEnumeratedValue: 'IFCPROPERTYENUMERATEDVALUE',
   IfcPropertySingleValue: 'IFCPROPERTYSINGLEVALUE',
+  IfcRailingType: 'IFCRAILINGTYPE',
   IfcSanitaryTerminalType: 'IFCSANITARYTERMINALTYPE',
   IfcSpaceType: 'IFCSPACETYPE',
   IfcStairFlightType: 'IFCSTAIRFLIGHTTYPE',
@@ -154,9 +171,11 @@ const _relationships = {
   IfcRelAssignsToActor: 'IFCRELASSIGNSTOACTOR',
   IfcRelAssignsToGroup: 'IFCRELASSIGNSTOGROUP',
   IfcRelAssociatesClassification: 'IFCRELASSOCIATESCLASSIFICATION',
+  IfcRelAssociatesDocument: 'IFCRELASSOCIATESDOCUMENT',
   IfcRelAssociatesMaterial: 'IFCRELASSOCIATESMATERIAL',
   IfcRelConnectsPathElements: 'IFCRELCONNECTSPATHELEMENTS',
   IfcRelConnectsPortToElement: 'IFCRELCONNECTSPORTTOELEMENT',
+  IfcRelConnectsWithRealizingElements: 'IFCRELCONNECTSWITHREALIZINGELEMENTS',
   IfcRelContainedInSpatialStructure: 'IFCRELCONTAINEDINSPATIALSTRUCTURE',
   IfcRelDefinesByProperties: 'IFCRELDEFINESBYPROPERTIES',
   IfcRelDefinesByType: 'IFCRELDEFINESBYTYPE',
@@ -226,6 +245,8 @@ const _misc = {
   IfcGridPlacement: 'IFCGRIDPLACEMENT',
   IfcLinearPlacement: 'IFCLINEARPLACEMENT',
   IfcLocalPlacement: 'IFCLOCALPLACEMENT',
+  // Document
+  IfcDocumentReference: 'IFCDOCUMENTREFERENCE',
   // Identities
   IfcApplication: 'IFCAPPLICATION',
   IfcOrganization: 'IFCORGANIZATION',
