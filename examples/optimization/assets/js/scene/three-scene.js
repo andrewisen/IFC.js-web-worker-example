@@ -75,7 +75,11 @@ function resizeRendererToDisplaySize(renderer) {
 
 let renderRequested = false;
 
-// Credit: https://threejsfundamentals.org/threejs/lessons/threejs-rendering-on-demand.html
+/**
+ * Only animate on demand
+ *
+ * Credit: https://threejsfundamentals.org/threejs/lessons/threejs-rendering-on-demand.html
+ */
 var animateOnDemand = function () {
   renderRequested = undefined;
 
@@ -105,13 +109,21 @@ function isMobile() {
   return 'ontouchstart' in document.documentElement;
 }
 
+/**
+ * Hide the Hidden group
+ */
 const hideGroup = () => {
   scene.children[scene.children.length - 1].visible = false;
 };
-
+/**
+ * Show the Hidden group
+ */
 const showGroup = () => {
   scene.children[scene.children.length - 1].visible = true;
 };
+/**
+ * For mouse wheel - not working properly
+ */
 const hideGroupWithDelay = () => {
   hideGroup();
   setTimeout(() => {

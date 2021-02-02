@@ -1,8 +1,19 @@
 /**
  * The logic is the same as the Web Worker example.
- * I have removed all comments related to that example.
+ * I have removed all comments that are related to that example.
  *
- * We will focus on the `assets/js/three-js.js` file.
+ * Go to:
+ * - examples/optimization/assets/js/scene/build-scene.js
+ * - examples/optimization/assets/js/scene/rebuild-scene.js
+ *
+ * Both files use the groupStructure function.
+ * It's a very simple function to split the geometry into two groups, visible and hidden.
+ *
+ * The scene is updated to only animate on demand.
+ * When an update is requested, it will hide the so-called hidden geometry,
+ *
+ * See:
+ * - examples/optimization/assets/js/scene/three-scene.js
  */
 import { IfcFile } from './assets/js/utils/ifc-file.js';
 import { parseIfcFile } from './assets/js/worker/construct-worker.js';
