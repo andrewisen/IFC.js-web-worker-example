@@ -4,6 +4,7 @@ importScripts('./utils/custom-ifc-types.js');
 importScripts('./save/indexed-db.js');
 importScripts('./save/save-structured.js');
 var loaded = {};
+var hidden = {};
 var running = 0;
 var myIfcFile;
 onmessage = (e) => {
@@ -25,7 +26,11 @@ const constructWebWorker = (dataSection, ifcTypesGroupName, ifcTypesGroup) => {
   });
 };
 function workerDone(e) {
-  const _loaded = e.data.loaded;
+  const hiddenBuildingElements = '_hiddenBuildingElements';
+  const { loaded: _loaded, ifcTypesGroupName } = e.data;
+  if (ifcTypesGroupName === hiddenBuildingElements) {
+    Object.assign(hidden, _loaded);
+  }
   Object.assign(loaded, _loaded);
   --running;
   if (running === 0) {

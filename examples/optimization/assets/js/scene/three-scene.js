@@ -1,4 +1,4 @@
-import { pick } from './scene-picker.js';
+// import { pick } from './scene-picker.js';
 
 //Scene
 var scene = new THREE.Scene();
@@ -66,28 +66,67 @@ function resizeRendererToDisplaySize(renderer) {
   const canvas = renderer.domElement;
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
-  if (canvas.width !== width || canvas.height !== height) {
+  const needResize = canvas.width !== width || canvas.height !== height;
+  if (needResize) {
     renderer.setSize(width, height, false);
-    camera.aspect = width / height;
+  }
+  return needResize;
+}
+
+let renderRequested = false;
+
+// Credit: https://threejsfundamentals.org/threejs/lessons/threejs-rendering-on-demand.html
+var animateOnDemand = function () {
+  renderRequested = undefined;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
+  }
+
+  controls.update();
+
+  // pick(camera);
+  renderer.render(scene, camera);
+};
+
+function requestRenderIfNotRequested() {
+  if (!renderRequested) {
+    renderRequested = true;
+    requestAnimationFrame(animateOnDemand);
   }
 }
 
-//Update
-var animate = function () {
-  requestAnimationFrame(animate);
-  controls.update();
-  resizeRendererToDisplaySize(renderer);
-
-  pick(camera);
-
-  renderer.render(scene, camera);
-};
+controls.addEventListener('change', requestRenderIfNotRequested);
+window.addEventListener('resize', requestRenderIfNotRequested);
 
 function isMobile() {
   return 'ontouchstart' in document.documentElement;
 }
 
-// animate();
+const hideGroup = () => {
+  scene.children[scene.children.length - 1].visible = false;
+};
 
-export { scene, animate };
+const showGroup = () => {
+  scene.children[scene.children.length - 1].visible = true;
+};
+const hideGroupWithDelay = () => {
+  hideGroup();
+  setTimeout(() => {
+    showGroup();
+    requestRenderIfNotRequested();
+  }, 100);
+};
+
+canvas.addEventListener('mousedown', hideGroup);
+canvas.addEventListener('mouseup', showGroup);
+// canvas.addEventListener('mousewheel', hideGroupWithDelay);
+
+function initScene() {
+  animateOnDemand();
+  requestRenderIfNotRequested();
+}
+
+export { scene, initScene };

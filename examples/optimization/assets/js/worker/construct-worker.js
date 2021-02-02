@@ -1,5 +1,5 @@
-import { buildScene } from './build-scene.js';
-import { toggleLoader } from './utils.js';
+import { buildScene } from '../scene/build-scene.js';
+import { toggleLoader } from '../utils/utils.js';
 
 function parseIfcFile(input, myIfcFile) {
   const fileSizeLimit = 0;
@@ -12,19 +12,18 @@ function parseIfcFile(input, myIfcFile) {
   reader.readAsText(input.files[0]);
 }
 
+/**
+ * Single Web Worker has been disabled
+ */
 function constructWorker(result, myIfcFile, fileSizeLimit) {
-  if (myIfcFile.size < fileSizeLimit) {
-    constructSingleWorker(result, myIfcFile);
-  } else {
-    constructMultiWorker(result, myIfcFile);
-  }
+  constructMultiWorker(result, myIfcFile);
 }
 
-function constructSingleWorker(result, myIfcFile) {
-  const singleWorker = new Worker('worker/single-worker.js');
-  singleWorker.postMessage({ result, myIfcFile });
-  multiWorker.onmessage = buildScene;
-}
+// function constructSingleWorker(result, myIfcFile) {
+//   const singleWorker = new Worker('worker/single-worker.js');
+//   singleWorker.postMessage({ result, myIfcFile });
+//   multiWorker.onmessage = buildScene;
+// }
 
 function constructMultiWorker(result, myIfcFile) {
   const multiWorker = new Worker('worker/multi-worker.js');
