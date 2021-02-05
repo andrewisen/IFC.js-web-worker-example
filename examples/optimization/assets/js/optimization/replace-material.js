@@ -1,7 +1,7 @@
 /**
- * Read more at: https://threejsfundamentals.org/threejs/lessons/threejs-materials.html
+ * Deprecated
  */
-function replaceMaterial(mainObject) {
+const replaceMaterial = (mainObject) => {
   for (let i = 0; i < mainObject.children.length; i++) {
     let child = mainObject.children[i];
     const type = child.type;
@@ -19,6 +19,6 @@ function replaceMaterial(mainObject) {
     mainObject.children[i].material = material;
   }
   return mainObject;
-}
+};
 
 export { replaceMaterial };

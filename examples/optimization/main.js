@@ -21,7 +21,15 @@ import { toggleLoader } from './assets/js/utils/utils.js';
 import { IndexedDB } from './assets/js/database/indexed-db.js';
 import { rebuildScene } from './assets/js/scene/rebuild-scene.js';
 import { simpleCheck } from './assets/js/worker/simple-check.js';
-export function readIfcFile() {
+/**
+ * Constants
+ */
+const TIME_LABEL = 'Total';
+const DEV = true;
+/**
+ * On input change, read the file.
+ */
+const readIfcFile = () => {
   const input = document.querySelector('input[type="file"]');
   input.addEventListener(
     'change',
@@ -30,18 +38,33 @@ export function readIfcFile() {
     },
     false
   );
-}
-function readFile(input) {
+};
+/**
+ * Read file either from FileReader or IndexedDB.
+ */
+const readFile = (input) => {
+  if (DEV) console.time(TIME_LABEL);
   const { name, lastModified, size } = input.files[0];
-  let myIfcFile = new IfcFile(name, lastModified, size);
-  let indexedDB = new IndexedDB();
+  const myIfcFile = new IfcFile(name, lastModified, size);
+  const indexedDB = new IndexedDB();
   const cb = () => {
-    indexedDB.get(myIfcFile.name, function (ifcFile) {
-      simpleCheck(ifcFile) ? parseIfcFile(input, myIfcFile) : rebuildScene(ifcFile.structured);
+    indexedDB.get(myIfcFile.name, (ifcFile) => {
+      DEV
+        ? parseIfcFile(input, myIfcFile)
+        : simpleCheck(ifcFile)
+        ? parseIfcFile(input, myIfcFile)
+        : rebuildScene(ifcFile.structured);
     });
   };
   indexedDB.init(cb);
-}
-readIfcFile();
-document.getElementById('c').style.display = 'none';
-toggleLoader();
+};
+/**
+ * Add event listener and toggle loader.
+ */
+const main = () => {
+  readIfcFile();
+  document.getElementById('c').style.display = 'none';
+  toggleLoader();
+};
+main();
+export { readIfcFile, TIME_LABEL, DEV };

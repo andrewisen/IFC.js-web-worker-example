@@ -1,9 +1,14 @@
+/**
+ * Constants
+ *
+ * N.B. Module import to Web Workers is not supported by all browsers.
+ * This is independent from the one in main.js
+ */
+const DEV = true;
 importScripts('../../libs/chevrotain.min.js');
 importScripts('../../../build/IFC.specificWorker.js');
 onmessage = (e) => {
-  //// DEBUG ////
-  console.time(e.data.ifcTypesGroupName);
-  //// DEBUG ////
+  if (DEV) console.time(e.data.ifcTypesGroupName);
   const ifcTypes = Object.values(e.data.ifcTypesGroup).map((ifcType) => {
     return ifcType;
   });
@@ -20,17 +25,14 @@ onmessage = (e) => {
     ifcItems.push(ifcObject);
   });
   const loaded = loadItems(ifcItems);
-  //// DEBUG ////
-  console.timeEnd(e.data.ifcTypesGroupName);
-  //// DEBUG ////
+  if (DEV) console.timeEnd(e.data.ifcTypesGroupName);
   postMessage({ loaded, ifcTypesGroupName: e.data.ifcTypesGroupName });
 };
-function loadItems(ifcData) {
+const loadItems = (ifcData) => {
   const loadedItems = {};
-  ifcData.map((ifcItem) => {
-    if (IFCjs.isTypeSupported(ifcItem)) {
+  ifcData.forEach((ifcItem) => {
+    if (IFCjs.isTypeSupported(ifcItem))
       loadedItems[ifcItem[IFCjs.i.expressId]] = IFCjs.parseAndLoadItem(ifcItem);
-    }
   });
   return loadedItems;
-}
+};

@@ -4,7 +4,6 @@ importScripts('./utils/custom-ifc-types.js');
 importScripts('./save/indexed-db.js');
 importScripts('./save/save-structured.js');
 var loaded = {};
-var hidden = {};
 var running = 0;
 var myIfcFile;
 onmessage = (e) => {
@@ -25,18 +24,13 @@ const constructWebWorker = (dataSection, ifcTypesGroupName, ifcTypesGroup) => {
     ifcTypesGroup
   });
 };
-function workerDone(e) {
-  const hiddenBuildingElements = '_hiddenBuildingElements';
+const workerDone = (e) => {
   const { loaded: _loaded, ifcTypesGroupName } = e.data;
-  if (ifcTypesGroupName === hiddenBuildingElements) {
-    Object.assign(hidden, _loaded);
-  }
   Object.assign(loaded, _loaded);
   --running;
-  if (running === 0) {
-    IFCjs.bindEntities(loaded);
-    const structured = IFCjs.constructProject(loaded);
-    saveStructured(structured, myIfcFile);
-    postMessage(structured);
-  }
-}
+  if (running !== 0) return;
+  IFCjs.bindEntities(loaded);
+  const structured = IFCjs.constructProject(loaded);
+  saveStructured(structured, myIfcFile);
+  postMessage(structured);
+};

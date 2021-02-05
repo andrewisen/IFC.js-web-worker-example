@@ -1,5 +1,5 @@
-// import { pick } from './scene-picker.js';
-
+import { pick } from './scene-picker.js';
+const DEV = true;
 //Scene
 var scene = new THREE.Scene();
 //Camera
@@ -29,12 +29,12 @@ function createAxes() {
   axes.renderOrder = 2; // after the grid
   return axes;
 }
-scene.add(createAxes());
+// scene.add(createAxes());
 const grid = new THREE.GridHelper(100, 100);
 grid.material.depthTest = true;
 grid.renderOrder = 1;
 grid.rotation.x = Math.PI / 2;
-scene.add(grid);
+// scene.add(grid);
 
 //Light
 const color = 0xffffff;
@@ -62,7 +62,7 @@ if (onMobile) {
 }
 
 //Autoadjust camera to window size
-function resizeRendererToDisplaySize(renderer) {
+const _resizeRendererToDisplaySize = (renderer) => {
   const canvas = renderer.domElement;
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
@@ -71,74 +71,77 @@ function resizeRendererToDisplaySize(renderer) {
     renderer.setSize(width, height, false);
   }
   return needResize;
-}
+};
 
 let renderRequested = false;
 
 /**
  * Only animate on demand
+ * N.B. The scrolling is not working properly
  *
  * Credit: https://threejsfundamentals.org/threejs/lessons/threejs-rendering-on-demand.html
  */
-var animateOnDemand = function () {
+const animateOnDemand = function () {
   renderRequested = undefined;
 
-  if (resizeRendererToDisplaySize(renderer)) {
+  if (_resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
-
   controls.update();
-
-  // pick(camera);
+  pick(camera);
   renderer.render(scene, camera);
 };
 
-function requestRenderIfNotRequested() {
+const requestRenderIfNotRequested = () => {
   if (!renderRequested) {
     renderRequested = true;
     requestAnimationFrame(animateOnDemand);
   }
-}
+};
 
-controls.addEventListener('change', requestRenderIfNotRequested);
-window.addEventListener('resize', requestRenderIfNotRequested);
+if (DEV) {
+  controls.addEventListener('change', requestRenderIfNotRequested);
+  window.addEventListener('resize', requestRenderIfNotRequested);
+}
 
 function isMobile() {
   return 'ontouchstart' in document.documentElement;
 }
 
-/**
- * Hide the Hidden group
- */
-const hideGroup = () => {
-  scene.children[scene.children.length - 1].visible = false;
-};
-/**
- * Show the Hidden group
- */
-const showGroup = () => {
-  scene.children[scene.children.length - 1].visible = true;
-};
-/**
- * For mouse wheel - not working properly
- */
-const hideGroupWithDelay = () => {
-  hideGroup();
-  setTimeout(() => {
-    showGroup();
-    requestRenderIfNotRequested();
-  }, 100);
+var animate = function () {
+  requestAnimationFrame(animate);
+  controls.update();
+  resizeRendererToDisplaySize(renderer);
+  pick(camera);
+  renderer.render(scene, camera);
 };
 
-canvas.addEventListener('mousedown', hideGroup);
-canvas.addEventListener('mouseup', showGroup);
-// canvas.addEventListener('mousewheel', hideGroupWithDelay);
-
-function initScene() {
-  animateOnDemand();
-  requestRenderIfNotRequested();
+function resizeRendererToDisplaySize(renderer) {
+  const canvas = renderer.domElement;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  if (canvas.width !== width || canvas.height !== height) {
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
 }
 
-export { scene, initScene };
+const forcePick = (e) => {
+  if (e.button === 0) {
+    pick(camera);
+    requestRenderIfNotRequested();
+  }
+};
+
+const initScene = () => {
+  DEV
+    ? animate()
+    : canvas.addEventListener('mousedown', forcePick) &&
+      animateOnDemand() &&
+      requestRenderIfNotRequested();
+};
+
+export { scene, initScene, camera, controls };

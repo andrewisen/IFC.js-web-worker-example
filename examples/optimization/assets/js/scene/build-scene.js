@@ -1,37 +1,61 @@
+import { TIME_LABEL, DEV } from '../../../main.js';
 import { buildGeometry, mainObject } from '../../../../../build/IFC.geometry.module.js';
 import { scene, initScene } from './three-scene.js';
 import { toggleLoader } from '../utils/utils.js';
-import { groupStructure } from '../optimization/group-structure.js';
-// import { replaceMaterial } from '../optimization/replace-material.js';
-function buildScene(e) {
+import { Merger } from '../optimization/merge-geometries.js';
+/**
+ * Get the structured data from the Web Worker and build the geometry.
+ */
+const buildScene = (e) => {
   let structured = e.data;
   structured.MainObject = mainObject;
   structured = buildGeometry(structured);
+  group(structured);
+  animate();
+};
+/**
+ * Group geometry into:
+ * 1. Hidden
+ * 2. Visible
+ * 3. Transparent
+ */
+const group = (structured) => {
   /**
-   * Split the structured into two groups: Visible & Hidden
-   */
-  let { visible, hidden } = groupStructure(structured);
-  /**
-   * Add visible objects to the first group
-   */
-  const visibleGroup = new THREE.Group();
-  visibleGroup.add(visible);
-  /**
-   * Add hidden objects to the second group
+   * Hidden Group
    */
   const hiddenGroup = new THREE.Group();
-  hiddenGroup.add(hidden);
-  /**
-   * Add both groups to the scene
-   */
-  scene.add(visibleGroup);
+  hiddenGroup.add(structured.MainObject);
+  hiddenGroup.children[0].children.forEach((child) => {
+    child.visible = false;
+  });
+  hiddenGroup.name = 'hiddenGroup';
+  hiddenGroup.renderOrder = 1;
   scene.add(hiddenGroup);
   /**
-   * Animate on demand
+   * Generate merged meshes
    */
+  const merger = new Merger(structured.MainObject);
+  const { group: visibleGroup, transparentGroup } = merger.mergeGeometries(); // Change to hidden group
+  /**
+   * Visible Group
+   */
+  visibleGroup.name = 'visibleGroup';
+  scene.add(visibleGroup);
+  /**
+   * Transparent Group
+   */
+  transparentGroup.name = 'transparentGroup';
+  transparentGroup.visible = false;
+  scene.add(transparentGroup);
+};
+/**
+ * Start the scene and toggle loader
+ */
+const animate = () => {
   initScene();
   document.getElementById('c').style.display = 'block';
   toggleLoader();
-  console.timeEnd('TOTAL:');
-}
-export { buildScene };
+  if (DEV) console.time(TIME_LABEL);
+};
+
+export { buildScene, group, animate };

@@ -1,10 +1,11 @@
 //source: https://threejsfundamentals.org/threejs/lessons/threejs-picking.html
-import { mainObject } from '../../../../build/IFC.geometry.module.js';
+import { mainObject } from '../../../../../build/IFC.geometry.module.js';
+import { scene } from './three-scene.js';
 
 const canvas = document.querySelector('#c');
 const raycaster = new THREE.Raycaster();
 let pickedObject = null;
-let pickedObjectMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, side: 2 });
+let pickedObjectMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, depthTest: false });
 let pickedObjectSavedMaterial = 0;
 let canUserPick = true;
 const pickPosition = { x: 0, y: 0 };
@@ -13,6 +14,7 @@ clearPickPosition();
 function pick(camera) {
   if (canUserPick) {
     if (pickedObject) {
+      disablePickingMode(pickedObject);
       pickedObject.material = pickedObjectSavedMaterial;
       pickedObject = undefined;
     }
@@ -23,6 +25,7 @@ function pick(camera) {
       pickedObject = intersectedObjects[0].object;
       pickedObjectSavedMaterial = pickedObject.material;
       pickedObject.material = pickedObjectMaterial;
+      enablePickingMode(pickedObject);
       console.log(pickedObject._Data);
     }
   }
@@ -76,3 +79,30 @@ window.addEventListener('touchmove', (event) => {
 window.addEventListener('touchend', clearPickPosition);
 
 export { pick };
+
+const disablePickingMode = (pickedObject) => {
+  pickedObject.visible = false;
+  scene.children[scene.children.length - 1].visible = false;
+  scene.children[scene.children.length - 2].visible = true;
+};
+const enablePickingMode = (pickedObject) => {
+  scene.children[scene.children.length - 2].visible = false;
+  scene.children[scene.children.length - 1].visible = true;
+  pickedObject.visible = true;
+};
+
+window.addEventListener(
+  'keydown',
+  function (event) {
+    if (event.defaultPrevented) return;
+    switch (event.key) {
+      case 'Escape':
+        if (pickedObject) disablePickingMode(pickedObject);
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+  },
+  true
+);
