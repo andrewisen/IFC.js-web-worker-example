@@ -39,17 +39,21 @@ class Merger {
   /**
    * Merge THREE.Object3D
    */
-  merge(child, parent = undefined) {
-    const { type, children } = child;
-    if (type === MESH) this.mergeMesh(child, parent);
-    else if (type === LINE) this.mergeLine(child, parent);
-    else if (type === LINESEGMENTS) this.mergeLineSegment(child, parent);
+  merge(child, parent = undefined, grandParent = undefined) {
+    if (grandParent) return;
+    const { type } = child;
+    if (type === MESH) this.mergeMesh(child, parent, grandParent);
+    else if (type === LINE) this.mergeLine(child, parent, grandParent);
+    else if (type === LINESEGMENTS) this.mergeLineSegment(child, parent, grandParent);
     else {
       /**
        * There shouldn't be any other types.
        * But I haven't checked this.
        */
     }
+  }
+  checkRecursion(parent, child) {
+    const { children } = child;
     /**
      * Check if recursion is needed
      */
@@ -61,6 +65,7 @@ class Merger {
      * If a parent is missing, then we are the parent.
      */
     if (parent === undefined) parent = child;
+
     /**
      *
      */
@@ -73,10 +78,11 @@ class Merger {
        *
        */
       grandChild.children.forEach((greatGrandChild) => {
+        // const parent = grandChild;
         /**
          * The "parent" is now the GC.
          */
-        this.merge(greatGrandChild, grandChild);
+        this.merge(greatGrandChild, grandChild, parent);
       });
       /**
        * Please note:
@@ -94,7 +100,7 @@ class Merger {
    * All meshes must use bufferGeometry.
    * Also, all meshes should be BufferGeometry since r125
    */
-  mergeMesh(child, parent) {
+  mergeMesh(child, parent, grandParent) {
     const {
       geometry: childGeometry,
       geometry: { type },
@@ -107,7 +113,11 @@ class Merger {
     /**
      * Let's apply the transformation matrix.
      */
-    parent === undefined ? clone.applyMatrix4(child.matrix) : clone.applyMatrix4(parent.matrix);
+    grandParent === undefined
+      ? parent === undefined
+        ? clone.applyMatrix4(child.matrix)
+        : clone.applyMatrix4(parent.matrix)
+      : clone.applyMatrix4(grandParent.matrix);
     /**
      * We will use the Three.js Material UUID to group the buffer geometries.
      * The material object (see above) will group the materials (depending on UUID).
@@ -115,45 +125,56 @@ class Merger {
      * This approach might return some redundant result.
      * However, this will be fine - for the sake of simplicity.
      */
-
     this.meshes[id] === undefined
       ? (this.meshes[id] = new MaterialGroup(material, [clone]))
       : this.meshes[id].bufferGeometries.push(clone);
+    this.checkRecursion(parent, child);
   }
   /**
    * Both Lines and LineSegments seem to have some trouble with the material.
    * It all comes down to what the "parent" refers to.
    *
    */
-  mergeLine(child, parent) {
+  mergeLine(child, parent, grandParent) {
     const {
       geometry: bufferGeometry,
       material,
       material: { uuid: id }
     } = child;
-    parent === undefined
-      ? bufferGeometry.applyMatrix4(child.matrix)
-      : bufferGeometry.applyMatrix4(parent.matrix);
+    const clone = bufferGeometry.clone();
+    const { children } = clone;
+    grandParent === undefined
+      ? parent === undefined
+        ? clone.applyMatrix4(child.matrix)
+        : clone.applyMatrix4(parent.matrix)
+      : clone.applyMatrix4(grandParent.matrix);
     this.lines[id] === undefined
-      ? (this.lines[id] = new MaterialGroup(material, [bufferGeometry]))
-      : this.lines[id].bufferGeometries.push(bufferGeometry);
+      ? (this.lines[id] = new MaterialGroup(material, [clone]))
+      : this.lines[id].bufferGeometries.push(clone);
+    this.checkRecursion(parent, child);
   }
   /**
    * Both Lines and LineSegments seem to have some trouble with the material.
    * It all comes down to what the "parent" refers to.
    */
-  mergeLineSegment(child, parent) {
+  mergeLineSegment(child, parent, grandParent) {
     const {
       geometry: edgesGeometry,
       material,
       material: { uuid: id }
     } = child;
-    parent === undefined
-      ? edgesGeometry.applyMatrix4(child.matrix)
-      : edgesGeometry.applyMatrix4(parent.matrix);
+
+    const clone = edgesGeometry.clone();
+    const { children } = clone;
+    grandParent === undefined
+      ? parent === undefined
+        ? clone.applyMatrix4(child.matrix)
+        : clone.applyMatrix4(parent.matrix)
+      : clone.applyMatrix4(grandParent.matrix);
     this.lineSegments[id] === undefined
-      ? (this.lineSegments[id] = new MaterialGroup(material, [edgesGeometry]))
-      : this.lineSegments[id].bufferGeometries.push(edgesGeometry);
+      ? (this.lineSegments[id] = new MaterialGroup(material, [clone]))
+      : this.lineSegments[id].bufferGeometries.push(clone);
+    this.checkRecursion(parent, child);
   }
   /**
    * Create a group with:
@@ -177,6 +198,7 @@ class Merger {
       const mergedLines = new THREE.Line(merged, material);
       group.add(mergedLines);
     });
+    console.log(this.lineSegments);
     Object.values(this.lineSegments).forEach((lineSegment) => {
       const { material, bufferGeometries } = lineSegment;
       const merged = BufferGeometryUtils.mergeBufferGeometries(bufferGeometries);
@@ -199,9 +221,13 @@ class Merger {
       opacity: 0.5
     };
     const meshMaterial = new THREE.MeshBasicMaterial(options);
+    const lineMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     children
       .filter((child) => child.type === MESH)
       .forEach((child) => (child.material = meshMaterial));
+    // children
+    //   .filter((child) => child.type === LINESEGMENTS)
+    //   .forEach((child) => (child.material = lineMaterial));
     return clone;
   }
 }
