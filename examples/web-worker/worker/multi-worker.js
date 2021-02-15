@@ -69,11 +69,13 @@ function workerDone(e) {
   Object.assign(loaded, _loaded);
   --running;
   if (running === 0) {
+    console.time('bindEntities');
     /**
      * We have used specific Web Workers to build the loaded data.
      * Thus, we are missing references to other entities.
      */
     IFCjs.bindEntities(loaded);
+    console.timeEnd('bindEntities');
     /**
      * The Web Worker cannot post the MainObject.
      * It will give the following error:
@@ -88,7 +90,9 @@ function workerDone(e) {
      * See: https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage
      * And: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#sending_messages_to_and_from_a_dedicated_worker
      */
+    console.time('constructProject');
     const structured = IFCjs.constructProject(loaded);
+    console.timeEnd('constructProject');
     saveStructured(structured, myIfcFile);
     postMessage(structured);
   }
