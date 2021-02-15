@@ -1,4 +1,4 @@
-import { buildGeometry, mainObject } from '../../../../build/IFC.geometry.module.js';
+import { buildGeometry, mainObject } from '../../../build/IFC.geometry.module.js';
 /**
  * Make sure to include the Geometry bundle BEFORE (!) the scene.
  * It might give an error otherwise - I have no idea why...

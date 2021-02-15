@@ -1,4 +1,4 @@
-import { buildGeometry, mainObject } from '../../../../../build/IFC.geometry.module.js';
+import { buildGeometry, mainObject } from '../../../../build/IFC.geometry.module.js';
 import { group, animate } from './build-scene.js';
 /**
  * See build-scene.js

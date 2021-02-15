@@ -1,5 +1,5 @@
 import { TIME_LABEL, DEV } from '../../../main.js';
-import { buildGeometry, mainObject } from '../../../../../build/IFC.geometry.module.js';
+import { buildGeometry, mainObject } from '../../../../build/IFC.geometry.module.js';
 import { scene, initScene } from './three-scene.js';
 import { toggleLoader } from '../utils/utils.js';
 import { Merger } from '../optimization/merge-geometries.js';

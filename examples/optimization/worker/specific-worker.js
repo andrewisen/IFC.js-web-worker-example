@@ -6,7 +6,7 @@
  */
 const DEV = true;
 importScripts('../../libs/chevrotain.min.js');
-importScripts('../../../build/IFC.specificWorker.js');
+importScripts('../../build/IFC.specificWorker.js');
 onmessage = (e) => {
   if (DEV) console.time(e.data.ifcTypesGroupName);
   const ifcTypes = Object.values(e.data.ifcTypesGroup).map((ifcType) => {

@@ -1,5 +1,5 @@
 //source: https://threejsfundamentals.org/threejs/lessons/threejs-picking.html
-import { mainObject } from '../../../../build/IFC.geometry.module.js';
+import { mainObject } from '../../../build/IFC.geometry.module.js';
 
 const canvas = document.querySelector('#c');
 const raycaster = new THREE.Raycaster();

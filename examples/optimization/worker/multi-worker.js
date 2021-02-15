@@ -1,5 +1,5 @@
 importScripts('../../libs/chevrotain.min.js');
-importScripts('../../../build/IFC.multiWorker.js');
+importScripts('../../build/IFC.multiWorker.js');
 importScripts('./utils/custom-ifc-types.js');
 importScripts('./save/indexed-db.js');
 importScripts('./save/save-structured.js');
