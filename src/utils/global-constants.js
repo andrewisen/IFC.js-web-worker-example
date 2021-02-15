@@ -12,8 +12,10 @@ const namedProps = {
   coordinates: "Coordinates",
   corner: "Corner",
   depth: "Depth",
+  directrix: "Directrix",
   dirRatios: "DirectionRatios",
   elements: "Elements",
+  endParam: "EndParam",
   extDirection: "ExtrudedDirection",
   expressId: "_ExpressId",
   fbsmFaces: "FbsmFaces",
@@ -30,6 +32,7 @@ const namedProps = {
   ifcClass: "_IfcClass",
   innerCurves: "InnerCurves",
   innerFilletRadius: "InnerFilletRadius",
+  innerRadius: "InnerRadius",
   isBrep: "_IsBrep",
   items: "Items",
   location: "Location",
@@ -76,6 +79,7 @@ const namedProps = {
   senseAgreement: "SenseAgreement",
   semiAxis1: "SemiAxis1",
   semiAxis2: "SemiAxis2",
+  startParam: "StartParam",
   sweptArea: "SweptArea",
   transform: "_Transformation",
   trim1: "Trim1",
@@ -117,17 +121,19 @@ const ifcValueType = {
 };
 
 const geometryTypes = {
+  advancedSweptSolid: "AdvancedSweptSolid",
   annotation2D: "Annotation2D",
+  boundingBox: "BoundingBox",
+  brep: "Brep",
+  clipping: "Clipping",
   curve2D: "Curve2D",
   curve3D: "Curve3D",
-  sweptSolid: "SweptSolid",
-  mappedRepresentation: "MappedRepresentation",
-  brep: "Brep",
-  geometricSet: "GeometricSet",
-  clipping: "Clipping",
   extrudedAreaSolid: "IfcExtrudedAreaSolid",
+  geometricSet: "GeometricSet",
+  mappedRepresentation: "MappedRepresentation",
+  solidModel: "SolidModel",
   surfaceModel: "SurfaceModel",
-  boundingBox: "BoundingBox",
+  sweptSolid: "SweptSolid",
 };
 
 const ifcBoolValues = {

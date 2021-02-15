@@ -2,13 +2,16 @@ const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
   IfcBeam: "IFCBEAM",
+  IfcBuildingElementPart: "IFCBUILDINGELEMENTPART",
   IfcColumn: "IFCCOLUMN",
   IfcCovering: "IFCCOVERING",
   IfcCurtainWall: "IFCCURTAINWALL",
+  IfcDistributionElement: "IFCDISTRIBUTIONELEMENT",
   IfcDoor: "IFCDOOR",
   IfcElementAssembly: "IFCELEMENTASSEMBLY",
   IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
   IfcFastener: "IFCFASTENER",
+  IfcFlowFitting: "IFCFLOWFITTING",
   IfcFlowTerminal: "IFCFLOWTERMINAL",
   IfcFlowSegment: "IFCFLOWSEGMENT",
   IfcFooting: "IFCFOOTING",
@@ -26,6 +29,7 @@ const ifcTypes = {
   IfcRoof: "IFCROOF",
   IfcStairFlight: "IFCSTAIRFLIGHT",
   IfcStair: "IFCSTAIR",
+  IfcVirtualElement: "IFCVIRTUALELEMENT",
   IfcWallStandardCase: "IFCWALLSTANDARDCASE",
   IfcWall: "IFCWALL",
   IfcWindow: "IFCWINDOW",
@@ -73,6 +77,7 @@ const ifcTypes = {
   IfcLine: "IFCLINE",
   IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
   IfcPlanarExtent: "IFCPLANAREXTENT",
+  IfcOpenShell: "IFCOPENSHELL",
   IfcPlane: "IFCPLANE",
   IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
   IfcPolyline: "IFCPOLYLINE",
@@ -81,6 +86,7 @@ const ifcTypes = {
   IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+  IfcShellBasedSurfaceModel: "IFCSHELLBASEDSURFACEMODEL",
   IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
   IfcTrimmedCurve: "IFCTRIMMEDCURVE",
   IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
@@ -129,8 +135,12 @@ const ifcTypes = {
   IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
   IfcBeamType: "IFCBEAMTYPE",
   IfcColumnType: "IFCCOLUMNTYPE",
+  IfcCableCarrierSegmentType: "IFCCABLECARRIERSEGMENTTYPE",
+  IfcCableCarrierFittingType: "IFCCABLECARRIERFITTINGTYPE",
   IfcCoveringType: "IFCCOVERINGTYPE",
   IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+  IfcDuctFittingType: "IFCDUCTFITTINGTYPE",
+  IfcFireSuppressionTerminalType: "IFCFIRESUPPRESSIONTERMINALTYPE",
   IfcFurnitureType: "IFCFURNITURETYPE",
   IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
   IfcDoorType: "IFCDOORTYPE",
@@ -141,6 +151,7 @@ const ifcTypes = {
   IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
   IfcMemberType: "IFCMEMBERTYPE",
   IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
+  IfcPipeFittingType: "IFCPIPEFITTINGTYPE",
   IfcPlateType: "IFCPLATETYPE",
   IfcPropertySet: "IFCPROPERTYSET",
   IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
@@ -154,9 +165,12 @@ const ifcTypes = {
   IfcWindowStyle: "IFCWINDOWSTYLE",
   IfcSlabType: "IFCSLABTYPE",
   IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+  IfcWindowPanelProperties: "IFCWINDOWPANELPROPERTIES",
   //Quantities
   IfcElementQuantity: "IFCELEMENTQUANTITY",
+  IfcMonetaryUnit: "IFCMONETARYUNIT",
   IfcQuantityArea: "IFCQUANTITYAREA",
+  IfcQuantityCount: "IFCQUANTITYCOUNT",
   IfcQuantityLength: "IFCQUANTITYLENGTH",
   IfcQuantityVolume: "IFCQUANTITYVOLUME",
   // Relationships
@@ -167,6 +181,7 @@ const ifcTypes = {
   IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
   IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
   IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+  IfcRelConnectsPorts: "IFCRELCONNECTSPORTS",
   IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
   IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
   IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
@@ -196,8 +211,19 @@ const ifcTypes = {
   IfcUnitAssignment: "IFCUNITASSIGNMENT",
 };
 
+
+const ifcTypesSet = new Set();
+Object.values(ifcTypes).forEach((e) => ifcTypesSet.add(e));
+
+const ifcTypesMap = new Map();
+Object.keys(ifcTypes).forEach((e) => ifcTypesMap.set(ifcTypes[e], e));
+
 function getName(ifcType) {
-  return Object.keys(ifcTypes).find((key) => ifcTypes[key] === ifcType);
+  return ifcTypesMap.get(ifcType);
 }
 
-export { ifcTypes, getName };
+function haveIfcType(type) {
+  return ifcTypesSet.has(type);
+}
+
+export { ifcTypes, getName, haveIfcType };
