@@ -12,8 +12,10 @@ const namedProps = {
   coordinates: "Coordinates",
   corner: "Corner",
   depth: "Depth",
+  directrix: "Directrix",
   dirRatios: "DirectionRatios",
   elements: "Elements",
+  endParam: "EndParam",
   extDirection: "ExtrudedDirection",
   expressId: "_ExpressId",
   fbsmFaces: "FbsmFaces",
@@ -30,6 +32,7 @@ const namedProps = {
   ifcClass: "_IfcClass",
   innerCurves: "InnerCurves",
   innerFilletRadius: "InnerFilletRadius",
+  innerRadius: "InnerRadius",
   isBrep: "_IsBrep",
   items: "Items",
   location: "Location",
@@ -76,6 +79,7 @@ const namedProps = {
   senseAgreement: "SenseAgreement",
   semiAxis1: "SemiAxis1",
   semiAxis2: "SemiAxis2",
+  startParam: "StartParam",
   sweptArea: "SweptArea",
   transform: "_Transformation",
   trim1: "Trim1",
@@ -127,13 +131,16 @@ const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
   IfcBeam: "IFCBEAM",
+  IfcBuildingElementPart: "IFCBUILDINGELEMENTPART",
   IfcColumn: "IFCCOLUMN",
   IfcCovering: "IFCCOVERING",
   IfcCurtainWall: "IFCCURTAINWALL",
+  IfcDistributionElement: "IFCDISTRIBUTIONELEMENT",
   IfcDoor: "IFCDOOR",
   IfcElementAssembly: "IFCELEMENTASSEMBLY",
   IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
   IfcFastener: "IFCFASTENER",
+  IfcFlowFitting: "IFCFLOWFITTING",
   IfcFlowTerminal: "IFCFLOWTERMINAL",
   IfcFlowSegment: "IFCFLOWSEGMENT",
   IfcFooting: "IFCFOOTING",
@@ -151,6 +158,7 @@ const ifcTypes = {
   IfcRoof: "IFCROOF",
   IfcStairFlight: "IFCSTAIRFLIGHT",
   IfcStair: "IFCSTAIR",
+  IfcVirtualElement: "IFCVIRTUALELEMENT",
   IfcWallStandardCase: "IFCWALLSTANDARDCASE",
   IfcWall: "IFCWALL",
   IfcWindow: "IFCWINDOW",
@@ -198,6 +206,7 @@ const ifcTypes = {
   IfcLine: "IFCLINE",
   IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
   IfcPlanarExtent: "IFCPLANAREXTENT",
+  IfcOpenShell: "IFCOPENSHELL",
   IfcPlane: "IFCPLANE",
   IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
   IfcPolyline: "IFCPOLYLINE",
@@ -206,6 +215,7 @@ const ifcTypes = {
   IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+  IfcShellBasedSurfaceModel: "IFCSHELLBASEDSURFACEMODEL",
   IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
   IfcTrimmedCurve: "IFCTRIMMEDCURVE",
   IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
@@ -254,8 +264,12 @@ const ifcTypes = {
   IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
   IfcBeamType: "IFCBEAMTYPE",
   IfcColumnType: "IFCCOLUMNTYPE",
+  IfcCableCarrierSegmentType: "IFCCABLECARRIERSEGMENTTYPE",
+  IfcCableCarrierFittingType: "IFCCABLECARRIERFITTINGTYPE",
   IfcCoveringType: "IFCCOVERINGTYPE",
   IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+  IfcDuctFittingType: "IFCDUCTFITTINGTYPE",
+  IfcFireSuppressionTerminalType: "IFCFIRESUPPRESSIONTERMINALTYPE",
   IfcFurnitureType: "IFCFURNITURETYPE",
   IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
   IfcDoorType: "IFCDOORTYPE",
@@ -266,6 +280,7 @@ const ifcTypes = {
   IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
   IfcMemberType: "IFCMEMBERTYPE",
   IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
+  IfcPipeFittingType: "IFCPIPEFITTINGTYPE",
   IfcPlateType: "IFCPLATETYPE",
   IfcPropertySet: "IFCPROPERTYSET",
   IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
@@ -279,9 +294,12 @@ const ifcTypes = {
   IfcWindowStyle: "IFCWINDOWSTYLE",
   IfcSlabType: "IFCSLABTYPE",
   IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+  IfcWindowPanelProperties: "IFCWINDOWPANELPROPERTIES",
   //Quantities
   IfcElementQuantity: "IFCELEMENTQUANTITY",
+  IfcMonetaryUnit: "IFCMONETARYUNIT",
   IfcQuantityArea: "IFCQUANTITYAREA",
+  IfcQuantityCount: "IFCQUANTITYCOUNT",
   IfcQuantityLength: "IFCQUANTITYLENGTH",
   IfcQuantityVolume: "IFCQUANTITYVOLUME",
   // Relationships
@@ -292,6 +310,7 @@ const ifcTypes = {
   IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
   IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
   IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+  IfcRelConnectsPorts: "IFCRELCONNECTSPORTS",
   IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
   IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
   IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
@@ -320,9 +339,17 @@ const ifcTypes = {
   IfcSIUnit: "IFCSIUNIT",
   IfcUnitAssignment: "IFCUNITASSIGNMENT"
 };
+const ifcTypesSet = new Set();
+Object.values(ifcTypes).forEach(e => ifcTypesSet.add(e));
+const ifcTypesMap = new Map();
+Object.keys(ifcTypes).forEach(e => ifcTypesMap.set(ifcTypes[e], e));
 
 function getName(ifcType) {
-  return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
+  return ifcTypesMap.get(ifcType);
+}
+
+function haveIfcType(type) {
+  return ifcTypesSet.has(type);
 }
 
 const typesParserMap = {};
@@ -351,14 +378,16 @@ const ifcDataTypes = {
   text: "Text",
   textSet: "TextSet"
 };
+const dataTypesSet = new Set();
+Object.values(ifcDataTypes).forEach(e => dataTypesSet.add(e));
+const dataTypesArray = Array.from(dataTypesSet);
 
 function isDataTypeValid(dataType) {
-  if (Object.values(ifcDataTypes).indexOf(dataType) > -1) return true;
-  return false;
+  return dataTypesSet.has(dataType);
 }
 
 function getAllDataTypes() {
-  return Object.values(ifcDataTypes);
+  return dataTypesArray;
 }
 
 newObject({
@@ -578,6 +607,17 @@ newObject({
   Tag: ifcDataTypes.text
 });
 newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcFlowFitting),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ObjectType: ifcDataTypes.text,
+  [namedProps.objectPlacement]: ifcDataTypes.id,
+  [namedProps.representation]: ifcDataTypes.id,
+  Tag: ifcDataTypes.text
+});
+newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcFurnishingElement),
   GlobalId: ifcDataTypes.text,
   OwnerHistory: ifcDataTypes.id,
@@ -710,6 +750,39 @@ newObject({
 });
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcFastener),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ObjectType: ifcDataTypes.text,
+  [namedProps.objectPlacement]: ifcDataTypes.id,
+  [namedProps.representation]: ifcDataTypes.id,
+  Tag: ifcDataTypes.text
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcBuildingElementPart),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ObjectType: ifcDataTypes.text,
+  [namedProps.objectPlacement]: ifcDataTypes.id,
+  [namedProps.representation]: ifcDataTypes.id,
+  Tag: ifcDataTypes.text
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcDistributionElement),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ObjectType: ifcDataTypes.text,
+  [namedProps.objectPlacement]: ifcDataTypes.id,
+  [namedProps.representation]: ifcDataTypes.id,
+  Tag: ifcDataTypes.text
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcVirtualElement),
   GlobalId: ifcDataTypes.text,
   OwnerHistory: ifcDataTypes.id,
   Name: ifcDataTypes.text,
@@ -859,11 +932,11 @@ newObject({
 });
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcSweptDiskSolid),
-  Directrix: ifcDataTypes.id,
-  Radius: ifcDataTypes.number,
-  InnerRadius: ifcDataTypes.number,
-  StartParam: ifcDataTypes.number,
-  EndParam: ifcDataTypes.number
+  [namedProps.directrix]: ifcDataTypes.id,
+  [namedProps.radius]: ifcDataTypes.number,
+  [namedProps.innerRadius]: ifcDataTypes.number,
+  [namedProps.startParam]: ifcDataTypes.number,
+  [namedProps.endParam]: ifcDataTypes.number
 });
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcPlane),
@@ -1054,6 +1127,14 @@ newObject({
   Pnt: ifcDataTypes.id,
   Dir: ifcDataTypes.id
 });
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcOpenShell),
+  CfsFaces: ifcDataTypes.idSet
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcShellBasedSurfaceModel),
+  SbsmBoundary: ifcDataTypes.idSet
+});
 
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcApplication),
@@ -1120,7 +1201,7 @@ newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcMaterialLayer),
   Material: ifcDataTypes.id,
   LayerThickness: ifcDataTypes.number,
-  IsVentilated: ifcDataTypes.value
+  IsVentilated: ifcDataTypes.enum
 });
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcMaterialLayerSet),
@@ -1570,6 +1651,71 @@ newObject({
   ElementType: ifcDataTypes.text
 });
 newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcDuctFittingType),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ApplicableOccurrence: ifcDataTypes.text,
+  HasPropertySets: ifcDataTypes.idSet,
+  RepresentationMaps: ifcDataTypes.idSet,
+  Tag: ifcDataTypes.text,
+  ElementType: ifcDataTypes.text,
+  PredefinedType: ifcDataTypes.enum
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcPipeFittingType),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ApplicableOccurrence: ifcDataTypes.text,
+  HasPropertySets: ifcDataTypes.idSet,
+  RepresentationMaps: ifcDataTypes.idSet,
+  Tag: ifcDataTypes.text,
+  ElementType: ifcDataTypes.text,
+  PredefinedType: ifcDataTypes.enum
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcFireSuppressionTerminalType),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ApplicableOccurrence: ifcDataTypes.text,
+  HasPropertySets: ifcDataTypes.idSet,
+  RepresentationMaps: ifcDataTypes.idSet,
+  Tag: ifcDataTypes.text,
+  ElementType: ifcDataTypes.text,
+  PredefinedType: ifcDataTypes.enum
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcCableCarrierSegmentType),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ApplicableOccurrence: ifcDataTypes.text,
+  HasPropertySets: ifcDataTypes.idSet,
+  RepresentationMaps: ifcDataTypes.idSet,
+  Tag: ifcDataTypes.text,
+  ElementType: ifcDataTypes.text,
+  PredefinedType: ifcDataTypes.enum
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcCableCarrierFittingType),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  ApplicableOccurrence: ifcDataTypes.text,
+  HasPropertySets: ifcDataTypes.idSet,
+  RepresentationMaps: ifcDataTypes.idSet,
+  Tag: ifcDataTypes.text,
+  ElementType: ifcDataTypes.text,
+  PredefinedType: ifcDataTypes.enum
+});
+newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcDoorLiningProperties),
   GlobalId: ifcDataTypes.text,
   OwnerHistory: ifcDataTypes.id,
@@ -1644,6 +1790,18 @@ newObject({
   FirstMullionOffset: ifcDataTypes.number,
   SecondMullionOffset: ifcDataTypes.number,
   ShapeAspectStyle: ifcDataTypes.number
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcWindowPanelProperties),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  OperationType: ifcDataTypes.enum,
+  PanelPosition: ifcDataTypes.enum,
+  FrameDepth: ifcDataTypes.number,
+  FrameThickness: ifcDataTypes.number,
+  ShapeAspectStyle: ifcDataTypes.id
 });
 
 newObject({
@@ -1822,6 +1980,16 @@ newObject({
   RealizingElements: ifcDataTypes.idSet,
   ConnectionType: ifcDataTypes.text
 });
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcRelConnectsPorts),
+  GlobalId: ifcDataTypes.text,
+  OwnerHistory: ifcDataTypes.id,
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  RelatingPort: ifcDataTypes.id,
+  RelatedPort: ifcDataTypes.id,
+  RealizingElement: ifcDataTypes.id
+});
 
 newObject({
   [namedProps.ifcClass]: getName(ifcTypes.IfcQuantityArea),
@@ -1852,6 +2020,17 @@ newObject({
   Description: ifcDataTypes.text,
   MethodOfMeasurement: ifcDataTypes.text,
   Quantities: ifcDataTypes.idSet
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcMonetaryUnit),
+  Currency: ifcDataTypes.enum
+});
+newObject({
+  [namedProps.ifcClass]: getName(ifcTypes.IfcQuantityCount),
+  Name: ifcDataTypes.text,
+  Description: ifcDataTypes.text,
+  Unit: ifcDataTypes.id,
+  CountValue: ifcDataTypes.number
 });
 
 newObject({
@@ -2725,7 +2904,7 @@ function parseAndLoadItem(ifcItem) {
 }
 
 function isTypeSupported(ifcItem) {
-  return Object.values(ifcTypes).indexOf(ifcItem[itemsReaderValues.type]) > -1;
+  return haveIfcType(ifcItem[itemsReaderValues.type]);
 }
 
 export { getId, getIfcRawProperties, getIfcType, itemsReaderValues as i, isTypeSupported, parseAndLoadItem, structuredData as s, separateIfcEntities };

@@ -12,8 +12,10 @@ const namedProps = {
   coordinates: "Coordinates",
   corner: "Corner",
   depth: "Depth",
+  directrix: "Directrix",
   dirRatios: "DirectionRatios",
   elements: "Elements",
+  endParam: "EndParam",
   extDirection: "ExtrudedDirection",
   expressId: "_ExpressId",
   fbsmFaces: "FbsmFaces",
@@ -30,6 +32,7 @@ const namedProps = {
   ifcClass: "_IfcClass",
   innerCurves: "InnerCurves",
   innerFilletRadius: "InnerFilletRadius",
+  innerRadius: "InnerRadius",
   isBrep: "_IsBrep",
   items: "Items",
   location: "Location",
@@ -76,6 +79,7 @@ const namedProps = {
   senseAgreement: "SenseAgreement",
   semiAxis1: "SemiAxis1",
   semiAxis2: "SemiAxis2",
+  startParam: "StartParam",
   sweptArea: "SweptArea",
   transform: "_Transformation",
   trim1: "Trim1",
@@ -122,6 +126,9 @@ const ifcDataTypes = {
   text: "Text",
   textSet: "TextSet"
 };
+const dataTypesSet = new Set();
+Object.values(ifcDataTypes).forEach(e => dataTypesSet.add(e));
+const dataTypesArray = Array.from(dataTypesSet);
 
 function bindEntities(items) {
   for (let item in items) {
@@ -162,7 +169,7 @@ function bindValueSetProperty(ifcProperty, items) {
 
 function trimExplicitTypes(ifcLine, key) {
   const value = ifcLine[key][typeValue.value];
-  if (value) ifcLine[key] = value;
+  if (typeof value !== 'undefined') ifcLine[key] = value;
 }
 
 const regexp = {
@@ -195,13 +202,16 @@ const ifcTypes = {
   //Building elements
   IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
   IfcBeam: "IFCBEAM",
+  IfcBuildingElementPart: "IFCBUILDINGELEMENTPART",
   IfcColumn: "IFCCOLUMN",
   IfcCovering: "IFCCOVERING",
   IfcCurtainWall: "IFCCURTAINWALL",
+  IfcDistributionElement: "IFCDISTRIBUTIONELEMENT",
   IfcDoor: "IFCDOOR",
   IfcElementAssembly: "IFCELEMENTASSEMBLY",
   IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
   IfcFastener: "IFCFASTENER",
+  IfcFlowFitting: "IFCFLOWFITTING",
   IfcFlowTerminal: "IFCFLOWTERMINAL",
   IfcFlowSegment: "IFCFLOWSEGMENT",
   IfcFooting: "IFCFOOTING",
@@ -219,6 +229,7 @@ const ifcTypes = {
   IfcRoof: "IFCROOF",
   IfcStairFlight: "IFCSTAIRFLIGHT",
   IfcStair: "IFCSTAIR",
+  IfcVirtualElement: "IFCVIRTUALELEMENT",
   IfcWallStandardCase: "IFCWALLSTANDARDCASE",
   IfcWall: "IFCWALL",
   IfcWindow: "IFCWINDOW",
@@ -266,6 +277,7 @@ const ifcTypes = {
   IfcLine: "IFCLINE",
   IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
   IfcPlanarExtent: "IFCPLANAREXTENT",
+  IfcOpenShell: "IFCOPENSHELL",
   IfcPlane: "IFCPLANE",
   IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
   IfcPolyline: "IFCPOLYLINE",
@@ -274,6 +286,7 @@ const ifcTypes = {
   IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
   IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
   IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+  IfcShellBasedSurfaceModel: "IFCSHELLBASEDSURFACEMODEL",
   IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
   IfcTrimmedCurve: "IFCTRIMMEDCURVE",
   IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
@@ -322,8 +335,12 @@ const ifcTypes = {
   IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
   IfcBeamType: "IFCBEAMTYPE",
   IfcColumnType: "IFCCOLUMNTYPE",
+  IfcCableCarrierSegmentType: "IFCCABLECARRIERSEGMENTTYPE",
+  IfcCableCarrierFittingType: "IFCCABLECARRIERFITTINGTYPE",
   IfcCoveringType: "IFCCOVERINGTYPE",
   IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+  IfcDuctFittingType: "IFCDUCTFITTINGTYPE",
+  IfcFireSuppressionTerminalType: "IFCFIRESUPPRESSIONTERMINALTYPE",
   IfcFurnitureType: "IFCFURNITURETYPE",
   IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
   IfcDoorType: "IFCDOORTYPE",
@@ -334,6 +351,7 @@ const ifcTypes = {
   IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
   IfcMemberType: "IFCMEMBERTYPE",
   IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
+  IfcPipeFittingType: "IFCPIPEFITTINGTYPE",
   IfcPlateType: "IFCPLATETYPE",
   IfcPropertySet: "IFCPROPERTYSET",
   IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
@@ -347,9 +365,12 @@ const ifcTypes = {
   IfcWindowStyle: "IFCWINDOWSTYLE",
   IfcSlabType: "IFCSLABTYPE",
   IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+  IfcWindowPanelProperties: "IFCWINDOWPANELPROPERTIES",
   //Quantities
   IfcElementQuantity: "IFCELEMENTQUANTITY",
+  IfcMonetaryUnit: "IFCMONETARYUNIT",
   IfcQuantityArea: "IFCQUANTITYAREA",
+  IfcQuantityCount: "IFCQUANTITYCOUNT",
   IfcQuantityLength: "IFCQUANTITYLENGTH",
   IfcQuantityVolume: "IFCQUANTITYVOLUME",
   // Relationships
@@ -360,6 +381,7 @@ const ifcTypes = {
   IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
   IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
   IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+  IfcRelConnectsPorts: "IFCRELCONNECTSPORTS",
   IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
   IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
   IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
@@ -388,29 +410,51 @@ const ifcTypes = {
   IfcSIUnit: "IFCSIUNIT",
   IfcUnitAssignment: "IFCUNITASSIGNMENT"
 };
+const ifcTypesSet = new Set();
+Object.values(ifcTypes).forEach(e => ifcTypesSet.add(e));
+const ifcTypesMap = new Map();
+Object.keys(ifcTypes).forEach(e => ifcTypesMap.set(ifcTypes[e], e));
 
 function getName(ifcType) {
-  return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
+  return ifcTypesMap.get(ifcType);
 }
 
 class IfcEntityFinder {
   constructor(ifcData) {
-    this.ifcData = ifcData;
+    const map = new Map(); // generate map so we can return all types without looping tree again
+
+    Object.keys(ifcData).forEach(e => {
+      const t = ifcData[e][namedProps.ifcClass];
+
+      if (map.has(t)) {
+        const x = map.get(t);
+        x.push({
+          p: e,
+          d: ifcData[e]
+        });
+      } else {
+        const x = [{
+          p: e,
+          d: ifcData[e]
+        }];
+        map.set(t, x);
+      }
+    });
+    this.cache = map;
   }
 
   findByType(ifcType) {
+    const map = this.cache;
     const matches = {};
-    const name = getName(ifcType);
-    Object.keys(this.ifcData).forEach(e => {
-      if (this.getType(e) === name) {
-        matches[e] = this.ifcData[e];
-      }
-    });
-    return matches;
-  }
 
-  getType(id) {
-    return this.ifcData[id][namedProps.ifcClass];
+    if (map.has(getName(ifcType))) {
+      const x = map.get(getName(ifcType));
+      x.forEach(e => {
+        matches[e.p] = e.d;
+      });
+    }
+
+    return matches;
   }
 
   findAllProducts(spatialStructureElements, elements = []) {

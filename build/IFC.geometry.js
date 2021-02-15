@@ -15,8 +15,10 @@ var IFCjs = (function (exports) {
     coordinates: "Coordinates",
     corner: "Corner",
     depth: "Depth",
+    directrix: "Directrix",
     dirRatios: "DirectionRatios",
     elements: "Elements",
+    endParam: "EndParam",
     extDirection: "ExtrudedDirection",
     expressId: "_ExpressId",
     fbsmFaces: "FbsmFaces",
@@ -33,6 +35,7 @@ var IFCjs = (function (exports) {
     ifcClass: "_IfcClass",
     innerCurves: "InnerCurves",
     innerFilletRadius: "InnerFilletRadius",
+    innerRadius: "InnerRadius",
     isBrep: "_IsBrep",
     items: "Items",
     location: "Location",
@@ -79,6 +82,7 @@ var IFCjs = (function (exports) {
     senseAgreement: "SenseAgreement",
     semiAxis1: "SemiAxis1",
     semiAxis2: "SemiAxis2",
+    startParam: "StartParam",
     sweptArea: "SweptArea",
     transform: "_Transformation",
     trim1: "Trim1",
@@ -98,17 +102,19 @@ var IFCjs = (function (exports) {
     unit: "IfcUnit"
   };
   const geometryTypes = {
+    advancedSweptSolid: "AdvancedSweptSolid",
     annotation2D: "Annotation2D",
+    boundingBox: "BoundingBox",
+    brep: "Brep",
+    clipping: "Clipping",
     curve2D: "Curve2D",
     curve3D: "Curve3D",
-    sweptSolid: "SweptSolid",
-    mappedRepresentation: "MappedRepresentation",
-    brep: "Brep",
-    geometricSet: "GeometricSet",
-    clipping: "Clipping",
     extrudedAreaSolid: "IfcExtrudedAreaSolid",
+    geometricSet: "GeometricSet",
+    mappedRepresentation: "MappedRepresentation",
+    solidModel: "SolidModel",
     surfaceModel: "SurfaceModel",
-    boundingBox: "BoundingBox"
+    sweptSolid: "SweptSolid"
   };
   const structuredData = {
     ifcProject: "IfcProject",
@@ -329,13 +335,16 @@ var IFCjs = (function (exports) {
     //Building elements
     IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
     IfcBeam: "IFCBEAM",
+    IfcBuildingElementPart: "IFCBUILDINGELEMENTPART",
     IfcColumn: "IFCCOLUMN",
     IfcCovering: "IFCCOVERING",
     IfcCurtainWall: "IFCCURTAINWALL",
+    IfcDistributionElement: "IFCDISTRIBUTIONELEMENT",
     IfcDoor: "IFCDOOR",
     IfcElementAssembly: "IFCELEMENTASSEMBLY",
     IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
     IfcFastener: "IFCFASTENER",
+    IfcFlowFitting: "IFCFLOWFITTING",
     IfcFlowTerminal: "IFCFLOWTERMINAL",
     IfcFlowSegment: "IFCFLOWSEGMENT",
     IfcFooting: "IFCFOOTING",
@@ -353,6 +362,7 @@ var IFCjs = (function (exports) {
     IfcRoof: "IFCROOF",
     IfcStairFlight: "IFCSTAIRFLIGHT",
     IfcStair: "IFCSTAIR",
+    IfcVirtualElement: "IFCVIRTUALELEMENT",
     IfcWallStandardCase: "IFCWALLSTANDARDCASE",
     IfcWall: "IFCWALL",
     IfcWindow: "IFCWINDOW",
@@ -400,6 +410,7 @@ var IFCjs = (function (exports) {
     IfcLine: "IFCLINE",
     IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
     IfcPlanarExtent: "IFCPLANAREXTENT",
+    IfcOpenShell: "IFCOPENSHELL",
     IfcPlane: "IFCPLANE",
     IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
     IfcPolyline: "IFCPOLYLINE",
@@ -408,6 +419,7 @@ var IFCjs = (function (exports) {
     IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
     IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
     IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+    IfcShellBasedSurfaceModel: "IFCSHELLBASEDSURFACEMODEL",
     IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
     IfcTrimmedCurve: "IFCTRIMMEDCURVE",
     IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
@@ -456,8 +468,12 @@ var IFCjs = (function (exports) {
     IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
     IfcBeamType: "IFCBEAMTYPE",
     IfcColumnType: "IFCCOLUMNTYPE",
+    IfcCableCarrierSegmentType: "IFCCABLECARRIERSEGMENTTYPE",
+    IfcCableCarrierFittingType: "IFCCABLECARRIERFITTINGTYPE",
     IfcCoveringType: "IFCCOVERINGTYPE",
     IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+    IfcDuctFittingType: "IFCDUCTFITTINGTYPE",
+    IfcFireSuppressionTerminalType: "IFCFIRESUPPRESSIONTERMINALTYPE",
     IfcFurnitureType: "IFCFURNITURETYPE",
     IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
     IfcDoorType: "IFCDOORTYPE",
@@ -468,6 +484,7 @@ var IFCjs = (function (exports) {
     IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
     IfcMemberType: "IFCMEMBERTYPE",
     IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
+    IfcPipeFittingType: "IFCPIPEFITTINGTYPE",
     IfcPlateType: "IFCPLATETYPE",
     IfcPropertySet: "IFCPROPERTYSET",
     IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
@@ -481,9 +498,12 @@ var IFCjs = (function (exports) {
     IfcWindowStyle: "IFCWINDOWSTYLE",
     IfcSlabType: "IFCSLABTYPE",
     IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+    IfcWindowPanelProperties: "IFCWINDOWPANELPROPERTIES",
     //Quantities
     IfcElementQuantity: "IFCELEMENTQUANTITY",
+    IfcMonetaryUnit: "IFCMONETARYUNIT",
     IfcQuantityArea: "IFCQUANTITYAREA",
+    IfcQuantityCount: "IFCQUANTITYCOUNT",
     IfcQuantityLength: "IFCQUANTITYLENGTH",
     IfcQuantityVolume: "IFCQUANTITYVOLUME",
     // Relationships
@@ -494,6 +514,7 @@ var IFCjs = (function (exports) {
     IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
     IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
     IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+    IfcRelConnectsPorts: "IFCRELCONNECTSPORTS",
     IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
     IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
     IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
@@ -522,9 +543,13 @@ var IFCjs = (function (exports) {
     IfcSIUnit: "IFCSIUNIT",
     IfcUnitAssignment: "IFCUNITASSIGNMENT"
   };
+  const ifcTypesSet = new Set();
+  Object.values(ifcTypes).forEach(e => ifcTypesSet.add(e));
+  const ifcTypesMap = new Map();
+  Object.keys(ifcTypes).forEach(e => ifcTypesMap.set(ifcTypes[e], e));
 
   function getName(ifcType) {
-    return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
+    return ifcTypesMap.get(ifcType);
   }
 
   function createLine(coordinates) {
@@ -639,7 +664,7 @@ var IFCjs = (function (exports) {
     } = getEllipseInfo(curve);
     const currentPoint = [shape.currentPoint.x, shape.currentPoint.y];
     const distancesToNextPoints = getDistancesToNextPoints(currentPoint, ends);
-    distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absellipse(x, y, a, b, trims[1], trims[0], true) : shape.absellipse(x, y, a, b, trims[0], trims[1], false);
+    distancesToNextPoints[0] < distancesToNextPoints[1] ? shape.absellipse(x, y, a, b, trims[0], trims[1], false) : shape.absellipse(x, y, a, b, trims[1], trims[0], true);
   }
 
   function getCircleInfo(curve) {
@@ -692,7 +717,7 @@ var IFCjs = (function (exports) {
 
   function getCurveTrim(curve, trim) {
     const offsetAngle = getTrimmedCurveAngle(curve);
-    return curve[trim][0][ifcUnitsValue.value] * Math.PI / 180 - offsetAngle;
+    return curve[trim][0][ifcUnitsValue.value] * Math.PI / 180 + offsetAngle;
   }
 
   function getCircleEnds(x, y, radius, trims) {
@@ -1038,9 +1063,9 @@ var IFCjs = (function (exports) {
     return geometry;
   }
 
-  function mapSweptSolid(shape, product) {
+  function mapSweptSolid(shape) {
     const items = [];
-    shape[namedProps.items].forEach(extruded => items.push(mapExtrudedAreaSolid(extruded, product)));
+    shape[namedProps.items].forEach(extruded => items.push(mapExtrudedAreaSolid(extruded)));
     return joinAllExtrusions(items);
   }
 
@@ -1056,9 +1081,9 @@ var IFCjs = (function (exports) {
     return result;
   }
 
-  function mapExtrudedAreaSolid(extruded, product) {
+  function mapExtrudedAreaSolid(extruded) {
     const extrudedProps = getExtrusionProps(extruded);
-    const solid = getExtrusionByType(extrudedProps, product);
+    const solid = getExtrusionByType(extrudedProps);
     const position = extruded[namedProps.position];
     applyTransformsToGeometry(solid, position);
     return solid;
@@ -1152,165 +1177,133 @@ var IFCjs = (function (exports) {
     return value === defaultValue ? def : value;
   }
 
-  //Credit to the following algorithm:
   //https://stackoverflow.com/questions/50272399/three-js-2d-object-in-3d-space-by-vertices/50274103#50274103
-  function createFace(faceDefinition) {
-    const coordinates = faceDefinition.outerBounds.bounds[0];
-    let outerPoints = getPoints(coordinates);
-    let {
-      tempOuterPoints,
-      quaternion
-    } = getProjectedPointsAndQuaternion(outerPoints);
-    const outerShape = new THREE.Shape(tempOuterPoints);
-    const allPoints = [...outerPoints];
-    if (hasHoles(faceDefinition)) punchHoles(faceDefinition, quaternion, allPoints, outerShape);
-    return createGeometry(outerShape, allPoints);
+  function createBufferGeometry(faces) {
+    const result = triangulate(faces);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', getAttribute(result.triangles, 3));
+    geometry.setAttribute('normal', getAttribute(result.normals, 3));
+    geometry.setAttribute('uv', getAttribute(result.uvs, 2));
+    geometry.computeVertexNormals();
+    return new THREE.Mesh(geometry);
   }
 
-  function createGeometry(outerShape, allPoints) {
-    const shapeGeom = new THREE.ShapeGeometry(outerShape, 24);
-    const mesh = new THREE.Mesh(shapeGeom);
-    mesh.geometry.vertices = allPoints;
-    mesh.geometry.computeVertexNormals();
-    mesh.geometry.computeFaceNormals();
-    return mesh;
+  function getAttribute(attribute, attributeCount) {
+    return new THREE.BufferAttribute(new Float32Array(attribute), attributeCount);
   }
 
-  function getPoints(coordinates) {
-    return coordinates.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+  function triangulate(faces) {
+    const result = {
+      triangles: [],
+      normals: [],
+      uvs: []
+    };
+    faces.forEach(face => triangulateFace(face, result));
+    return result;
   }
 
-  function getTempPoints(points, quaternion) {
-    return points.map(p => p.clone().applyQuaternion(quaternion));
-  }
+  function triangulateFace(face, result) {
+    const points = getAllPoints(face);
+    const flatCoords = getFlatCoordinates(points.all);
+    const indices = getTriangleIndices(points);
 
-  function hasHoles(faceDefinition) {
-    return faceDefinition.innerBounds.bounds.length > 0;
-  }
-
-  function punchHoles(faceDefinition, quaternion, allPoints, outerShape) {
-    faceDefinition.innerBounds.bounds.forEach(bound => {
-      const innerPoints = getPoints(bound);
-      const tempInnerPoints = getTempPoints(innerPoints, quaternion);
-      const innerShape = new THREE.Path(tempInnerPoints);
-      outerShape.holes.push(innerShape);
-      allPoints.push(...innerPoints);
-    });
-  } //To implement this algorithm successfully (see link above)
-  // the selected triangle of vertices needs to fulfill the following points to work:
-  // 1. It must be a valid triangle (its vertices are not aligned)
-  // 2. Its area should be as big as possible to increment the precission of its normal vector
-  // 3. The generated 2d surface has its points defined clockwise
-
-
-  function getProjectedPointsAndQuaternion(points) {
-    const triangles = getAllTriangles(points); //1
-
-    sortTrianglesByArea(triangles); //2
-
-    return getQuatAndPoints(triangles, points); //3
-  }
-
-  function getAllTriangles(points) {
-    const triangles = [];
-    let i = 1;
-
-    while (i + 1 < points.length) {
-      const {
-        vector,
-        triangle
-      } = getTriangleVector(points, i);
-      if (isVectorValid(vector)) triangles.push({
-        area: triangle.getArea(),
-        triangle
-      });
-      i++;
+    for (const index of indices) {
+      result.triangles.push(...getTriangle(flatCoords, index));
+      result.normals.push(...[0, 0, 0]);
+      result.uvs.push(...[0, 0]);
     }
-
-    return triangles;
   }
 
-  function getTriangleVector(points, i) {
-    const triangle = new THREE.Triangle(points[i + 1], points[i], points[0]);
-    const vector = new THREE.Vector3();
-    triangle.getNormal(vector);
-    return {
-      vector,
-      triangle
+  function getAllPoints(face) {
+    const points = {
+      outer: [],
+      inner: [],
+      all: []
     };
+    const outerFace = face.outerBounds.bounds[0];
+    const innerBounds = face.innerBounds.bounds;
+    points.outer = getThreePoints(outerFace);
+    innerBounds.forEach(bound => points.inner.push(getThreePoints(bound)));
+    points.all.push(...points.outer);
+    points.inner.forEach(boundPoints => points.all.push(...boundPoints));
+    return points;
   }
 
-  function sortTrianglesByArea(triangles) {
-    triangles.sort((a, b) => a.area > b.area ? 1 : b.area > a.area ? -1 : 0).reverse();
+  function getFlatCoordinates(face) {
+    let flatCoords = [];
+    face.forEach(coord => flatCoords.push(...[coord.x, coord.y, coord.z]));
+    return flatCoords;
   }
 
-  function isVectorValid(vector) {
-    return vector.x != 0 || vector.y != 0 || vector.z != 0;
+  function getTriangleIndices(points) {
+    const tempCoords = getTempCoordinates(points);
+    const holeIndices = getHolesIndices(points);
+    return earcut(tempCoords, holeIndices);
   }
 
-  function getQuatAndPoints(triangles, points) {
-    const props = initializeProperties();
-
-    while (props.isClockWise === false) selectAnotherTriangle(props, points, triangles);
-
-    return {
-      tempOuterPoints: props.tempOuterPoints,
-      quaternion: props.quaternion
-    };
+  function getTempCoordinates(points) {
+    const tempPoints = [];
+    const tempCoords = [];
+    const q = getQuaternion(points.all);
+    points.all.forEach(p => tempPoints.push(p.clone().applyQuaternion(q)));
+    tempPoints.forEach(coord => tempCoords.push(...[coord.x, coord.y]));
+    return tempCoords;
   }
 
-  function selectAnotherTriangle(props, points, triangles) {
-    const tri = triangles[props.selectedTriangle];
-    tri.triangle.getNormal(props.normal);
-    props.quaternion = new THREE.Quaternion().setFromUnitVectors(props.normal, props.baseNormal);
-    props.tempOuterPoints = getTempPoints(points, props.quaternion);
-    const projected = props.tempOuterPoints.map(point => new THREE.Vector2(point.x, point.y));
-    props.isClockWise = THREE.ShapeUtils.isClockWise(projected);
-    props.selectedTriangle++;
+  function getHolesIndices(points) {
+    let baseIndex = points.outer.length;
+    let holeIndices = [];
+    points.inner.forEach(boundPoints => {
+      holeIndices.push(baseIndex);
+      baseIndex += boundPoints.length;
+    });
+    return holeIndices;
   }
 
-  function initializeProperties() {
-    return {
-      baseNormal: new THREE.Vector3(0, 0, 1),
-      normal: new THREE.Vector3(),
-      selectedTriangle: 0,
-      tempOuterPoints: [],
-      quaternion: {},
-      isClockWise: false
-    };
+  function getQuaternion(points) {
+    const normal = getNormal(points);
+    const baseNormal = new THREE.Vector3(0, 0, 1);
+    return new THREE.Quaternion().setFromUnitVectors(normal, baseNormal);
+  }
+
+  function getNormal(points) {
+    const length = points.length;
+    const p1 = points[0];
+    const p2 = points[Math.ceil(length / 3)];
+    const p3 = points[Math.ceil(2 * length / 3)];
+    const tri = new THREE.Triangle(p1, p2, p3);
+    const normal = new THREE.Vector3();
+    tri.getNormal(normal);
+    return normal;
+  }
+
+  function getThreePoints(coordinates) {
+    const points = [];
+    coordinates.forEach(c => points.push(new THREE.Vector3(c[0], c[1], c[2])));
+    return points;
+  }
+
+  function getTriangle(face, index) {
+    const triangleIndex = index * 3;
+    const triangle = [face[triangleIndex], face[triangleIndex + 1], face[triangleIndex + 2]];
+    return triangle;
   }
 
   function mapBrep(shape) {
     const representations = shape[namedProps.items];
     const definitions = [];
     representations.forEach(r => definitions.push(...getGeometry(r[namedProps.outer][namedProps.cfsFaces])));
-    return createAndJoinFaces(definitions);
+    console.time('buffer');
+    const asdf = createBufferGeometry(definitions);
+    console.timeEnd('buffer');
+    return asdf;
   }
 
   function mapSurfaceModel(shape) {
     const faceSets = shape[namedProps.items][0][namedProps.fbsmFaces];
     const definitions = [];
     faceSets.forEach(faceSet => definitions.push(...getGeometry(faceSet[namedProps.cfsFaces])));
-    return createAndJoinFaces(definitions);
-  }
-
-  function createAndJoinFaces(definitions) {
-    const faces = [];
-    definitions.forEach(definition => faces.push(createFace(definition)));
-    return joinAllFaces(faces);
-  }
-
-  function joinAllFaces(faces) {
-    const joined = new THREE.Geometry();
-    faces.forEach(face => joined.merge(face.geometry, face.matrix));
-    const material = new THREE.MeshPhongMaterial({
-      side: 2
-    });
-    const mesh = new THREE.Mesh(joined, material);
-    mesh.geometry.computeVertexNormals();
-    mesh.geometry.computeFaceNormals();
-    mesh[namedProps.isBrep] = true;
-    return mesh;
+    return createBufferGeometry(definitions);
   }
 
   function getGeometry(faceSet) {
@@ -1334,7 +1327,7 @@ var IFCjs = (function (exports) {
     const bounds = [];
     const orientation = [];
     ifcBounds.forEach(bound => {
-      bounds.push(getPoints$1(bound));
+      bounds.push(getPoints(bound));
       orientation.push(bound[namedProps.orientation]);
     });
     return {
@@ -1343,7 +1336,7 @@ var IFCjs = (function (exports) {
     };
   }
 
-  function getPoints$1(bound) {
+  function getPoints(bound) {
     const points = bound[namedProps.bound][namedProps.polygon];
     const coordinates = [];
     points.forEach(point => {
@@ -1928,8 +1921,8 @@ var IFCjs = (function (exports) {
   //          +-------+
   //
 
-  function applyBoolDifferences(baseMesh, clipMeshes) {
-    preventCoplanarSurfaces(baseMesh);
+  function applyBoolDifferences(baseMesh, clipMeshes, preventCoplanar = true) {
+    if (preventCoplanar) preventCoplanarSurfaces(baseMesh, 0.99999);
     let operand1 = CSG.fromMesh(baseMesh);
 
     for (let i = 0; i < clipMeshes.length; i++) {
@@ -1943,8 +1936,7 @@ var IFCjs = (function (exports) {
   } //Ugly, but avoids crashes of CSG operations due to face superpositions
 
 
-  function preventCoplanarSurfaces(baseMesh) {
-    const factor = 0.99999;
+  function preventCoplanarSurfaces(baseMesh, factor) {
     baseMesh.scale.x *= factor;
     baseMesh.scale.y *= factor;
     baseMesh.scale.z *= factor;
@@ -2091,6 +2083,11 @@ var IFCjs = (function (exports) {
     return new THREE.Object3D();
   }
 
+  function mapAdvancedSweptSolid(shape) {
+    console.log("dkfakdsfjal");
+    return new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.01));
+  }
+
   function constructGeometries(structured) {
     structured[structuredData.products].forEach(product => constructGeometry(product));
     structured[structuredData.spaces].forEach(space => constructGeometry(space));
@@ -2154,7 +2151,9 @@ var IFCjs = (function (exports) {
     [geometryTypes.extrudedAreaSolid]: mapExtrudedAreaSolid,
     [geometryTypes.surfaceModel]: mapSurfaceModel,
     [geometryTypes.boundingBox]: mapBoundingBox,
-    [geometryTypes.annotation2D]: mapAnnotation
+    [geometryTypes.annotation2D]: mapAnnotation,
+    [geometryTypes.advancedSweptSolid]: mapAdvancedSweptSolid,
+    [geometryTypes.solidModel]: mapBrep
   };
 
   function getMappedGeometry(representation, product) {
@@ -2163,8 +2162,9 @@ var IFCjs = (function (exports) {
     try {
       return geometryMap[type](representation, product);
     } catch (e) {
-      console.warn(`Error with item ${product[namedProps.ifcClass]} of type ${type}: ${e}`);
-      return geometryMap[type](representation, product);
+      console.warn(`Error with item ${product[namedProps.ifcClass]} of type ${type}: ${e}`); // return geometryMap[type](representation, product);
+
+      return new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.01));
     }
   }
 
@@ -2186,13 +2186,13 @@ var IFCjs = (function (exports) {
   function applyBooleanOperation(product) {
     for (let i = 0; i < product[namedProps.geometry].length; i++) {
       const geometryItem = product[namedProps.geometry][i];
-      if (geometryItem.type === 'Mesh' && !geometryItem[namedProps.isBrep]) product[namedProps.geometry][i] = applyBooleanOperationOnMesh(product, geometryItem);
+      if (geometryItem.type === 'Mesh') product[namedProps.geometry][i] = applyBooleanOperationOnMesh(product, geometryItem);
     }
   }
 
   function applyBooleanOperationOnMesh(product, geometry) {
     const openings = getOpenings(product);
-    const resultGeom = applyBoolDifferences(geometry, openings);
+    const resultGeom = applyBoolDifferences(geometry, openings, false);
     const result = CSG.toMesh(resultGeom, geometry.matrix);
     result.geometry = new THREE.BufferGeometry().fromGeometry(result.geometry);
     result.material = new THREE.MeshPhongMaterial();
@@ -2223,6 +2223,7 @@ var IFCjs = (function (exports) {
     brown: 0xc2893a,
     red: 0xff0000,
     grey: 0x606060,
+    lightGrey: 0x858585,
     darkBrown: 0x5c3d1e,
     darkBlue: 0x23395d,
     lightBlue: 0xadd8e6,
@@ -2232,10 +2233,12 @@ var IFCjs = (function (exports) {
     whiteDiffuse: getDiffuseMat(colors.white),
     brownDiffuse: getDiffuseMat(colors.brown),
     transparent: getTransparentMat(colors.white, 0),
-    translucentBlue: getTransparentMat(colors.lightBlue, 0.2)
+    translucentBlue: getTransparentMat(colors.lightBlue, 0.2),
+    translucentWhite: getTransparentMat(colors.white, 0.2)
   };
   const lineMaterials = {
     grey: newLineMaterial(colors.grey),
+    lightGrey: newLineMaterial(colors.lightGrey),
     brown: newLineMaterial(colors.darkBrown),
     blue: newLineMaterial(colors.darkBlue),
     black: newLineMaterial(colors.black)
@@ -2246,6 +2249,7 @@ var IFCjs = (function (exports) {
       return materialsMap[ifcTypes[ifcType]].material;
     } catch (e) {
       console.warn(`The type ${ifcType} doesn't have a material implemented.`);
+      return materials.whiteDiffuse;
     }
   }
 
@@ -2317,41 +2321,69 @@ var IFCjs = (function (exports) {
     },
     [ifcTypes.IfcFurnishingElement]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcRailing]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcColumn]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcFooting]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcBeam]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcStair]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcStairFlight]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcMember]: {
       material: materials.whiteDiffuse,
-      lineMaterial: lineMaterials.brown
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcFlowTerminal]: {
       material: materials.whiteDiffuse,
       lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcBuildingElementProxy]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.grey
+    },
+    [ifcTypes.IfcReinforcingBar]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcReinforcingMesh]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcMechanicalFastener]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcFastener]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcRamp]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcFlowSegment]: {
+      material: materials.whiteDiffuse,
+      lineMaterial: lineMaterials.brown
+    },
+    [ifcTypes.IfcFlowFitting]: {
       material: materials.whiteDiffuse,
       lineMaterial: lineMaterials.brown
     },
@@ -2361,11 +2393,11 @@ var IFCjs = (function (exports) {
     },
     [ifcTypes.IfcPlate]: {
       material: materials.translucentBlue,
-      lineMaterial: lineMaterials.blue
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcWindow]: {
       material: materials.translucentBlue,
-      lineMaterial: lineMaterials.blue
+      lineMaterial: lineMaterials.grey
     },
     [ifcTypes.IfcSpace]: {
       material: materials.transparent,
@@ -2508,13 +2540,25 @@ var IFCjs = (function (exports) {
   };
 
   function buildGeometry(structured) {
-    //console.log(structured);
+    console.log(structured);
+    console.time('constructGeometries');
     constructGeometries(structured);
+    console.timeEnd('constructGeometries');
+    console.time('applyTransformation');
     applyTransformations(structured);
+    console.timeEnd('applyTransformation');
+    console.time('drawEdges');
     drawEdges(structured);
+    console.timeEnd('drawEdges');
+    console.time('subtractOpenings');
     subtractOpenings(structured);
+    console.timeEnd('subtractOpenings');
+    console.time('applyMaterials');
     applyMaterials(structured);
+    console.timeEnd('applyMaterials');
+    console.time('applyScale');
     applyScale(structured);
+    console.timeEnd('applyScale');
     return structured;
   }
 

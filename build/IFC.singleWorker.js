@@ -15,8 +15,10 @@ var IFCjs = (function (exports) {
     coordinates: "Coordinates",
     corner: "Corner",
     depth: "Depth",
+    directrix: "Directrix",
     dirRatios: "DirectionRatios",
     elements: "Elements",
+    endParam: "EndParam",
     extDirection: "ExtrudedDirection",
     expressId: "_ExpressId",
     fbsmFaces: "FbsmFaces",
@@ -33,6 +35,7 @@ var IFCjs = (function (exports) {
     ifcClass: "_IfcClass",
     innerCurves: "InnerCurves",
     innerFilletRadius: "InnerFilletRadius",
+    innerRadius: "InnerRadius",
     isBrep: "_IsBrep",
     items: "Items",
     location: "Location",
@@ -79,6 +82,7 @@ var IFCjs = (function (exports) {
     senseAgreement: "SenseAgreement",
     semiAxis1: "SemiAxis1",
     semiAxis2: "SemiAxis2",
+    startParam: "StartParam",
     sweptArea: "SweptArea",
     transform: "_Transformation",
     trim1: "Trim1",
@@ -130,13 +134,16 @@ var IFCjs = (function (exports) {
     //Building elements
     IfcBuildingElementProxy: "IFCBUILDINGELEMENTPROXY",
     IfcBeam: "IFCBEAM",
+    IfcBuildingElementPart: "IFCBUILDINGELEMENTPART",
     IfcColumn: "IFCCOLUMN",
     IfcCovering: "IFCCOVERING",
     IfcCurtainWall: "IFCCURTAINWALL",
+    IfcDistributionElement: "IFCDISTRIBUTIONELEMENT",
     IfcDoor: "IFCDOOR",
     IfcElementAssembly: "IFCELEMENTASSEMBLY",
     IfcEquipmentElement: "IFCEQUIPMENTELEMENT",
     IfcFastener: "IFCFASTENER",
+    IfcFlowFitting: "IFCFLOWFITTING",
     IfcFlowTerminal: "IFCFLOWTERMINAL",
     IfcFlowSegment: "IFCFLOWSEGMENT",
     IfcFooting: "IFCFOOTING",
@@ -154,6 +161,7 @@ var IFCjs = (function (exports) {
     IfcRoof: "IFCROOF",
     IfcStairFlight: "IFCSTAIRFLIGHT",
     IfcStair: "IFCSTAIR",
+    IfcVirtualElement: "IFCVIRTUALELEMENT",
     IfcWallStandardCase: "IFCWALLSTANDARDCASE",
     IfcWall: "IFCWALL",
     IfcWindow: "IFCWINDOW",
@@ -201,6 +209,7 @@ var IFCjs = (function (exports) {
     IfcLine: "IFCLINE",
     IfcLShapeProfileDef: "IFCLSHAPEPROFILEDEF",
     IfcPlanarExtent: "IFCPLANAREXTENT",
+    IfcOpenShell: "IFCOPENSHELL",
     IfcPlane: "IFCPLANE",
     IfcPolygonalBoundedHalfSpace: "IFCPOLYGONALBOUNDEDHALFSPACE",
     IfcPolyline: "IFCPOLYLINE",
@@ -209,6 +218,7 @@ var IFCjs = (function (exports) {
     IfcRectangleHollowProfileDef: "IFCRECTANGLEHOLLOWPROFILEDEF",
     IfcRectangleProfileDef: "IFCRECTANGLEPROFILEDEF",
     IfcShapeRepresentation: "IFCSHAPEREPRESENTATION",
+    IfcShellBasedSurfaceModel: "IFCSHELLBASEDSURFACEMODEL",
     IfcSweptDiskSolid: "IFCSWEPTDISKSOLID",
     IfcTrimmedCurve: "IFCTRIMMEDCURVE",
     IfcArbitraryOpenProfileDef: "IFCARBITRARYOPENPROFILEDEF",
@@ -257,8 +267,12 @@ var IFCjs = (function (exports) {
     IfcBuildingElementProxyType: "IFCBUILDINGELEMENTPROXYTYPE",
     IfcBeamType: "IFCBEAMTYPE",
     IfcColumnType: "IFCCOLUMNTYPE",
+    IfcCableCarrierSegmentType: "IFCCABLECARRIERSEGMENTTYPE",
+    IfcCableCarrierFittingType: "IFCCABLECARRIERFITTINGTYPE",
     IfcCoveringType: "IFCCOVERINGTYPE",
     IfcCurtainWallType: "IFCCURTAINWALLTYPE",
+    IfcDuctFittingType: "IFCDUCTFITTINGTYPE",
+    IfcFireSuppressionTerminalType: "IFCFIRESUPPRESSIONTERMINALTYPE",
     IfcFurnitureType: "IFCFURNITURETYPE",
     IfcDistributionElementType: "IFCDISTRIBUTIONELEMENTTYPE",
     IfcDoorType: "IFCDOORTYPE",
@@ -269,6 +283,7 @@ var IFCjs = (function (exports) {
     IfcLightFixtureType: "IFCLIGHTFIXTURETYPE",
     IfcMemberType: "IFCMEMBERTYPE",
     IfcPipeSegmentType: "IFCPIPESEGMENTTYPE",
+    IfcPipeFittingType: "IFCPIPEFITTINGTYPE",
     IfcPlateType: "IFCPLATETYPE",
     IfcPropertySet: "IFCPROPERTYSET",
     IfcPropertyEnumeratedValue: "IFCPROPERTYENUMERATEDVALUE",
@@ -282,9 +297,12 @@ var IFCjs = (function (exports) {
     IfcWindowStyle: "IFCWINDOWSTYLE",
     IfcSlabType: "IFCSLABTYPE",
     IfcWindowLiningProperties: "IFCWINDOWLININGPROPERTIES",
+    IfcWindowPanelProperties: "IFCWINDOWPANELPROPERTIES",
     //Quantities
     IfcElementQuantity: "IFCELEMENTQUANTITY",
+    IfcMonetaryUnit: "IFCMONETARYUNIT",
     IfcQuantityArea: "IFCQUANTITYAREA",
+    IfcQuantityCount: "IFCQUANTITYCOUNT",
     IfcQuantityLength: "IFCQUANTITYLENGTH",
     IfcQuantityVolume: "IFCQUANTITYVOLUME",
     // Relationships
@@ -295,6 +313,7 @@ var IFCjs = (function (exports) {
     IfcRelAssociatesDocument: "IFCRELASSOCIATESDOCUMENT",
     IfcRelAssociatesMaterial: "IFCRELASSOCIATESMATERIAL",
     IfcRelConnectsPathElements: "IFCRELCONNECTSPATHELEMENTS",
+    IfcRelConnectsPorts: "IFCRELCONNECTSPORTS",
     IfcRelConnectsPortToElement: "IFCRELCONNECTSPORTTOELEMENT",
     IfcRelConnectsWithRealizingElements: "IFCRELCONNECTSWITHREALIZINGELEMENTS",
     IfcRelContainedInSpatialStructure: "IFCRELCONTAINEDINSPATIALSTRUCTURE",
@@ -323,9 +342,17 @@ var IFCjs = (function (exports) {
     IfcSIUnit: "IFCSIUNIT",
     IfcUnitAssignment: "IFCUNITASSIGNMENT"
   };
+  const ifcTypesSet = new Set();
+  Object.values(ifcTypes).forEach(e => ifcTypesSet.add(e));
+  const ifcTypesMap = new Map();
+  Object.keys(ifcTypes).forEach(e => ifcTypesMap.set(ifcTypes[e], e));
 
   function getName(ifcType) {
-    return Object.keys(ifcTypes).find(key => ifcTypes[key] === ifcType);
+    return ifcTypesMap.get(ifcType);
+  }
+
+  function haveIfcType(type) {
+    return ifcTypesSet.has(type);
   }
 
   const typesParserMap = {};
@@ -354,14 +381,16 @@ var IFCjs = (function (exports) {
     text: "Text",
     textSet: "TextSet"
   };
+  const dataTypesSet = new Set();
+  Object.values(ifcDataTypes).forEach(e => dataTypesSet.add(e));
+  const dataTypesArray = Array.from(dataTypesSet);
 
   function isDataTypeValid(dataType) {
-    if (Object.values(ifcDataTypes).indexOf(dataType) > -1) return true;
-    return false;
+    return dataTypesSet.has(dataType);
   }
 
   function getAllDataTypes() {
-    return Object.values(ifcDataTypes);
+    return dataTypesArray;
   }
 
   newObject({
@@ -581,6 +610,17 @@ var IFCjs = (function (exports) {
     Tag: ifcDataTypes.text
   });
   newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcFlowFitting),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ObjectType: ifcDataTypes.text,
+    [namedProps.objectPlacement]: ifcDataTypes.id,
+    [namedProps.representation]: ifcDataTypes.id,
+    Tag: ifcDataTypes.text
+  });
+  newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcFurnishingElement),
     GlobalId: ifcDataTypes.text,
     OwnerHistory: ifcDataTypes.id,
@@ -713,6 +753,39 @@ var IFCjs = (function (exports) {
   });
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcFastener),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ObjectType: ifcDataTypes.text,
+    [namedProps.objectPlacement]: ifcDataTypes.id,
+    [namedProps.representation]: ifcDataTypes.id,
+    Tag: ifcDataTypes.text
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcBuildingElementPart),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ObjectType: ifcDataTypes.text,
+    [namedProps.objectPlacement]: ifcDataTypes.id,
+    [namedProps.representation]: ifcDataTypes.id,
+    Tag: ifcDataTypes.text
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcDistributionElement),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ObjectType: ifcDataTypes.text,
+    [namedProps.objectPlacement]: ifcDataTypes.id,
+    [namedProps.representation]: ifcDataTypes.id,
+    Tag: ifcDataTypes.text
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcVirtualElement),
     GlobalId: ifcDataTypes.text,
     OwnerHistory: ifcDataTypes.id,
     Name: ifcDataTypes.text,
@@ -862,11 +935,11 @@ var IFCjs = (function (exports) {
   });
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcSweptDiskSolid),
-    Directrix: ifcDataTypes.id,
-    Radius: ifcDataTypes.number,
-    InnerRadius: ifcDataTypes.number,
-    StartParam: ifcDataTypes.number,
-    EndParam: ifcDataTypes.number
+    [namedProps.directrix]: ifcDataTypes.id,
+    [namedProps.radius]: ifcDataTypes.number,
+    [namedProps.innerRadius]: ifcDataTypes.number,
+    [namedProps.startParam]: ifcDataTypes.number,
+    [namedProps.endParam]: ifcDataTypes.number
   });
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcPlane),
@@ -1057,6 +1130,14 @@ var IFCjs = (function (exports) {
     Pnt: ifcDataTypes.id,
     Dir: ifcDataTypes.id
   });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcOpenShell),
+    CfsFaces: ifcDataTypes.idSet
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcShellBasedSurfaceModel),
+    SbsmBoundary: ifcDataTypes.idSet
+  });
 
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcApplication),
@@ -1123,7 +1204,7 @@ var IFCjs = (function (exports) {
     [namedProps.ifcClass]: getName(ifcTypes.IfcMaterialLayer),
     Material: ifcDataTypes.id,
     LayerThickness: ifcDataTypes.number,
-    IsVentilated: ifcDataTypes.value
+    IsVentilated: ifcDataTypes.enum
   });
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcMaterialLayerSet),
@@ -1573,6 +1654,71 @@ var IFCjs = (function (exports) {
     ElementType: ifcDataTypes.text
   });
   newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcDuctFittingType),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ApplicableOccurrence: ifcDataTypes.text,
+    HasPropertySets: ifcDataTypes.idSet,
+    RepresentationMaps: ifcDataTypes.idSet,
+    Tag: ifcDataTypes.text,
+    ElementType: ifcDataTypes.text,
+    PredefinedType: ifcDataTypes.enum
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcPipeFittingType),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ApplicableOccurrence: ifcDataTypes.text,
+    HasPropertySets: ifcDataTypes.idSet,
+    RepresentationMaps: ifcDataTypes.idSet,
+    Tag: ifcDataTypes.text,
+    ElementType: ifcDataTypes.text,
+    PredefinedType: ifcDataTypes.enum
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcFireSuppressionTerminalType),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ApplicableOccurrence: ifcDataTypes.text,
+    HasPropertySets: ifcDataTypes.idSet,
+    RepresentationMaps: ifcDataTypes.idSet,
+    Tag: ifcDataTypes.text,
+    ElementType: ifcDataTypes.text,
+    PredefinedType: ifcDataTypes.enum
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcCableCarrierSegmentType),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ApplicableOccurrence: ifcDataTypes.text,
+    HasPropertySets: ifcDataTypes.idSet,
+    RepresentationMaps: ifcDataTypes.idSet,
+    Tag: ifcDataTypes.text,
+    ElementType: ifcDataTypes.text,
+    PredefinedType: ifcDataTypes.enum
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcCableCarrierFittingType),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    ApplicableOccurrence: ifcDataTypes.text,
+    HasPropertySets: ifcDataTypes.idSet,
+    RepresentationMaps: ifcDataTypes.idSet,
+    Tag: ifcDataTypes.text,
+    ElementType: ifcDataTypes.text,
+    PredefinedType: ifcDataTypes.enum
+  });
+  newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcDoorLiningProperties),
     GlobalId: ifcDataTypes.text,
     OwnerHistory: ifcDataTypes.id,
@@ -1647,6 +1793,18 @@ var IFCjs = (function (exports) {
     FirstMullionOffset: ifcDataTypes.number,
     SecondMullionOffset: ifcDataTypes.number,
     ShapeAspectStyle: ifcDataTypes.number
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcWindowPanelProperties),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    OperationType: ifcDataTypes.enum,
+    PanelPosition: ifcDataTypes.enum,
+    FrameDepth: ifcDataTypes.number,
+    FrameThickness: ifcDataTypes.number,
+    ShapeAspectStyle: ifcDataTypes.id
   });
 
   newObject({
@@ -1825,6 +1983,16 @@ var IFCjs = (function (exports) {
     RealizingElements: ifcDataTypes.idSet,
     ConnectionType: ifcDataTypes.text
   });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcRelConnectsPorts),
+    GlobalId: ifcDataTypes.text,
+    OwnerHistory: ifcDataTypes.id,
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    RelatingPort: ifcDataTypes.id,
+    RelatedPort: ifcDataTypes.id,
+    RealizingElement: ifcDataTypes.id
+  });
 
   newObject({
     [namedProps.ifcClass]: getName(ifcTypes.IfcQuantityArea),
@@ -1855,6 +2023,17 @@ var IFCjs = (function (exports) {
     Description: ifcDataTypes.text,
     MethodOfMeasurement: ifcDataTypes.text,
     Quantities: ifcDataTypes.idSet
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcMonetaryUnit),
+    Currency: ifcDataTypes.enum
+  });
+  newObject({
+    [namedProps.ifcClass]: getName(ifcTypes.IfcQuantityCount),
+    Name: ifcDataTypes.text,
+    Description: ifcDataTypes.text,
+    Unit: ifcDataTypes.id,
+    CountValue: ifcDataTypes.number
   });
 
   newObject({
@@ -2794,7 +2973,7 @@ var IFCjs = (function (exports) {
 
   function trimExplicitTypes(ifcLine, key) {
     const value = ifcLine[key][typeValue.value];
-    if (value) ifcLine[key] = value;
+    if (typeof value !== 'undefined') ifcLine[key] = value;
   }
 
   function loadIfcFileItems(ifcData) {
@@ -2819,27 +2998,45 @@ var IFCjs = (function (exports) {
   }
 
   function isTypeSupported(ifcItem) {
-    return Object.values(ifcTypes).indexOf(ifcItem[itemsReaderValues.type]) > -1;
+    return haveIfcType(ifcItem[itemsReaderValues.type]);
   }
 
   class IfcEntityFinder {
     constructor(ifcData) {
-      this.ifcData = ifcData;
+      const map = new Map(); // generate map so we can return all types without looping tree again
+
+      Object.keys(ifcData).forEach(e => {
+        const t = ifcData[e][namedProps.ifcClass];
+
+        if (map.has(t)) {
+          const x = map.get(t);
+          x.push({
+            p: e,
+            d: ifcData[e]
+          });
+        } else {
+          const x = [{
+            p: e,
+            d: ifcData[e]
+          }];
+          map.set(t, x);
+        }
+      });
+      this.cache = map;
     }
 
     findByType(ifcType) {
+      const map = this.cache;
       const matches = {};
-      const name = getName(ifcType);
-      Object.keys(this.ifcData).forEach(e => {
-        if (this.getType(e) === name) {
-          matches[e] = this.ifcData[e];
-        }
-      });
-      return matches;
-    }
 
-    getType(id) {
-      return this.ifcData[id][namedProps.ifcClass];
+      if (map.has(getName(ifcType))) {
+        const x = map.get(getName(ifcType));
+        x.forEach(e => {
+          matches[e.p] = e.d;
+        });
+      }
+
+      return matches;
     }
 
     findAllProducts(spatialStructureElements, elements = []) {

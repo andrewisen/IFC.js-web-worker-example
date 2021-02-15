@@ -3,3 +3,7 @@ node_modules/
 package-lock.json
 .DS_Store
 debug.log
+
+# Examples
+examples/build
+examples/src
