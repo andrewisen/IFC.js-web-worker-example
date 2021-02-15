@@ -54,13 +54,15 @@ const _buildingElements = {
 const _geometryFaces = {
   IfcFace: 'IFCFACE'
 };
+const _geometryFaceOuterBounds = {
+  IfcFaceOuterBound: 'IFCFACEOUTERBOUND'
+};
 /**
  * Geometry - Miscellaneous faces
  */
 const _geometryFacesMisc = {
   IfcFaceBound: 'IFCFACEBOUND',
   IfcFaceBasedSurfaceModel: 'IFCFACEBASEDSURFACEMODEL',
-  IfcFaceOuterBound: 'IFCFACEOUTERBOUND',
   IfcFacetedBrep: 'IFCFACETEDBREP'
 };
 /**
@@ -278,6 +280,7 @@ const _misc = {
 const ifcTypesGroups = {
   _buildingElements,
   _geometryFaces,
+  _geometryFaceOuterBounds,
   _geometryFacesMisc,
   _geometryPoints,
   _geometryPlanes,
