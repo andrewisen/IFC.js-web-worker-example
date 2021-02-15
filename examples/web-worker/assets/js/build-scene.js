@@ -13,7 +13,9 @@ import { toggleLoader } from './utils.js';
 function buildScene(e) {
   let structured = e.data; // This is the data from the web worker, i.e. postMessage()
   structured.MainObject = mainObject; // Add back the mainObject
+  console.time('buildGeometry');
   structured = buildGeometry(structured);
+  console.timeEnd('buildGeometry');
   scene.add(structured.MainObject);
   animate();
   document.getElementById('c').style.display = 'block';
