@@ -26,7 +26,7 @@ function pick(camera) {
       pickedObjectSavedMaterial = pickedObject.material;
       pickedObject.material = pickedObjectMaterial;
       enablePickingMode(pickedObject);
-      console.log(pickedObject._Data);
+      console.log(pickedObject);
     }
   }
   canUserPick = false;
