@@ -5,8 +5,8 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
-const sourcePath = 'examples/src';
-const buildPath = 'examples/build';
+const sourcePath = 'examples/04/src';
+const buildPath = 'examples/04/build';
 const plugins = [
   babel({
     exclude: ['node_modules/**', 'libs/**', 'examples/**'],

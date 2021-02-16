@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../../resources/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+    <script src="../../libs/three.js"></script>
+    <script src="../../libs/smooth-zoom.js"></script>
+    <title>IFC.js - Web Worker Example</title>
+  </head>
+  <body>
+    <!-- Loading  -->
+    <div id="loading" class="loaderBackground">
+      <div class="loader"></div>
+    </div>
+    <!-- End Loading -->
+    <!-- Container -->
+    <div id="generalContainer">
+      <div id="GUI">
+        <input readonly type="file" id="openFileDialog" />
+        <button class="normalButton" onclick="document.getElementById('openFileDialog').click();">
+          Open
+        </button>
+      </div>
+      <!-- Three.js Content Goes Here -->
+      <canvas id="c"></canvas>
+      <!-- Three.js Content Goes Here -->
+    </div>
+    <!-- End Container -->
+    <!-- Scripts -->
+    <!-- N.B. Chevrotain is used only used inside the Web Worker - -->
+    <script src="../../libs/OrbitControls.js"></script>
+    <script src="./../assets/js/utils/dev.js"></script>
+    <script src="./../assets/js/utils/check-browser.js"></script>
+    <script type="module" src="main.js"></script>
+    <!-- End Scripts -->
+  </body>
+</html>
