@@ -5,5 +5,4 @@ package-lock.json
 debug.log
 
 # Examples
-examples/build
-examples/src
+examples/04/build
