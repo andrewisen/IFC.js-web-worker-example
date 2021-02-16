@@ -131,6 +131,7 @@ class Merger {
       material,
       material: { uuid: id }
     } = object3D;
+
     const bufferGeometry =
       type === 'BufferGeometry' ? geometry : new THREE.BufferGeometry().fromGeometry(geometry);
     /**
@@ -150,6 +151,9 @@ class Merger {
      */
     const clone = bufferGeometry.clone();
     clone.applyMatrix4(matrix);
+    // DEV
+    clone.deleteAttribute('color');
+    // DEV
     /**
      * We will use the Three.js Material UUID to group the buffer geometries.
      * The material object (see above) will group the materials (depending on UUID).
